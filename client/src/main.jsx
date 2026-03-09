@@ -13,6 +13,7 @@ import Blogs from "./pages/Blogs";
 import Network from "./pages/Network";
 import Admin from "./pages/Admin";
 import { SessionProvider } from "./context/SessionContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Record from "./components/Record";
 import "./index.css";
 
@@ -31,19 +32,35 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <Home />,
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/blogs",
-    element: <Blogs />,
+    element: (
+      <ProtectedRoute>
+        <Blogs />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/network",
-    element: <Network />,
+    element: (
+      <ProtectedRoute>
+        <Network />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/admin",
-    element: <Admin />,
+    element: (
+      <ProtectedRoute>
+        <Admin />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/app",

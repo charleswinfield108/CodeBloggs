@@ -25,7 +25,23 @@ export const SessionProvider = ({ children }) => {
     localStorage.setItem("session", JSON.stringify(sessionData));
   };
 
-  const logout = () => {
+  const logout = async () => {
+    // Call backend logout endpoint
+    if (session?.session_token) {
+      try {
+        await fetch("http://localhost:5050/session/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ session_token: session.session_token }),
+        });
+      } catch (error) {
+        console.error("Logout request failed:", error);
+      }
+    }
+    
+    // Clear session from state and storage
     setSession(null);
     localStorage.removeItem("session");
   };
