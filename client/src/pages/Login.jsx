@@ -12,6 +12,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,7 +42,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/login", {
+      const response = await fetch("http://localhost:5050/session/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -169,27 +170,52 @@ const Login = () => {
                 >
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  style={{
-                    width: "100%",
-                    padding: "0.5rem 0.8rem",
-                    border: "1px solid #E3E6F5",
-                    borderRadius: "0.5rem",
-                    fontSize: "1rem",
-                    outline: "none",
-                    fontFamily: "'Open Sans', sans-serif",
-                    fontWeight: "400",
-                    boxSizing: "border-box",
-                    color: "#1F2340",
-                  }}
-                  disabled={loading}
-                />
+                <div style={{ position: "relative" }}>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    style={{
+                      width: "100%",
+                      padding: "0.5rem 0.8rem",
+                      paddingRight: "2.5rem",
+                      border: "1px solid #E3E6F5",
+                      borderRadius: "0.5rem",
+                      fontSize: "1rem",
+                      outline: "none",
+                      fontFamily: "'Open Sans', sans-serif",
+                      fontWeight: "400",
+                      boxSizing: "border-box",
+                      color: "#1F2340",
+                    }}
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: "absolute",
+                      right: "0.8rem",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "none",
+                      border: "none",
+                      cursor: loading ? "not-allowed" : "pointer",
+                      fontSize: "1.2rem",
+                      color: "#8D88EA",
+                      padding: "0.4rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    disabled={loading}
+                  >
+                    {showPassword ? "👁️" : "👁️‍🗨️"}
+                  </button>
+                </div>
               </div>
 
               {error && (

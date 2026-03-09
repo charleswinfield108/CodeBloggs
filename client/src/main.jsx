@@ -7,7 +7,11 @@ import {
 } from "react-router-dom";
 import App from "./App";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Home from "./pages/Home";
+import Blogs from "./pages/Blogs";
+import Network from "./pages/Network";
+import Admin from "./pages/Admin";
 import { SessionProvider } from "./context/SessionContext";
 import Record from "./components/Record";
 import "./index.css";
@@ -22,13 +26,29 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/register",
+    element: <Register />,
+  },
+  {
     path: "/home",
+    element: <Home />,
+  },
+  {
+    path: "/blogs",
+    element: <Blogs />,
+  },
+  {
+    path: "/network",
+    element: <Network />,
+  },
+  {
+    path: "/admin",
+    element: <Admin />,
+  },
+  {
+    path: "/app",
     element: <App />,
     children: [
-      {
-        index: true,
-        element: <Home />,
-      },
       {
         path: "edit/:id",
         element: <Record />,
