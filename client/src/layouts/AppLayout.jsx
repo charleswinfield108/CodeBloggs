@@ -1,15 +1,15 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
-const App = () => {
+const AppLayout = () => {
   return (
-    <div className="w-full flex gap-6 min-h-screen">
+    <div className="w-full p-6 flex gap-6 min-h-screen">
       <Navbar />
-      <main className="flex-1 p-6">
+      <main className="flex-1">
         <Outlet />
       </main>
     </div>
   );
 };
 
-export default App;
+export default AppLayout;

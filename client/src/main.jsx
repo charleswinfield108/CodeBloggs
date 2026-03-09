@@ -3,47 +3,50 @@ import * as ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
+  Navigate,
 } from "react-router-dom";
 import App from "./App";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import { SessionProvider } from "./context/SessionContext";
 import Record from "./components/Record";
-import RecordList from "./components/RecordList";
 import "./index.css";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
-    children: [
-      {
-        path: "/",
-        element: <RecordList />,
-      },
-    ],
+    element: <Navigate to="/login" replace />,
   },
   {
-    path: "/edit/:id",
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/home",
     element: <App />,
     children: [
       {
-        path: "/edit/:id",
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "edit/:id",
         element: <Record />,
       },
-    ],
-  },
-  {
-    path: "/create",
-    element: <App />,
-    children: [
       {
-        path: "/create",
+        path: "create",
         element: <Record />,
       },
     ],
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <SessionProvider>
+      <RouterProvider router={router} />
+    </SessionProvider>
   </React.StrictMode>
 );
