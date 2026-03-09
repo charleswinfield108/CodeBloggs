@@ -50,8 +50,8 @@ export default function Record() {
     try {
       let response;
       if (isNew) {
-        // if we are adding a new record we will POST to /record.
-        response = await fetch("http://localhost:5050/record", {
+        // if we are adding a new record we will POST to /post.
+        response = await fetch("http://localhost:5050/post", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -59,8 +59,8 @@ export default function Record() {
           body: JSON.stringify(person),
         });
       } else {
-        // if we are updating a record we will PATCH to /record/:id.
-        response = await fetch(`http://localhost:5050/record/${params.id}`, {
+        // if we are updating a record we will PATCH to /post/:id.
+        response = await fetch(`http://localhost:5050/post/${params.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
