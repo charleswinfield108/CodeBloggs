@@ -69,11 +69,8 @@ const Sidebar = () => {
           display: "flex",
           flexDirection: "column",
           gap: "0.5rem",
-<<<<<<< HEAD
           marginTop: "40px",
-=======
           flex: 1,
->>>>>>> 1412b48fecd134e98dd90ac6c078517a9c8473aa
         }}
       >
         {navItems.map((item) => {
