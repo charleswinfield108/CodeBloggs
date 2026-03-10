@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePostModal } from "../context/PostModalContext";
 import { useSession } from "../context/SessionContext";
+import { useToast } from "../context/ToastContext";
 import { FiChevronDown } from "react-icons/fi";
 
 const Header = () => {
   const { openModal } = usePostModal();
   const { session, logout } = useSession();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -30,8 +32,7 @@ const Header = () => {
   };
 
   const handleAccountSettings = () => {
-    // TODO: Navigate to account settings or show toast
-    console.log("Account Settings clicked");
+    showToast("Account Settings was clicked", "info", 3000);
     setIsMenuOpen(false);
   };
 

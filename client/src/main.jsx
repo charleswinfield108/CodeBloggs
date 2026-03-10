@@ -14,6 +14,7 @@ import Network from "./pages/Network";
 import Admin from "./pages/Admin";
 import { SessionProvider } from "./context/SessionContext";
 import { PostModalProvider } from "./context/PostModalContext";
+import { ToastProvider } from "./context/ToastContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Record from "./components/Record";
 import "./index.css";
@@ -85,7 +86,9 @@ root.render(
   <React.StrictMode>
     <SessionProvider>
       <PostModalProvider>
-        <RouterProvider router={router} />
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
       </PostModalProvider>
     </SessionProvider>
   </React.StrictMode>
