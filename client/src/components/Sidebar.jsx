@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import logo from "../assets/CodeBloggs_ logo.png";
 import { AiOutlineHome } from "react-icons/ai";
@@ -9,8 +9,7 @@ import { MdAdminPanelSettings } from "react-icons/md";
 
 const Sidebar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { session, logout } = useSession();
+  const { session } = useSession();
 
   const isActive = (path) => location.pathname === path;
 
@@ -20,11 +19,6 @@ const Sidebar = () => {
     { label: "Network", path: "/network", icon: FaUsers },
     ...(session?.auth_level === "admin" ? [{ label: "Admin", path: "/admin", icon: MdAdminPanelSettings }] : []),
   ];
-
-  const handleLogout = async () => {
-    await logout();
-    navigate("/login");
-  };
 
   return (
     <aside
@@ -115,34 +109,6 @@ const Sidebar = () => {
           );
         })}
       </nav>
-
-      <div
-        style={{
-          borderTop: "1px solid #E3E6F5",
-          padding: "1rem 1.5rem",
-        }}
-      >
-        <button
-          onClick={handleLogout}
-          style={{
-            width: "100%",
-            padding: "0.75rem 1rem",
-            backgroundColor: "#8D88EA",
-            color: "white",
-            border: "none",
-            borderRadius: "0.5rem",
-            fontFamily: "'Open Sans', sans-serif",
-            fontWeight: "600",
-            fontSize: "0.95rem",
-            cursor: "pointer",
-            transition: "background-color 0.2s ease",
-          }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#6C63D9")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#8D88EA")}
-        >
-          Logout
-        </button>
-      </div>
     </aside>
   );
 };
