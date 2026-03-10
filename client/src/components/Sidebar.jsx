@@ -43,7 +43,8 @@ const Sidebar = () => {
         flexDirection: "column",
       }}
     >
-      <div
+      <Link
+        to="/home"
         style={{
           padding: "1rem 1.5rem 2rem 1.5rem",
           marginBottom: "1rem",
@@ -51,6 +52,8 @@ const Sidebar = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          textDecoration: "none",
+          cursor: "pointer",
         }}
       >
         <img
@@ -63,7 +66,7 @@ const Sidebar = () => {
             marginLeft: "-20px",
           }}
         />
-      </div>
+      </Link>
       <nav
         style={{
           display: "flex",
