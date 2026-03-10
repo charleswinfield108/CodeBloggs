@@ -13,6 +13,7 @@ import Blogs from "./pages/Blogs";
 import Network from "./pages/Network";
 import Admin from "./pages/Admin";
 import { SessionProvider } from "./context/SessionContext";
+import { PostModalProvider } from "./context/PostModalContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Record from "./components/Record";
 import "./index.css";
@@ -83,7 +84,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <SessionProvider>
-      <RouterProvider router={router} />
+      <PostModalProvider>
+        <RouterProvider router={router} />
+      </PostModalProvider>
     </SessionProvider>
   </React.StrictMode>
 );
