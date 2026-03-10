@@ -1,0 +1,760 @@
+{
+  "info": {
+    "_postman_id": "68782f72-0636-4aa5-ba59-861d939a1326",
+    "name": "CodeBloggs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52041519",
+    "_collection_link": "https://go.postman.co/collection/52041519-68782f72-0636-4aa5-ba59-861d939a1326?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login Page",
+      "item": [
+        {
+          "name": "Login user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/session/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "session",
+                "login"
+              ]
+            },
+            "description": "Login user with email and password"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registration Page",
+      "item": [
+        {
+          "name": "Register user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/user/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "user",
+                "register"
+              ]
+            },
+            "description": "Register a new user account"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Main Page",
+      "item": [
+        {
+          "name": "Validate token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/validate_token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "validate_token"
+              ]
+            },
+            "description": "Validate user token on page load"
+          },
+          "response": []
+        },
+        {
+          "name": "Get all posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "posts"
+              ]
+            },
+            "description": "Display all posts on home feed"
+          },
+          "response": []
+        },
+        {
+          "name": "Create post",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/post",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "post"
+              ]
+            },
+            "description": "Create new post from modal"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/session/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "session",
+                "logout"
+              ]
+            },
+            "description": "Logout user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get current user profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/user/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "user",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Get current user profile"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Blogs Page",
+      "item": [
+        {
+          "name": "Get all blog posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "posts"
+              ]
+            },
+            "description": "Get all blog posts"
+          },
+          "response": []
+        },
+        {
+          "name": "Get blog post details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/post/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "post",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Get single blog post details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update blog post",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/post/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "post",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Update blog post (if author)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete blog post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/post/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "post",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Delete blog post (if author)"
+          },
+          "response": []
+        },
+        {
+          "name": "Add comment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/comment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "comment"
+              ]
+            },
+            "description": "Add comment to blog post"
+          },
+          "response": []
+        },
+        {
+          "name": "Get all comments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "comments"
+              ]
+            },
+            "description": "Get all comments for posts"
+          },
+          "response": []
+        },
+        {
+          "name": "Update comment",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/comment/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "comment",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Update comment (if author)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete comment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/comment/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "comment",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Delete comment (if author)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Network Page",
+      "item": [
+        {
+          "name": "Get all users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Get list of all users"
+          },
+          "response": []
+        },
+        {
+          "name": "View user profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/user/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "user",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "View user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Get user info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/info/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "info",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Get user info/details"
+          },
+          "response": []
+        },
+        {
+          "name": "Get all users info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/infos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "infos"
+              ]
+            },
+            "description": "Get all users info"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Page",
+      "item": [
+        {
+          "name": "List all users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "users"
+              ]
+            },
+            "description": "List all users"
+          },
+          "response": []
+        },
+        {
+          "name": "View user details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/user/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "user",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "View user details"
+          },
+          "response": []
+        },
+        {
+          "name": "Edit user information",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/user/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "user",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Edit user information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user account",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/user/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "user",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Delete user account"
+          },
+          "response": []
+        },
+        {
+          "name": "View all posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "posts"
+              ]
+            },
+            "description": "View all posts"
+          },
+          "response": []
+        },
+        {
+          "name": "View post details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/post/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "post",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "View post details"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user posts",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/post/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "post",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Delete user posts"
+          },
+          "response": []
+        },
+        {
+          "name": "View all comments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "comments"
+              ]
+            },
+            "description": "View all comments"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete comments",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/comment/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "comment",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Delete comments"
+          },
+          "response": []
+        },
+        {
+          "name": "View all user sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/sessions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "sessions"
+              ]
+            },
+            "description": "View all user sessions"
+          },
+          "response": []
+        },
+        {
+          "name": "View session details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/session/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "session",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "View session details"
+          },
+          "response": []
+        },
+        {
+          "name": "Create session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5050/session/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5050",
+              "path": [
+                "session",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Create session"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
