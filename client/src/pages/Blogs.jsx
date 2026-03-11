@@ -243,7 +243,7 @@ const Blogs = () => {
                     <p
                       style={{
                         color: "#1F2340",
-                        fontSize: "1rem",
+                        fontSize: "12px",
                         margin: "0 0 1.5rem 0",
                         lineHeight: "1.6",
                       }}
@@ -314,9 +314,6 @@ const Blogs = () => {
                       </button>
                     </div>
                   </div>
-                </div>
-
-
                 </div>
               );
               })}
