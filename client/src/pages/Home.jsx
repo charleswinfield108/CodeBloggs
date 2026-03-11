@@ -1,10 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
 import AvatarInitials from "../components/AvatarInitials";
 
 const Home = () => {
   const { session } = useSession();
+  const [userPostCount, setUserPostCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserPostCount = async () => {
+      if (!session?.id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5050/posts");
+        const data = await response.json();
+
+        if (data.status === "ok" && Array.isArray(data.data)) {
+          // Filter posts that belong to the logged-in user
+          const userPosts = data.data.filter(
+            (post) => post.user_id === session.id
+          );
+          setUserPostCount(userPosts.length);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserPostCount();
+  }, [session?.id]);
 
   return (
     <Layout>
@@ -40,7 +70,14 @@ const Home = () => {
 
         <div style={{ backgroundColor: "#F6F7FF", padding: "2rem", borderRadius: "8px" }}>
           <h2 style={{ color: "#8D88EA", marginTop: 0 }}>Your Posts</h2>
-          <p style={{ color: "#666" }}>Your posts will appear here.</p>
+          <p style={{ fontSize: "2rem", color: "#8D88EA", fontWeight: "bold", margin: "0.5rem 0" }}>
+            {loading ? "Loading..." : userPostCount}
+          </p>
+          <p style={{ color: "#666" }}>
+            {loading 
+              ? "Fetching your post count..." 
+              : `You have created ${userPostCount} ${userPostCount === 1 ? "post" : "posts"}.`}
+          </p>
         </div>
       </div>
     </Layout>
