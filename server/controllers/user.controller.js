@@ -323,14 +323,21 @@ const usersGetInfo = async (req, res) => {
 const userUpdateStatus = async (req, res) => {
     try {
         const userId = req.params.id;
-        const { isOnline } = req.body;
+        let { isOnline } = req.body;
 
         if (!ObjectId.isValid(userId)) {
             return res.status(400).json({ error: "Invalid user ID" });
         }
 
+        // Handle string values from form data (sendBeacon sends as URLSearchParams)
+        if (typeof isOnline === 'string') {
+            isOnline = isOnline.toLowerCase() === 'true';
+        } else {
+            isOnline = Boolean(isOnline);
+        }
+
         const updateData = {
-            isOnline: Boolean(isOnline),
+            isOnline,
             lastSeen: new Date(),
             updatedAt: new Date()
         };

@@ -53,9 +53,13 @@ export const SessionProvider = ({ children }) => {
     const handlePageClose = () => {
       // Tell server user is offline without destroying session
       if (session?.id) {
+        // Use URLSearchParams for proper form encoding that sendBeacon can send
+        const params = new URLSearchParams();
+        params.append('isOnline', 'false');
+        
         navigator.sendBeacon(
           `http://localhost:5050/user/${encodeURIComponent(session.id)}/status`,
-          JSON.stringify({ isOnline: false })
+          params
         );
       }
     };
