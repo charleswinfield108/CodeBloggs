@@ -36,6 +36,15 @@ const sessionLogin = async (req, res) => {
 
         // Ensure the sessions collection has an expiration index
         const SESSIONS_COLLECTION = DB.collection("sessions");
+        
+        // Drop the old index if it exists with different TTL
+        try {
+          await SESSIONS_COLLECTION.dropIndex("session_date_1");
+        } catch (err) {
+          // Index doesn't exist yet, which is fine
+        }
+        
+        // Create the TTL index (24 hours)
         await SESSIONS_COLLECTION.createIndex({ "session_date": 1 }, { expireAfterSeconds: 86400 });
 
         // Create a new session object

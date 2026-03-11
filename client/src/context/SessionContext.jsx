@@ -26,15 +26,11 @@ export const SessionProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    // Call backend logout endpoint
+    // Call backend logout endpoint with token as query parameter
     if (session?.session_token) {
       try {
-        await fetch("http://localhost:5050/session/logout", {
+        await fetch(`http://localhost:5050/session/logout?token=${encodeURIComponent(session.session_token)}`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ session_token: session.session_token }),
         });
       } catch (error) {
         console.error("Logout request failed:", error);
