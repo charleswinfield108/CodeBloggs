@@ -236,7 +236,7 @@ const Blogs = () => {
                           })}
                         </p>
                         <p style={{ color: "#666", fontSize: "0.75rem", margin: "0.5rem 0 0 0" }}>
-                          {author.status === "Currently Logged In" ? "🟢" : "🔴"} {author.status || "Currently Logged Out"}
+                          {author.isOnline ? "🟢" : "🔴"} {author.isOnline ? "Online" : "Offline"}
                         </p>
                       </>
                     )}

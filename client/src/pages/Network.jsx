@@ -211,7 +211,7 @@ const Network = () => {
 
                 {/* Status */}
                 <p style={{ color: "#666", fontSize: "0.8rem", margin: "0 0 1rem 0" }}>
-                  {user.status === "Currently Logged In" ? "🟢" : "🔴"} {user.status || "Currently Logged Out"}
+                  {user.isOnline ? "🟢" : "🔴"} {user.isOnline ? "Online" : "Offline"}
                 </p>
 
                 {/* Divider */}

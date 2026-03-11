@@ -239,7 +239,7 @@ const Home = () => {
                   LOGIN STATUS
                 </p>
                 <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
-                  {currentUser?.status === "Currently Logged In" ? "🟢" : "🔴"} {currentUser?.status || "Currently Logged In"}
+                  {currentUser?.isOnline ? "🟢" : "🔴"} {currentUser?.isOnline ? "Online" : "Offline"}
                 </p>
               </div>
             </div>
