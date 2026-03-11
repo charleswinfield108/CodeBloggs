@@ -114,7 +114,7 @@ const Home = () => {
 
   return (
     <Layout>
-      <div style={{ display: "flex", gap: "2rem", height: "calc(100vh - 180px)" }}>
+      <div style={{ display: "flex", gap: "2rem" }}>
         {/* Left Column */}
         <div style={{ flex: "0 0 280px", display: "flex", flexDirection: "column", gap: "1rem" }}>
           {/* Avatar Section */}
