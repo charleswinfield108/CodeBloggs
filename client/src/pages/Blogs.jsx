@@ -148,6 +148,30 @@ const Blogs = () => {
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
+                  {/* Author Avatar Section */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+                    <AvatarInitials
+                      firstName={session?.first_name}
+                      lastName={session?.last_name}
+                      size={40}
+                    />
+                    <div>
+                      <p style={{ color: "#1F2340", fontSize: "0.85rem", margin: 0, fontWeight: "600" }}>
+                        {session?.first_name} {session?.last_name}
+                      </p>
+                      <p style={{ color: "#999", fontSize: "0.7rem", margin: 0 }}>
+                        {new Date(post.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div style={{ height: "1px", backgroundColor: "#E3E6F5", marginBottom: "1rem" }} />
+
                   {/* Post Date */}
                   <p style={{ color: "#999", fontSize: "0.7rem", margin: "0 0 0.75rem 0", fontWeight: "500" }}>
                     {new Date(post.createdAt).toLocaleDateString("en-US", {
