@@ -25,9 +25,27 @@ const sessionLogin = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" }); // Same generic error message
         }
 
-        // Respond with user details
+        // Generate a unique session token
+        const session_token = uuidv4();
+
+        // Ensure the sessions collection has an expiration index
+        const SESSIONS_COLLECTION = DB.collection("sessions");
+        await SESSIONS_COLLECTION.createIndex({ "session_date": 1 }, { expireAfterSeconds: 86400 });
+
+        // Create a new session object
+        const NEW_SESSION = {
+            session_token,
+            session_date: new Date(),
+            user_id: USER._id.toString()
+        };
+
+        // Insert the session into the database
+        await SESSIONS_COLLECTION.insertOne(NEW_SESSION);
+
+        // Respond with user details and session token
         const { _id, first_name, last_name, auth_level } = USER;
         return res.status(200).json({
+            session_token,
             id: _id.toString(),
             first_name,
             last_name,

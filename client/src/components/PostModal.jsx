@@ -15,22 +15,33 @@ const PostModal = () => {
       return;
     }
 
+    if (!session?.id) {
+      setError("User session not found. Please log in again.");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
     try {
+      const postData = {
+        content: content,
+        user_id: session.id,
+      };
+
+      console.log("Creating post with data:", postData);
+
       const response = await fetch("http://localhost:5050/post", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          content: content,
-          user_id: session?.id,
-        }),
+        body: JSON.stringify(postData),
       });
 
       const responseData = await response.json();
+
+      console.log("Post creation response:", { status: response.status, data: responseData });
 
       if (!response.ok) {
         throw new Error(responseData.error || "Failed to create post");
@@ -40,6 +51,7 @@ const PostModal = () => {
       closeModal();
       // TODO: Trigger a refresh of posts or show success message
     } catch (err) {
+      console.error("Post creation error:", err);
       setError(err.message || "Failed to create post");
     } finally {
       setLoading(false);
