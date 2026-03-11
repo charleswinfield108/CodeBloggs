@@ -217,6 +217,20 @@ const Home = () => {
                   {session?.auth_level === "admin" ? "Administrator" : "User"}
                 </p>
               </div>
+              <div
+                style={{
+                  height: "1px",
+                  backgroundColor: "#E3E6F5",
+                }}
+              />
+              <div>
+                <p style={{ color: "#999", fontSize: "0.65rem", margin: "0 0 0.25rem 0" }}>
+                  LOGIN STATUS
+                </p>
+                <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
+                  {session?.status === "Currently Logged In" ? "🟢" : "🔴"} {session?.status || "Currently Logged In"}
+                </p>
+              </div>
             </div>
           </div>
         </div>
