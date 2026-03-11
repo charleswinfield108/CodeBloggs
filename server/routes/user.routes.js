@@ -3,6 +3,7 @@ import USER_CONTROLLER from '../controllers/user.controller.js';
 const userRoutesEndpoint = (app) => {
     app.post("/user/register", USER_CONTROLLER.userCreate);
     app.patch("/user/:id", USER_CONTROLLER.userUpdate);
+    app.patch("/user/:id/status", USER_CONTROLLER.userUpdateStatus);
     app.delete("/user/:id", USER_CONTROLLER.userDelete);
     app.get("/user/:id", USER_CONTROLLER.userGetById);
     app.get("/users", USER_CONTROLLER.usersGetAll);

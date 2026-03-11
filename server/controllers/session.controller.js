@@ -25,10 +25,10 @@ const sessionLogin = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" }); // Same generic error message
         }
 
-        // Update user status to "Currently Logged In"
+        // Update user to mark them as online
         await DB.collection("users").updateOne(
             { _id: USER._id },
-            { $set: { status: "Currently Logged In" } }
+            { $set: { isOnline: true, lastSeen: new Date() } }
         );
 
         // Generate a unique session token
@@ -89,10 +89,10 @@ const sessionLogout = async (req, res) => {
             return res.status(404).json({ error: "Invalid or non-existent session token" });
         }
 
-        // Update user status to "Currently Logged Out"
+        // Mark user as offline
         await DB.collection("users").updateOne(
             { _id: new ObjectId(SESSION.user_id) },
-            { $set: { status: "Currently Logged Out" } }
+            { $set: { isOnline: false, lastSeen: new Date() } }
         );
 
         // Delete the session
