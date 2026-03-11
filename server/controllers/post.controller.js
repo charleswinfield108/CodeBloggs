@@ -200,12 +200,8 @@ const postsGetAll = async (req, res) => {
             }
         ]).toArray();
 
-        if (!POSTS_WITH_COMMENTS || POSTS_WITH_COMMENTS.length === 0) {
-            return res.status(404).json({ error: "No posts found" });
-        }
-
         // Map the posts to include necessary fields
-        const POSTS = POSTS_WITH_COMMENTS.map((post) => ({
+        const POSTS = (POSTS_WITH_COMMENTS || []).map((post) => ({
             _id: post._id,
             content: post.content,
             user_id: post.user_id,
@@ -217,7 +213,7 @@ const postsGetAll = async (req, res) => {
         res.json({
             status: 'ok',
             data: POSTS,
-            message: 'Posts retrieved successfully'
+            message: POSTS.length === 0 ? 'No posts found' : 'Posts retrieved successfully'
         });
     } catch (error) {
         console.error(error);

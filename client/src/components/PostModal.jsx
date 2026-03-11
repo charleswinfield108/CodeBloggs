@@ -23,16 +23,17 @@ const PostModal = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.session_token}`,
         },
         body: JSON.stringify({
-          title: "New Post",
           content: content,
+          user_id: session?.id,
         }),
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to create post");
+        throw new Error(responseData.error || "Failed to create post");
       }
 
       setContent("");
