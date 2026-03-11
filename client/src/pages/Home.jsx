@@ -6,10 +6,11 @@ import AvatarInitials from "../components/AvatarInitials";
 const Home = () => {
   const { session } = useSession();
   const [userPostCount, setUserPostCount] = useState(0);
+  const [lastPostDate, setLastPostDate] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserPostCount = async () => {
+    const fetchUserPostData = async () => {
       if (!session?.id) {
         setLoading(false);
         return;
@@ -25,6 +26,18 @@ const Home = () => {
             (post) => post.user_id === session.id
           );
           setUserPostCount(userPosts.length);
+
+          // Find the most recent post
+          if (userPosts.length > 0) {
+            const mostRecent = userPosts.reduce((latest, post) => {
+              const postDate = new Date(post.createdAt);
+              const latestDate = new Date(latest.createdAt);
+              return postDate > latestDate ? post : latest;
+            });
+            setLastPostDate(new Date(mostRecent.createdAt));
+          } else {
+            setLastPostDate(null);
+          }
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -33,8 +46,19 @@ const Home = () => {
       }
     };
 
-    fetchUserPostCount();
+    fetchUserPostData();
   }, [session?.id]);
+
+  const formatDate = (date) => {
+    if (!date) return "No posts yet";
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <Layout>
@@ -78,6 +102,15 @@ const Home = () => {
               ? "Fetching your post count..." 
               : `You have created ${userPostCount} ${userPostCount === 1 ? "post" : "posts"}.`}
           </p>
+
+          <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #E3E6F5" }}>
+            <p style={{ color: "#666", marginBottom: "0.5rem" }}>
+              <strong>Last Post:</strong>
+            </p>
+            <p style={{ color: "#8D88EA", fontSize: "1rem" }}>
+              {loading ? "Loading..." : formatDate(lastPostDate)}
+            </p>
+          </div>
         </div>
       </div>
     </Layout>
