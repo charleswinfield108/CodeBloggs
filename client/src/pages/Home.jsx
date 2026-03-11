@@ -234,7 +234,7 @@ const Home = () => {
                 minHeight: 0,
                 display: "flex",
                 flexDirection: "column",
-                gap: "0.75rem",
+                gap: "0.5rem",
                 overflowY: "auto",
               }}
             >
@@ -247,7 +247,7 @@ const Home = () => {
                       backgroundColor: "#FFFFFF",
                       border: "1px solid #E3E6F5",
                       borderRadius: "8px",
-                      padding: "1rem",
+                      padding: "0.75rem",
                       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
                       transition: "all 0.2s ease",
                     }}
@@ -263,14 +263,14 @@ const Home = () => {
                     <p
                       style={{
                         color: "#1F2340",
-                        fontSize: "0.875rem",
-                        margin: "0 0 0.5rem 0",
-                        lineHeight: "1.5",
+                        fontSize: "0.8rem",
+                        margin: "0 0 0.375rem 0",
+                        lineHeight: "1.4",
                       }}
                     >
                       {post.content}
                     </p>
-                    <p style={{ color: "#999", fontSize: "0.75rem", margin: "0 0 0.75rem 0" }}>
+                    <p style={{ color: "#999", fontSize: "0.7rem", margin: "0 0 0.5rem 0" }}>
                       {new Date(post.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -317,17 +317,17 @@ const Home = () => {
                     {post.comments && post.comments.length > 0 && (
                       <div
                         style={{
-                          marginTop: "0.75rem",
-                          paddingTop: "0.75rem",
+                          marginTop: "0.5rem",
+                          paddingTop: "0.5rem",
                           borderTop: "1px solid #E3E6F5",
                         }}
                       >
                         <p
                           style={{
                             color: "#666",
-                            fontSize: "0.75rem",
+                            fontSize: "0.7rem",
                             fontWeight: "600",
-                            margin: "0 0 0.5rem 0",
+                            margin: "0 0 0.375rem 0",
                           }}
                         >
                           Comments ({post.comments.length})
@@ -336,7 +336,7 @@ const Home = () => {
                           style={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: "0.5rem",
+                            gap: "0.375rem",
                           }}
                         >
                           {post.comments.map((comment) => (
@@ -344,7 +344,7 @@ const Home = () => {
                               key={comment._id}
                               style={{
                                 backgroundColor: "#F9F9FB",
-                                padding: "0.5rem",
+                                padding: "0.4rem",
                                 borderRadius: "6px",
                                 borderLeft: "3px solid #8D88EA",
                               }}
@@ -352,9 +352,9 @@ const Home = () => {
                               <p
                                 style={{
                                   color: "#1F2340",
-                                  fontSize: "0.75rem",
-                                  margin: "0 0 0.25rem 0",
-                                  lineHeight: "1.4",
+                                  fontSize: "0.7rem",
+                                  margin: "0 0 0.2rem 0",
+                                  lineHeight: "1.3",
                                 }}
                               >
                                 {comment.content}
@@ -364,12 +364,13 @@ const Home = () => {
                                   display: "flex",
                                   justifyContent: "space-between",
                                   alignItems: "center",
+                                  gap: "0.25rem",
                                 }}
                               >
                                 <p
                                   style={{
                                     color: "#999",
-                                    fontSize: "0.65rem",
+                                    fontSize: "0.6rem",
                                     margin: 0,
                                   }}
                                 >
@@ -387,7 +388,7 @@ const Home = () => {
                                   <span
                                     style={{
                                       color: "#8D88EA",
-                                      fontSize: "0.65rem",
+                                      fontSize: "0.6rem",
                                       fontWeight: "500",
                                     }}
                                   >
@@ -405,19 +406,19 @@ const Home = () => {
                     {(!post.comments || post.comments.length === 0) && (
                       <div
                         style={{
-                          marginTop: "0.75rem",
-                          paddingTop: "0.75rem",
+                          marginTop: "0.5rem",
+                          paddingTop: "0.5rem",
                           borderTop: "1px solid #E3E6F5",
                         }}
                       >
                         <p
                           style={{
                             color: "#999",
-                            fontSize: "0.75rem",
+                            fontSize: "0.7rem",
                             margin: 0,
                           }}
                         >
-                          No comments yet
+                          No comments
                         </p>
                       </div>
                     )}
