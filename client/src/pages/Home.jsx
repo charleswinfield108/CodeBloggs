@@ -132,7 +132,7 @@ const Home = () => {
             <AvatarInitials
               firstName={session?.first_name}
               lastName={session?.last_name}
-              size={120}
+              size={100}
             />
             <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: 0, textAlign: "center" }}>
               {session?.first_name} {session?.last_name}
@@ -219,7 +219,7 @@ const Home = () => {
         </div>
 
         {/* Right Column - Posts List with Scrollbar */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
           <h2 style={{ color: "#1F2340", fontSize: "1.5rem", margin: "0 0 1rem 0" }}>
             Your Recent Posts
           </h2>
@@ -228,9 +228,10 @@ const Home = () => {
             <div
               style={{
                 flex: 1,
+                minHeight: 0,
                 overflowY: "auto",
                 overflowX: "hidden",
-                paddingRight: "0.5rem",
+                paddingRight: "0.75rem",
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
