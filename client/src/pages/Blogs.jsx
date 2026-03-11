@@ -33,6 +33,8 @@ const Blogs = () => {
             const usersMap = {};
             usersData.data.forEach((user) => {
               usersMap[user._id] = user;
+              // Log to verify status is included
+              console.log(`User ${user._id}: status = ${user.status}`);
             });
             setUsers(usersMap);
           }
@@ -46,7 +48,7 @@ const Blogs = () => {
     };
 
     fetchAllPosts();
-  }, []);
+  }, [session]);
 
   const handleLikePost = async (postId, currentLikes) => {
     // Toggle like status

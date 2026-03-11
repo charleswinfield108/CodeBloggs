@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
+import { useSession } from "../context/SessionContext";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp } from "react-icons/fi";
 
 const Network = () => {
+  const { session } = useSession();
   const [users, setUsers] = useState([]);
   const [usersWithPosts, setUsersWithPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ const Network = () => {
     };
 
     fetchUsersAndPosts();
-  }, []);
+  }, [session]);
 
   const handleLikePost = async (postId, currentLikes) => {
     // Toggle like status
