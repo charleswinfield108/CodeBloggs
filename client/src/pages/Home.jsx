@@ -222,7 +222,7 @@ const Home = () => {
         </div>
 
         {/* Right Column - Posts List with Scrollbar */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden", maxHeight: "calc(100% - 150px)" }}>
           <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
             Your Recent Posts
           </h2>
