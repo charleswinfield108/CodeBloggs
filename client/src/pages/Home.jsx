@@ -11,6 +11,7 @@ const Home = () => {
   const [lastPostDate, setLastPostDate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState(new Set());
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchUserPostData = async () => {
@@ -20,6 +21,16 @@ const Home = () => {
       }
 
       try {
+        // Fetch current user's data (including status)
+        const usersResponse = await fetch("http://localhost:5050/users");
+        const usersData = await usersResponse.json();
+        
+        if (usersData.status === "ok" && Array.isArray(usersData.data)) {
+          const user = usersData.data.find((u) => u._id === session.id);
+          setCurrentUser(user);
+        }
+
+        // Fetch user's posts
         const response = await fetch("http://localhost:5050/posts");
         const data = await response.json();
 
@@ -228,7 +239,7 @@ const Home = () => {
                   LOGIN STATUS
                 </p>
                 <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
-                  {session?.status === "Currently Logged In" ? "🟢" : "🔴"} {session?.status || "Currently Logged In"}
+                  {currentUser?.status === "Currently Logged In" ? "🟢" : "🔴"} {currentUser?.status || "Currently Logged In"}
                 </p>
               </div>
             </div>
