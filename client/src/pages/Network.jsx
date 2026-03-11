@@ -207,6 +207,11 @@ const Network = () => {
                   📍 {user.location || "No location"}
                 </p>
 
+                {/* Status */}
+                <p style={{ color: "#666", fontSize: "0.8rem", margin: "0 0 1rem 0" }}>
+                  🟢 {user.status || "No status"}
+                </p>
+
                 {/* Divider */}
                 <div style={{ height: "1px", backgroundColor: "#E3E6F5", margin: "0 0 1rem 0" }} />
 

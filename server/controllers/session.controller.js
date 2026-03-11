@@ -25,6 +25,12 @@ const sessionLogin = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" }); // Same generic error message
         }
 
+        // Update user status to "Currently Logged In"
+        await DB.collection("users").updateOne(
+            { _id: USER._id },
+            { $set: { status: "Currently Logged In" } }
+        );
+
         // Generate a unique session token
         const session_token = uuidv4();
 
@@ -67,13 +73,21 @@ const sessionLogout = async (req, res) => {
     }
 
     try {
-        // Attempt to delete the session
-        const SESSION = await DB.collection("sessions").findOneAndDelete({ session_token: TOKEN });
+        // Find the session to get the user_id
+        const SESSION = await DB.collection("sessions").findOne({ session_token: TOKEN });
 
-        // Check if the session existed and was deleted
-        if (!SESSION.value) {
+        if (!SESSION) {
             return res.status(404).json({ error: "Invalid or non-existent session token" });
         }
+
+        // Update user status to "Currently Logged Out"
+        await DB.collection("users").updateOne(
+            { _id: new ObjectId(SESSION.user_id) },
+            { $set: { status: "Currently Logged Out" } }
+        );
+
+        // Delete the session
+        await DB.collection("sessions").deleteOne({ session_token: TOKEN });
 
         // Respond with a success message
         return res.status(200).json({ message: "Successfully logged out" });
