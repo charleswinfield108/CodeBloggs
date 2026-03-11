@@ -10,6 +10,8 @@ const Blogs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [likedPosts, setLikedPosts] = useState(new Set());
+  const [commentInputs, setCommentInputs] = useState({});
+  const [creatingComment, setCreatingComment] = useState({});
 
   useEffect(() => {
     const fetchUserPosts = async () => {
@@ -85,6 +87,63 @@ const Blogs = () => {
           post._id === postId ? { ...post, likes: currentLikes } : post
         )
       );
+    }
+  };
+
+  const handleCreateComment = async (postId) => {
+    const content = commentInputs[postId]?.trim();
+    if (!content) {
+      return;
+    }
+
+    setCreatingComment((prev) => ({ ...prev, [postId]: true }));
+
+    try {
+      const response = await fetch("http://localhost:5050/comment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content,
+          user_id: session?.id,
+          post_id: postId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create comment");
+      }
+
+      const result = await response.json();
+
+      // Add the new comment to the post
+      setUserPosts(
+        userPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                comments: [
+                  ...(post.comments || []),
+                  {
+                    _id: result.data._id || new Date().getTime().toString(),
+                    content: result.data.content || content,
+                    user_id: session?.id,
+                    createdAt: new Date().toISOString(),
+                    likes: 0,
+                  },
+                ],
+              }
+            : post
+        )
+      );
+
+      // Clear the input
+      setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
+    } catch (error) {
+      console.error("Error creating comment:", error);
+    } finally {
+      setCreatingComment((prev) => ({ ...prev, [postId]: false }));
     }
   };
 
@@ -321,24 +380,87 @@ const Blogs = () => {
                     </div>
                   )}
 
-                  {(!post.comments || post.comments.length === 0) && (
-                    <div
-                      style={{
-                        borderTop: "1px solid #E3E6F5",
-                        paddingTop: "1rem",
-                      }}
-                    >
+                  {/* Comment Input Section */}
+                  <div
+                    style={{
+                      borderTop: "1px solid #E3E6F5",
+                      paddingTop: "1rem",
+                    }}
+                  >
+                    {(!post.comments || post.comments.length === 0) && (
                       <p
                         style={{
                           color: "#999",
                           fontSize: "0.8rem",
-                          margin: 0,
+                          margin: "0 0 1rem 0",
                         }}
                       >
                         No comments yet
                       </p>
-                    </div>
-                  )}
+                    )}
+                    <textarea
+                      value={commentInputs[post._id] || ""}
+                      onChange={(e) =>
+                        setCommentInputs((prev) => ({
+                          ...prev,
+                          [post._id]: e.target.value,
+                        }))
+                      }
+                      placeholder="Add a comment..."
+                      style={{
+                        width: "100%",
+                        minHeight: "60px",
+                        padding: "0.75rem",
+                        borderRadius: "8px",
+                        border: "1px solid #E3E6F5",
+                        fontSize: "0.85rem",
+                        fontFamily: "inherit",
+                        resize: "none",
+                        marginBottom: "0.75rem",
+                      }}
+                    />
+                    <button
+                      onClick={() => handleCreateComment(post._id)}
+                      disabled={creatingComment[post._id] || !commentInputs[post._id]?.trim()}
+                      style={{
+                        width: "100%",
+                        backgroundColor:
+                          creatingComment[post._id] || !commentInputs[post._id]?.trim()
+                            ? "#CCC"
+                            : "#8D88EA",
+                        color: "#FFFFFF",
+                        border: "none",
+                        borderRadius: "8px",
+                        padding: "0.6rem 1rem",
+                        cursor:
+                          creatingComment[post._id] ||
+                          !commentInputs[post._id]?.trim()
+                            ? "not-allowed"
+                            : "pointer",
+                        transition: "all 0.2s ease",
+                        fontSize: "0.85rem",
+                        fontWeight: "600",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (
+                          !creatingComment[post._id] &&
+                          commentInputs[post._id]?.trim()
+                        ) {
+                          e.currentTarget.style.backgroundColor = "#7A77D8";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (
+                          !creatingComment[post._id] &&
+                          commentInputs[post._id]?.trim()
+                        ) {
+                          e.currentTarget.style.backgroundColor = "#8D88EA";
+                        }
+                      }}
+                    >
+                      {creatingComment[post._id] ? "Posting..." : "Post Comment"}
+                    </button>
+                  </div>
                 </div>
               ))}
           </div>
