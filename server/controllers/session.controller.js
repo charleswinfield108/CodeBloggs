@@ -25,10 +25,10 @@ const sessionLogin = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" }); // Same generic error message
         }
 
-        // Update user to mark them as online
+        // Update user to mark them as online and record heartbeat
         await DB.collection("users").updateOne(
             { _id: USER._id },
-            { $set: { isOnline: true, lastSeen: new Date() } }
+            { $set: { isOnline: true, lastSeen: new Date(), lastHeartbeat: new Date() } }
         );
 
         // Generate a unique session token

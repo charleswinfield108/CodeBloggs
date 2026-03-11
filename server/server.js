@@ -8,7 +8,6 @@ import SESSION from "express-session"
 import COOKIE_PARSER from "cookie-parser"
 
 APP.use(EXPRESS.json());
-APP.use(EXPRESS.urlencoded({ extended: true }));
 APP.use(CORS());
 APP.use(COOKIE_PARSER())
 APP.use(SESSION({

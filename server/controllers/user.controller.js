@@ -180,11 +180,19 @@ const usersGetAll = async (req, res) => {
             return res.status(404).json({ error: "No users found" });
         }
 
-        // Ensure isOnline field exists for all users (default to false if not set)
-        const USERS_WITH_STATUS = USERS.map(user => ({
-            ...user,
-            isOnline: user.isOnline === true
-        }));
+        // Calculate isOnline based on lastSeen timestamp (2 minute timeout)
+        const TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
+        const NOW = Date.now();
+
+        const USERS_WITH_STATUS = USERS.map(user => {
+            const lastSeenTime = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
+            const isOnline = (NOW - lastSeenTime) < TIMEOUT_MS;
+
+            return {
+                ...user,
+                isOnline
+            };
+        });
 
         res.status(200).json({
             status: 'ok',
@@ -323,21 +331,14 @@ const usersGetInfo = async (req, res) => {
 const userUpdateStatus = async (req, res) => {
     try {
         const userId = req.params.id;
-        let { isOnline } = req.body;
+        const { isOnline } = req.body;
 
         if (!ObjectId.isValid(userId)) {
             return res.status(400).json({ error: "Invalid user ID" });
         }
 
-        // Handle string values from form data (sendBeacon sends as URLSearchParams)
-        if (typeof isOnline === 'string') {
-            isOnline = isOnline.toLowerCase() === 'true';
-        } else {
-            isOnline = Boolean(isOnline);
-        }
-
         const updateData = {
-            isOnline,
+            isOnline: Boolean(isOnline),
             lastSeen: new Date(),
             updatedAt: new Date()
         };

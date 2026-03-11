@@ -48,26 +48,6 @@ export const SessionProvider = ({ children }) => {
     localStorage.removeItem("session");
   };
 
-  // Handle going offline when page closes
-  useEffect(() => {
-    const handlePageClose = () => {
-      // Tell server user is offline without destroying session
-      if (session?.id) {
-        // Use URLSearchParams for proper form encoding that sendBeacon can send
-        const params = new URLSearchParams();
-        params.append('isOnline', 'false');
-        
-        navigator.sendBeacon(
-          `http://localhost:5050/user/${encodeURIComponent(session.id)}/status`,
-          params
-        );
-      }
-    };
-
-    window.addEventListener("beforeunload", handlePageClose);
-    return () => window.removeEventListener("beforeunload", handlePageClose);
-  }, [session]);
-
   return (
     <SessionContext.Provider value={{ session, loading, isOnline, login, logout }}>
       {children}
