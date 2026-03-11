@@ -237,6 +237,55 @@ const Home = () => {
                         <span>{post.likes}</span>
                       </button>
                     </div>
+
+                    {post.comments && post.comments.length > 0 && (
+                      <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #E3E6F5" }}>
+                        <p style={{ color: "#666", fontSize: "0.875rem", fontWeight: "600", marginBottom: "1rem", margin: "0 0 1rem 0" }}>
+                          Comments ({post.comments.length})
+                        </p>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                          {post.comments.map((comment) => (
+                            <div
+                              key={comment._id}
+                              style={{
+                                backgroundColor: "#F9F9FB",
+                                padding: "0.75rem",
+                                borderRadius: "6px",
+                                borderLeft: "3px solid #8D88EA",
+                              }}
+                            >
+                              <p style={{ color: "#1F2340", fontSize: "0.875rem", margin: "0 0 0.25rem 0", lineHeight: "1.5" }}>
+                                {comment.content}
+                              </p>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                <p style={{ color: "#999", fontSize: "0.75rem", margin: 0 }}>
+                                  {new Date(comment.createdAt).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </p>
+                                {comment.likes > 0 && (
+                                  <span style={{ color: "#8D88EA", fontSize: "0.75rem", fontWeight: "500" }}>
+                                    {comment.likes} {comment.likes === 1 ? "like" : "likes"}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {(!post.comments || post.comments.length === 0) && (
+                      <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #E3E6F5" }}>
+                        <p style={{ color: "#999", fontSize: "0.875rem", margin: 0 }}>
+                          No comments yet. Be the first to comment!
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ))}
             </div>
