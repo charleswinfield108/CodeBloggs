@@ -1,6 +1,7 @@
 import React from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
+import AvatarInitials from "../components/AvatarInitials";
 
 const Home = () => {
   const { session } = useSession();
@@ -20,11 +21,21 @@ const Home = () => {
           padding: "2rem", 
           borderRadius: "8px", 
           borderLeft: "4px solid #8D88EA",
-          marginBottom: "2rem"
+          marginBottom: "2rem",
+          display: "flex",
+          gap: "2rem",
+          alignItems: "flex-start"
         }}>
-          <h2 style={{ color: "#8D88EA", marginTop: 0 }}>User Profile</h2>
-          <p><strong>Name:</strong> {session?.first_name} {session?.last_name}</p>
-          <p><strong>Auth Level:</strong> {session?.auth_level}</p>
+          <AvatarInitials 
+            firstName={session?.first_name} 
+            lastName={session?.last_name} 
+            size={100}
+          />
+          <div style={{ flex: 1 }}>
+            <h2 style={{ color: "#8D88EA", marginTop: 0 }}>User Profile</h2>
+            <p><strong>Name:</strong> {session?.first_name} {session?.last_name}</p>
+            <p><strong>Auth Level:</strong> {session?.auth_level}</p>
+          </div>
         </div>
 
         <div style={{ backgroundColor: "#F6F7FF", padding: "2rem", borderRadius: "8px" }}>
