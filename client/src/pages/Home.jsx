@@ -114,27 +114,28 @@ const Home = () => {
 
   return (
     <Layout>
-      <div style={{ display: "flex", gap: "2rem" }}>
+      <div style={{ display: "flex", gap: "1.5rem", height: "100%", overflow: "hidden" }}>
         {/* Left Column */}
-        <div style={{ flex: "0 0 280px", display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div style={{ flex: "0 0 240px", display: "flex", flexDirection: "column", gap: "0.75rem", overflowY: "auto" }}>
           {/* Avatar Section */}
           <div
             style={{
               backgroundColor: "#F6F7FF",
-              padding: "2rem",
+              padding: "1rem",
               borderRadius: "8px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "1rem",
+              gap: "0.75rem",
+              flexShrink: 0,
             }}
           >
             <AvatarInitials
               firstName={session?.first_name}
               lastName={session?.last_name}
-              size={100}
+              size={80}
             />
-            <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: 0, textAlign: "center" }}>
+            <h2 style={{ color: "#1F2340", fontSize: "1rem", margin: 0, textAlign: "center" }}>
               {session?.first_name} {session?.last_name}
             </h2>
           </div>
@@ -145,20 +146,21 @@ const Home = () => {
               backgroundColor: "#FFFFFF",
               border: "1px solid #E3E6F5",
               borderRadius: "8px",
-              padding: "1.5rem",
+              padding: "1rem",
+              flexShrink: 0,
             }}
           >
-            <h3 style={{ color: "#8D88EA", fontSize: "1rem", margin: "0 0 1rem 0", fontWeight: "600" }}>
+            <h3 style={{ color: "#8D88EA", fontSize: "0.875rem", margin: "0 0 0.75rem 0", fontWeight: "600" }}>
               Status
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ color: "#666", fontSize: "0.875rem" }}>Posts Created</span>
+                <span style={{ color: "#666", fontSize: "0.75rem" }}>Posts Created</span>
                 <span
                   style={{
                     color: "#8D88EA",
                     fontWeight: "bold",
-                    fontSize: "1.25rem",
+                    fontSize: "1rem",
                   }}
                 >
                   {loading ? "..." : userPostCount}
@@ -171,8 +173,8 @@ const Home = () => {
                 }}
               />
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ color: "#666", fontSize: "0.875rem" }}>Last Post</span>
-                <span style={{ color: "#8D88EA", fontSize: "0.75rem" }}>
+                <span style={{ color: "#666", fontSize: "0.75rem" }}>Last Post</span>
+                <span style={{ color: "#8D88EA", fontSize: "0.7rem" }}>
                   {loading ? "Loading..." : lastPostDate ? lastPostDate.toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "N/A"}
                 </span>
               </div>
@@ -185,18 +187,19 @@ const Home = () => {
               backgroundColor: "#FFFFFF",
               border: "1px solid #E3E6F5",
               borderRadius: "8px",
-              padding: "1.5rem",
+              padding: "1rem",
+              flexShrink: 0,
             }}
           >
-            <h3 style={{ color: "#8D88EA", fontSize: "1rem", margin: "0 0 1rem 0", fontWeight: "600" }}>
+            <h3 style={{ color: "#8D88EA", fontSize: "0.875rem", margin: "0 0 0.75rem 0", fontWeight: "600" }}>
               Information
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               <div>
-                <p style={{ color: "#999", fontSize: "0.75rem", margin: "0 0 0.25rem 0" }}>
+                <p style={{ color: "#999", fontSize: "0.65rem", margin: "0 0 0.25rem 0" }}>
                   NAME
                 </p>
-                <p style={{ color: "#1F2340", fontSize: "0.875rem", margin: 0, fontWeight: "500" }}>
+                <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
                   {session?.first_name} {session?.last_name}
                 </p>
               </div>
@@ -207,10 +210,10 @@ const Home = () => {
                 }}
               />
               <div>
-                <p style={{ color: "#999", fontSize: "0.75rem", margin: "0 0 0.25rem 0" }}>
+                <p style={{ color: "#999", fontSize: "0.65rem", margin: "0 0 0.25rem 0" }}>
                   AUTH LEVEL
                 </p>
-                <p style={{ color: "#1F2340", fontSize: "0.875rem", margin: 0, fontWeight: "500" }}>
+                <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
                   {session?.auth_level === "admin" ? "Administrator" : "User"}
                 </p>
               </div>
@@ -219,8 +222,8 @@ const Home = () => {
         </div>
 
         {/* Right Column - Posts List with Scrollbar */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
-          <h2 style={{ color: "#1F2340", fontSize: "1.5rem", margin: "0 0 1rem 0" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
+          <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
             Your Recent Posts
           </h2>
 
@@ -231,7 +234,8 @@ const Home = () => {
                 minHeight: 0,
                 display: "flex",
                 flexDirection: "column",
-                gap: "1rem",
+                gap: "0.75rem",
+                overflowY: "auto",
               }}
             >
               {userPosts
@@ -243,7 +247,7 @@ const Home = () => {
                       backgroundColor: "#FFFFFF",
                       border: "1px solid #E3E6F5",
                       borderRadius: "8px",
-                      padding: "1.5rem",
+                      padding: "1rem",
                       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
                       transition: "all 0.2s ease",
                     }}
@@ -259,14 +263,14 @@ const Home = () => {
                     <p
                       style={{
                         color: "#1F2340",
-                        fontSize: "1rem",
+                        fontSize: "0.875rem",
                         margin: "0 0 0.5rem 0",
-                        lineHeight: "1.6",
+                        lineHeight: "1.5",
                       }}
                     >
                       {post.content}
                     </p>
-                    <p style={{ color: "#999", fontSize: "0.875rem", margin: "0 0 1rem 0" }}>
+                    <p style={{ color: "#999", fontSize: "0.75rem", margin: "0 0 0.75rem 0" }}>
                       {new Date(post.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -275,23 +279,23 @@ const Home = () => {
                         minute: "2-digit",
                       })}
                     </p>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                       <button
                         onClick={() => handleLikePost(post._id, post.likes)}
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          gap: "0.5rem",
+                          gap: "0.4rem",
                           backgroundColor: likedPosts.has(post._id)
                             ? "#8D88EA"
                             : "#F0F0F5",
                           color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
                           border: "none",
                           borderRadius: "6px",
-                          padding: "0.5rem 1rem",
+                          padding: "0.4rem 0.8rem",
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                          fontSize: "0.875rem",
+                          fontSize: "0.75rem",
                           fontWeight: "500",
                         }}
                         onMouseEnter={(e) => {
@@ -305,7 +309,7 @@ const Home = () => {
                           }
                         }}
                       >
-                        <FiThumbsUp size={16} />
+                        <FiThumbsUp size={14} />
                         <span>{post.likes}</span>
                       </button>
                     </div>
@@ -313,17 +317,17 @@ const Home = () => {
                     {post.comments && post.comments.length > 0 && (
                       <div
                         style={{
-                          marginTop: "1.5rem",
-                          paddingTop: "1.5rem",
+                          marginTop: "0.75rem",
+                          paddingTop: "0.75rem",
                           borderTop: "1px solid #E3E6F5",
                         }}
                       >
                         <p
                           style={{
                             color: "#666",
-                            fontSize: "0.875rem",
+                            fontSize: "0.75rem",
                             fontWeight: "600",
-                            margin: "0 0 1rem 0",
+                            margin: "0 0 0.5rem 0",
                           }}
                         >
                           Comments ({post.comments.length})
@@ -332,7 +336,7 @@ const Home = () => {
                           style={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: "0.75rem",
+                            gap: "0.5rem",
                           }}
                         >
                           {post.comments.map((comment) => (
@@ -340,7 +344,7 @@ const Home = () => {
                               key={comment._id}
                               style={{
                                 backgroundColor: "#F9F9FB",
-                                padding: "0.75rem",
+                                padding: "0.5rem",
                                 borderRadius: "6px",
                                 borderLeft: "3px solid #8D88EA",
                               }}
@@ -348,9 +352,9 @@ const Home = () => {
                               <p
                                 style={{
                                   color: "#1F2340",
-                                  fontSize: "0.875rem",
+                                  fontSize: "0.75rem",
                                   margin: "0 0 0.25rem 0",
-                                  lineHeight: "1.5",
+                                  lineHeight: "1.4",
                                 }}
                               >
                                 {comment.content}
@@ -365,14 +369,13 @@ const Home = () => {
                                 <p
                                   style={{
                                     color: "#999",
-                                    fontSize: "0.75rem",
+                                    fontSize: "0.65rem",
                                     margin: 0,
                                   }}
                                 >
                                   {new Date(comment.createdAt).toLocaleDateString(
                                     "en-US",
                                     {
-                                      year: "numeric",
                                       month: "short",
                                       day: "numeric",
                                       hour: "2-digit",
@@ -384,7 +387,7 @@ const Home = () => {
                                   <span
                                     style={{
                                       color: "#8D88EA",
-                                      fontSize: "0.75rem",
+                                      fontSize: "0.65rem",
                                       fontWeight: "500",
                                     }}
                                   >
@@ -402,19 +405,19 @@ const Home = () => {
                     {(!post.comments || post.comments.length === 0) && (
                       <div
                         style={{
-                          marginTop: "1.5rem",
-                          paddingTop: "1.5rem",
+                          marginTop: "0.75rem",
+                          paddingTop: "0.75rem",
                           borderTop: "1px solid #E3E6F5",
                         }}
                       >
                         <p
                           style={{
                             color: "#999",
-                            fontSize: "0.875rem",
+                            fontSize: "0.75rem",
                             margin: 0,
                           }}
                         >
-                          No comments yet. Be the first to comment!
+                          No comments yet
                         </p>
                       </div>
                     )}
@@ -430,16 +433,15 @@ const Home = () => {
                 backgroundColor: "#F6F7FF",
                 border: "2px dashed #8D88EA",
                 borderRadius: "8px",
-                padding: "2rem",
+                padding: "1rem",
                 textAlign: "center",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <p style={{ color: "#8D88EA", fontSize: "1rem", margin: 0 }}>
-                You haven't created any posts yet. Click the "Post" button in the
-                header to share your first post!
+              <p style={{ color: "#8D88EA", fontSize: "0.875rem", margin: 0 }}>
+                No posts yet. Click "Post" to create one!
               </p>
             </div>
           )}
@@ -453,7 +455,7 @@ const Home = () => {
                 justifyContent: "center",
               }}
             >
-              <p style={{ color: "#8D88EA", fontSize: "1rem" }}>Loading posts...</p>
+              <p style={{ color: "#8D88EA", fontSize: "0.875rem" }}>Loading posts...</p>
             </div>
           )}
         </div>
