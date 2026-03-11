@@ -229,9 +229,6 @@ const Home = () => {
               style={{
                 flex: 1,
                 minHeight: 0,
-                overflowY: "auto",
-                overflowX: "hidden",
-                paddingRight: "0.75rem",
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
