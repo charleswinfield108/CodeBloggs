@@ -69,7 +69,7 @@ const Home = () => {
   useEffect(() => {
     // Register callback to refetch posts when a new post is created
     registerPostCreatedCallback(fetchUserPostData);
-  }, [registerPostCreatedCallback]);
+  }, []);
 
   const formatDate = (date) => {
     if (!date) return "No posts yet";

@@ -1,10 +1,10 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useRef } from "react";
 
 export const PostModalContext = createContext();
 
 export const PostModalProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [onPostCreated, setOnPostCreated] = useState(null);
+  const onPostCreatedRef = useRef(null);
 
   const openModal = () => {
     setIsOpen(true);
@@ -15,12 +15,12 @@ export const PostModalProvider = ({ children }) => {
   };
 
   const registerPostCreatedCallback = (callback) => {
-    setOnPostCreated(() => callback);
+    onPostCreatedRef.current = callback;
   };
 
   const triggerPostCreated = () => {
-    if (onPostCreated) {
-      onPostCreated();
+    if (onPostCreatedRef.current) {
+      onPostCreatedRef.current();
     }
   };
 
