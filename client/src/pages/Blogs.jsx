@@ -203,7 +203,7 @@ const Blogs = () => {
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
                     transition: "all 0.3s ease",
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: "row",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";
@@ -214,108 +214,107 @@ const Blogs = () => {
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
-                  {/* Author Section */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
+                  {/* Left Side - Author Info (20%) */}
+                  <div style={{ width: "20%", paddingRight: "1.5rem", borderRight: "1px solid #E3E6F5", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
                     {author && (
                       <>
                         <AvatarInitials
                           firstName={author.first_name}
                           lastName={author.last_name}
-                          size={48}
+                          size={60}
                         />
-                        <div>
-                          <p style={{ color: "#1F2340", fontSize: "0.95rem", margin: 0, fontWeight: "600" }}>
-                            {author.first_name} {author.last_name}
-                          </p>
-                          <p style={{ color: "#999", fontSize: "0.8rem", margin: "0.25rem 0 0 0" }}>
-                            {new Date(post.createdAt).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </p>
-                        </div>
+                        <p style={{ color: "#1F2340", fontSize: "0.9rem", margin: "0.75rem 0 0 0", fontWeight: "600" }}>
+                          {author.first_name} {author.last_name}
+                        </p>
+                        <p style={{ color: "#999", fontSize: "0.75rem", margin: "0.5rem 0 0 0" }}>
+                          {new Date(post.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </p>
                       </>
                     )}
                   </div>
 
-                  {/* Divider */}
-                  <div style={{ height: "1px", backgroundColor: "#E3E6F5", marginBottom: "1.5rem" }} />
-
-                  {/* Post Content */}
-                  <p
-                    style={{
-                      color: "#1F2340",
-                      fontSize: "1rem",
-                      margin: "0 0 1.5rem 0",
-                      lineHeight: "1.6",
-                    }}
-                  >
-                    {post.content}
-                  </p>
-
-                  {/* Like and Comment Buttons */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                    <button
-                      onClick={() => handleLikePost(post._id, post.likes)}
+                  {/* Right Side - Post Content (80%) */}
+                  <div style={{ width: "80%", paddingLeft: "1.5rem", display: "flex", flexDirection: "column" }}>
+                    {/* Post Content */}
+                    <p
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        backgroundColor: likedPosts.has(post._id)
-                          ? "#8D88EA"
-                          : "#F0F0F5",
-                        color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
-                        border: "none",
-                        borderRadius: "8px",
-                        padding: "0.6rem 1rem",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                        fontSize: "0.85rem",
-                        fontWeight: "600",
+                        color: "#1F2340",
+                        fontSize: "1rem",
+                        margin: "0 0 1.5rem 0",
+                        lineHeight: "1.6",
                       }}
-                      onMouseEnter={(e) => {
-                        if (!likedPosts.has(post._id)) {
+                    >
+                      {post.content}
+                    </p>
+
+                    {/* Like and Comment Buttons */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "auto" }}>
+                      <button
+                        onClick={() => handleLikePost(post._id, post.likes)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          backgroundColor: likedPosts.has(post._id)
+                            ? "#8D88EA"
+                            : "#F0F0F5",
+                          color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "0.6rem 1rem",
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontSize: "0.85rem",
+                          fontWeight: "600",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!likedPosts.has(post._id)) {
+                            e.currentTarget.style.backgroundColor = "#E3E6F5";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!likedPosts.has(post._id)) {
+                            e.currentTarget.style.backgroundColor = "#F0F0F5";
+                          }
+                        }}
+                      >
+                        <FiThumbsUp size={16} />
+                        <span>{post.likes} {post.likes === 1 ? "like" : "likes"}</span>
+                      </button>
+
+                      <button
+                        onClick={() => setOpenCommentModal(post._id)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          backgroundColor: "#F0F0F5",
+                          color: "#666",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "0.6rem 1rem",
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontSize: "0.85rem",
+                          fontWeight: "600",
+                        }}
+                        onMouseEnter={(e) => {
                           e.currentTarget.style.backgroundColor = "#E3E6F5";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!likedPosts.has(post._id)) {
+                        }}
+                        onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = "#F0F0F5";
-                        }
-                      }}
-                    >
-                      <FiThumbsUp size={16} />
-                      <span>{post.likes} {post.likes === 1 ? "like" : "likes"}</span>
-                    </button>
-
-                    <button
-                      onClick={() => setOpenCommentModal(post._id)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        backgroundColor: "#F0F0F5",
-                        color: "#666",
-                        border: "none",
-                        borderRadius: "8px",
-                        padding: "0.6rem 1rem",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                        fontSize: "0.85rem",
-                        fontWeight: "600",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#E3E6F5";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "#F0F0F5";
-                      }}
-                    >
-                      <FiMessageCircle size={16} />
-                      <span>{post.comments?.length || 0} {post.comments?.length === 1 ? "comment" : "comments"}</span>
-                    </button>
+                        }}
+                      >
+                        <FiMessageCircle size={16} />
+                        <span>{post.comments?.length || 0} {post.comments?.length === 1 ? "comment" : "comments"}</span>
+                      </button>
+                    </div>
                   </div>
+                </div>
 
 
                 </div>
