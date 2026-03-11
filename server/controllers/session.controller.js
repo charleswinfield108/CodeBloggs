@@ -25,10 +25,10 @@ const sessionLogin = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" }); // Same generic error message
         }
 
-        // Update user status to "Currently Logged In"
+        // Update user to mark them as online and record heartbeat
         await DB.collection("users").updateOne(
             { _id: USER._id },
-            { $set: { status: "Currently Logged In" } }
+            { $set: { isOnline: true, lastSeen: new Date(), lastHeartbeat: new Date() } }
         );
 
         // Generate a unique session token
@@ -36,6 +36,15 @@ const sessionLogin = async (req, res) => {
 
         // Ensure the sessions collection has an expiration index
         const SESSIONS_COLLECTION = DB.collection("sessions");
+        
+        // Drop the old index if it exists with different TTL
+        try {
+          await SESSIONS_COLLECTION.dropIndex("session_date_1");
+        } catch (err) {
+          // Index doesn't exist yet, which is fine
+        }
+        
+        // Create the TTL index (24 hours)
         await SESSIONS_COLLECTION.createIndex({ "session_date": 1 }, { expireAfterSeconds: 86400 });
 
         // Create a new session object
@@ -49,14 +58,14 @@ const sessionLogin = async (req, res) => {
         await SESSIONS_COLLECTION.insertOne(NEW_SESSION);
 
         // Respond with user details and session token
-        const { _id, first_name, last_name, auth_level, status } = USER;
+        const { _id, first_name, last_name, auth_level } = USER;
         return res.status(200).json({
             session_token,
             id: _id.toString(),
             first_name,
             last_name,
             auth_level,
-            status: "Currently Logged In"
+            isOnline: true  // User is online after login
         });
     } catch (error) {
         console.error("Error during login:", error);
@@ -81,10 +90,10 @@ const sessionLogout = async (req, res) => {
             return res.status(404).json({ error: "Invalid or non-existent session token" });
         }
 
-        // Update user status to "Currently Logged Out"
+        // Mark user as offline
         await DB.collection("users").updateOne(
             { _id: new ObjectId(SESSION.user_id) },
-            { $set: { status: "Currently Logged Out" } }
+            { $set: { isOnline: false, lastSeen: new Date() } }
         );
 
         // Delete the session

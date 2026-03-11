@@ -51,6 +51,14 @@ const USER_SCHEMA = new MONGOOSE.Schema({
             message: '{VALUE} is not supported'
         },
     },
+    isOnline: {
+        type: Boolean,
+        default: false
+    },
+    lastSeen: {
+        type: Date,
+        default: Date.now
+    },
     createdAt: {
         type: Date,
         default: Date.now
