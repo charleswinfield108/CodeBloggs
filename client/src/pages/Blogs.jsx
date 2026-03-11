@@ -327,7 +327,7 @@ const Blogs = () => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        zIndex: 1000,
+                        zIndex: 2000,
                       }}
                       onClick={() => setOpenCommentModal(null)}
                     >
@@ -341,6 +341,7 @@ const Blogs = () => {
                           maxHeight: "80vh",
                           display: "flex",
                           flexDirection: "column",
+                          zIndex: 2001,
                         }}
                         onClick={(e) => e.stopPropagation()}
                       >
