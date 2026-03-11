@@ -180,9 +180,15 @@ const usersGetAll = async (req, res) => {
             return res.status(404).json({ error: "No users found" });
         }
 
+        // Ensure isOnline field exists for all users (default to false if not set)
+        const USERS_WITH_STATUS = USERS.map(user => ({
+            ...user,
+            isOnline: user.isOnline === true
+        }));
+
         res.status(200).json({
             status: 'ok',
-            data: USERS,
+            data: USERS_WITH_STATUS,
             message: 'Users retrieved successfully'
         });
     } catch (error) {

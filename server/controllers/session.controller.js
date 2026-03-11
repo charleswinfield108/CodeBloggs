@@ -64,7 +64,8 @@ const sessionLogin = async (req, res) => {
             id: _id.toString(),
             first_name,
             last_name,
-            auth_level
+            auth_level,
+            isOnline: true  // User is online after login
         });
     } catch (error) {
         console.error("Error during login:", error);
