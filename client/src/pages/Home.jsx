@@ -114,63 +114,128 @@ const Home = () => {
 
   return (
     <Layout>
-      <div>
-        <h1 style={{ color: "#1F2340", fontSize: "2rem", marginBottom: "1rem" }}>
-          Welcome, {session?.first_name}!
-        </h1>
-        <p style={{ color: "#666", fontSize: "1rem", marginBottom: "2rem" }}>
-          Welcome to CodeBloggs. This is your home page where you can see your posts and activity.
-        </p>
-        
-        <div style={{ 
-          backgroundColor: "#F6F7FF", 
-          padding: "2rem", 
-          borderRadius: "8px", 
-          borderLeft: "4px solid #8D88EA",
-          marginBottom: "2rem",
-          display: "flex",
-          gap: "2rem",
-          alignItems: "flex-start"
-        }}>
-          <AvatarInitials 
-            firstName={session?.first_name} 
-            lastName={session?.last_name} 
-            size={100}
-          />
-          <div style={{ flex: 1 }}>
-            <h2 style={{ color: "#8D88EA", marginTop: 0 }}>User Profile</h2>
-            <p><strong>Name:</strong> {session?.first_name} {session?.last_name}</p>
-            <p><strong>Auth Level:</strong> {session?.auth_level}</p>
-          </div>
-        </div>
-
-        <div style={{ backgroundColor: "#F6F7FF", padding: "2rem", borderRadius: "8px" }}>
-          <h2 style={{ color: "#8D88EA", marginTop: 0 }}>Your Posts</h2>
-          <p style={{ fontSize: "2rem", color: "#8D88EA", fontWeight: "bold", margin: "0.5rem 0" }}>
-            {loading ? "Loading..." : userPostCount}
-          </p>
-          <p style={{ color: "#666" }}>
-            {loading 
-              ? "Fetching your post count..." 
-              : `You have created ${userPostCount} ${userPostCount === 1 ? "post" : "posts"}.`}
-          </p>
-
-          <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #E3E6F5" }}>
-            <p style={{ color: "#666", marginBottom: "0.5rem" }}>
-              <strong>Last Post:</strong>
-            </p>
-            <p style={{ color: "#8D88EA", fontSize: "1rem" }}>
-              {loading ? "Loading..." : formatDate(lastPostDate)}
-            </p>
-          </div>
-        </div>
-
-        {!loading && userPosts.length > 0 && (
-          <div style={{ marginTop: "2rem" }}>
-            <h2 style={{ color: "#1F2340", fontSize: "1.5rem", marginBottom: "1rem" }}>
-              Your Recent Posts
+      <div style={{ display: "flex", gap: "2rem", height: "calc(100vh - 180px)" }}>
+        {/* Left Column */}
+        <div style={{ flex: "0 0 280px", display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {/* Avatar Section */}
+          <div
+            style={{
+              backgroundColor: "#F6F7FF",
+              padding: "2rem",
+              borderRadius: "8px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <AvatarInitials
+              firstName={session?.first_name}
+              lastName={session?.last_name}
+              size={120}
+            />
+            <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: 0, textAlign: "center" }}>
+              {session?.first_name} {session?.last_name}
             </h2>
+          </div>
+
+          {/* User Status Section */}
+          <div
+            style={{
+              backgroundColor: "#FFFFFF",
+              border: "1px solid #E3E6F5",
+              borderRadius: "8px",
+              padding: "1.5rem",
+            }}
+          >
+            <h3 style={{ color: "#8D88EA", fontSize: "1rem", margin: "0 0 1rem 0", fontWeight: "600" }}>
+              Status
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ color: "#666", fontSize: "0.875rem" }}>Posts Created</span>
+                <span
+                  style={{
+                    color: "#8D88EA",
+                    fontWeight: "bold",
+                    fontSize: "1.25rem",
+                  }}
+                >
+                  {loading ? "..." : userPostCount}
+                </span>
+              </div>
+              <div
+                style={{
+                  height: "1px",
+                  backgroundColor: "#E3E6F5",
+                }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ color: "#666", fontSize: "0.875rem" }}>Last Post</span>
+                <span style={{ color: "#8D88EA", fontSize: "0.75rem" }}>
+                  {loading ? "Loading..." : lastPostDate ? lastPostDate.toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "N/A"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* User Information Section */}
+          <div
+            style={{
+              backgroundColor: "#FFFFFF",
+              border: "1px solid #E3E6F5",
+              borderRadius: "8px",
+              padding: "1.5rem",
+            }}
+          >
+            <h3 style={{ color: "#8D88EA", fontSize: "1rem", margin: "0 0 1rem 0", fontWeight: "600" }}>
+              Information
+            </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div>
+                <p style={{ color: "#999", fontSize: "0.75rem", margin: "0 0 0.25rem 0" }}>
+                  NAME
+                </p>
+                <p style={{ color: "#1F2340", fontSize: "0.875rem", margin: 0, fontWeight: "500" }}>
+                  {session?.first_name} {session?.last_name}
+                </p>
+              </div>
+              <div
+                style={{
+                  height: "1px",
+                  backgroundColor: "#E3E6F5",
+                }}
+              />
+              <div>
+                <p style={{ color: "#999", fontSize: "0.75rem", margin: "0 0 0.25rem 0" }}>
+                  AUTH LEVEL
+                </p>
+                <p style={{ color: "#1F2340", fontSize: "0.875rem", margin: 0, fontWeight: "500" }}>
+                  {session?.auth_level === "admin" ? "Administrator" : "User"}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Posts List with Scrollbar */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <h2 style={{ color: "#1F2340", fontSize: "1.5rem", margin: "0 0 1rem 0" }}>
+            Your Recent Posts
+          </h2>
+
+          {!loading && userPosts.length > 0 && (
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                overflowX: "hidden",
+                paddingRight: "0.5rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+              }}
+            >
               {userPosts
                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 .map((post) => (
@@ -193,7 +258,14 @@ const Home = () => {
                       e.currentTarget.style.transform = "translateY(0)";
                     }}
                   >
-                    <p style={{ color: "#1F2340", fontSize: "1rem", margin: "0 0 0.5rem 0", lineHeight: "1.6" }}>
+                    <p
+                      style={{
+                        color: "#1F2340",
+                        fontSize: "1rem",
+                        margin: "0 0 0.5rem 0",
+                        lineHeight: "1.6",
+                      }}
+                    >
                       {post.content}
                     </p>
                     <p style={{ color: "#999", fontSize: "0.875rem", margin: "0 0 1rem 0" }}>
@@ -212,7 +284,9 @@ const Home = () => {
                           display: "flex",
                           alignItems: "center",
                           gap: "0.5rem",
-                          backgroundColor: likedPosts.has(post._id) ? "#8D88EA" : "#F0F0F5",
+                          backgroundColor: likedPosts.has(post._id)
+                            ? "#8D88EA"
+                            : "#F0F0F5",
                           color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
                           border: "none",
                           borderRadius: "6px",
@@ -239,11 +313,30 @@ const Home = () => {
                     </div>
 
                     {post.comments && post.comments.length > 0 && (
-                      <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #E3E6F5" }}>
-                        <p style={{ color: "#666", fontSize: "0.875rem", fontWeight: "600", marginBottom: "1rem", margin: "0 0 1rem 0" }}>
+                      <div
+                        style={{
+                          marginTop: "1.5rem",
+                          paddingTop: "1.5rem",
+                          borderTop: "1px solid #E3E6F5",
+                        }}
+                      >
+                        <p
+                          style={{
+                            color: "#666",
+                            fontSize: "0.875rem",
+                            fontWeight: "600",
+                            margin: "0 0 1rem 0",
+                          }}
+                        >
                           Comments ({post.comments.length})
                         </p>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "0.75rem",
+                          }}
+                        >
                           {post.comments.map((comment) => (
                             <div
                               key={comment._id}
@@ -254,22 +347,51 @@ const Home = () => {
                                 borderLeft: "3px solid #8D88EA",
                               }}
                             >
-                              <p style={{ color: "#1F2340", fontSize: "0.875rem", margin: "0 0 0.25rem 0", lineHeight: "1.5" }}>
+                              <p
+                                style={{
+                                  color: "#1F2340",
+                                  fontSize: "0.875rem",
+                                  margin: "0 0 0.25rem 0",
+                                  lineHeight: "1.5",
+                                }}
+                              >
                                 {comment.content}
                               </p>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                <p style={{ color: "#999", fontSize: "0.75rem", margin: 0 }}>
-                                  {new Date(comment.createdAt).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <p
+                                  style={{
+                                    color: "#999",
+                                    fontSize: "0.75rem",
+                                    margin: 0,
+                                  }}
+                                >
+                                  {new Date(comment.createdAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    }
+                                  )}
                                 </p>
                                 {comment.likes > 0 && (
-                                  <span style={{ color: "#8D88EA", fontSize: "0.75rem", fontWeight: "500" }}>
-                                    {comment.likes} {comment.likes === 1 ? "like" : "likes"}
+                                  <span
+                                    style={{
+                                      color: "#8D88EA",
+                                      fontSize: "0.75rem",
+                                      fontWeight: "500",
+                                    }}
+                                  >
+                                    {comment.likes}{" "}
+                                    {comment.likes === 1 ? "like" : "likes"}
                                   </span>
                                 )}
                               </div>
@@ -280,8 +402,20 @@ const Home = () => {
                     )}
 
                     {(!post.comments || post.comments.length === 0) && (
-                      <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #E3E6F5" }}>
-                        <p style={{ color: "#999", fontSize: "0.875rem", margin: 0 }}>
+                      <div
+                        style={{
+                          marginTop: "1.5rem",
+                          paddingTop: "1.5rem",
+                          borderTop: "1px solid #E3E6F5",
+                        }}
+                      >
+                        <p
+                          style={{
+                            color: "#999",
+                            fontSize: "0.875rem",
+                            margin: 0,
+                          }}
+                        >
                           No comments yet. Be the first to comment!
                         </p>
                       </div>
@@ -289,27 +423,42 @@ const Home = () => {
                   </div>
                 ))}
             </div>
-          </div>
-        )}
+          )}
 
-        {!loading && userPosts.length === 0 && (
-          <div
-            style={{
-              marginTop: "2rem",
-              backgroundColor: "#F6F7FF",
-              border: "2px dashed #8D88EA",
-              borderRadius: "8px",
-              padding: "2rem",
-              textAlign: "center",
-            }}
-          >
-            <p style={{ color: "#8D88EA", fontSize: "1rem", margin: 0 }}>
-              You haven't created any posts yet. Click the "Post" button in the header to share your first post!
-            </p>
-          </div>
-        )}
-      </div>
-    </Layout>
+          {!loading && userPosts.length === 0 && (
+            <div
+              style={{
+                flex: 1,
+                backgroundColor: "#F6F7FF",
+                border: "2px dashed #8D88EA",
+                borderRadius: "8px",
+                padding: "2rem",
+                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <p style={{ color: "#8D88EA", fontSize: "1rem", margin: 0 }}>
+                You haven't created any posts yet. Click the "Post" button in the
+                header to share your first post!
+              </p>
+            </div>
+          )}
+
+          {loading && (
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <p style={{ color: "#8D88EA", fontSize: "1rem" }}>Loading posts...</p>
+            </div>
+          )}
+        </div>
   );
 };
 
