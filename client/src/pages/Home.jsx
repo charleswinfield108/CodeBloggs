@@ -6,6 +6,7 @@ import AvatarInitials from "../components/AvatarInitials";
 const Home = () => {
   const { session } = useSession();
   const [userPostCount, setUserPostCount] = useState(0);
+  const [userPosts, setUserPosts] = useState([]);
   const [lastPostDate, setLastPostDate] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,14 +23,15 @@ const Home = () => {
 
         if (data.status === "ok" && Array.isArray(data.data)) {
           // Filter posts that belong to the logged-in user
-          const userPosts = data.data.filter(
+          const filteredPosts = data.data.filter(
             (post) => post.user_id === session.id
           );
-          setUserPostCount(userPosts.length);
+          setUserPosts(filteredPosts);
+          setUserPostCount(filteredPosts.length);
 
           // Find the most recent post
-          if (userPosts.length > 0) {
-            const mostRecent = userPosts.reduce((latest, post) => {
+          if (filteredPosts.length > 0) {
+            const mostRecent = filteredPosts.reduce((latest, post) => {
               const postDate = new Date(post.createdAt);
               const latestDate = new Date(latest.createdAt);
               return postDate > latestDate ? post : latest;
@@ -112,6 +114,69 @@ const Home = () => {
             </p>
           </div>
         </div>
+
+        {!loading && userPosts.length > 0 && (
+          <div style={{ marginTop: "2rem" }}>
+            <h2 style={{ color: "#1F2340", fontSize: "1.5rem", marginBottom: "1rem" }}>
+              Your Recent Posts
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              {userPosts
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map((post) => (
+                  <div
+                    key={post._id}
+                    style={{
+                      backgroundColor: "#FFFFFF",
+                      border: "1px solid #E3E6F5",
+                      borderRadius: "8px",
+                      padding: "1.5rem",
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.1)";
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.05)";
+                      e.currentTarget.style.transform = "translateY(0)";
+                    }}
+                  >
+                    <p style={{ color: "#1F2340", fontSize: "1rem", margin: "0 0 0.5rem 0", lineHeight: "1.6" }}>
+                      {post.content}
+                    </p>
+                    <p style={{ color: "#999", fontSize: "0.875rem", margin: 0 }}>
+                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
+        {!loading && userPosts.length === 0 && (
+          <div
+            style={{
+              marginTop: "2rem",
+              backgroundColor: "#F6F7FF",
+              border: "2px dashed #8D88EA",
+              borderRadius: "8px",
+              padding: "2rem",
+              textAlign: "center",
+            }}
+          >
+            <p style={{ color: "#8D88EA", fontSize: "1rem", margin: 0 }}>
+              You haven't created any posts yet. Click the "Post" button in the header to share your first post!
+            </p>
+          </div>
+        )}
       </div>
     </Layout>
   );
