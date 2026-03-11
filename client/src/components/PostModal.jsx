@@ -3,7 +3,7 @@ import { usePostModal } from "../context/PostModalContext";
 import { useSession } from "../context/SessionContext";
 
 const PostModal = () => {
-  const { isOpen, closeModal } = usePostModal();
+  const { isOpen, closeModal, triggerPostCreated } = usePostModal();
   const { session } = useSession();
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -49,7 +49,7 @@ const PostModal = () => {
 
       setContent("");
       closeModal();
-      // TODO: Trigger a refresh of posts or show success message
+      triggerPostCreated();
     } catch (err) {
       console.error("Post creation error:", err);
       setError(err.message || "Failed to create post");

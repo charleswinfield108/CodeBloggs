@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
+import { usePostModal } from "../context/PostModalContext";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp } from "react-icons/fi";
 
 const Home = () => {
   const { session } = useSession();
+  const { registerPostCreatedCallback } = usePostModal();
   const [userPostCount, setUserPostCount] = useState(0);
   const [userPosts, setUserPosts] = useState([]);
   const [lastPostDate, setLastPostDate] = useState(null);
@@ -13,56 +15,61 @@ const Home = () => {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [currentUser, setCurrentUser] = useState(null);
 
+  const fetchUserPostData = async () => {
+    if (!session?.id) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Fetch current user's data (including status)
+      const usersResponse = await fetch("http://localhost:5050/users");
+      const usersData = await usersResponse.json();
+      
+      if (usersData.status === "ok" && Array.isArray(usersData.data)) {
+        const user = usersData.data.find((u) => u._id === session.id);
+        setCurrentUser(user);
+      }
+
+      // Fetch user's posts
+      const response = await fetch("http://localhost:5050/posts");
+      const data = await response.json();
+
+      if (data.status === "ok" && Array.isArray(data.data)) {
+        // Filter posts that belong to the logged-in user
+        const filteredPosts = data.data.filter(
+          (post) => post.user_id === session.id
+        );
+        setUserPosts(filteredPosts);
+        setUserPostCount(filteredPosts.length);
+
+        // Find the most recent post
+        if (filteredPosts.length > 0) {
+          const mostRecent = filteredPosts.reduce((latest, post) => {
+            const postDate = new Date(post.createdAt);
+            const latestDate = new Date(latest.createdAt);
+            return postDate > latestDate ? post : latest;
+          });
+          setLastPostDate(new Date(mostRecent.createdAt));
+        } else {
+          setLastPostDate(null);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUserPostData = async () => {
-      if (!session?.id) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        // Fetch current user's data (including status)
-        const usersResponse = await fetch("http://localhost:5050/users");
-        const usersData = await usersResponse.json();
-        
-        if (usersData.status === "ok" && Array.isArray(usersData.data)) {
-          const user = usersData.data.find((u) => u._id === session.id);
-          setCurrentUser(user);
-        }
-
-        // Fetch user's posts
-        const response = await fetch("http://localhost:5050/posts");
-        const data = await response.json();
-
-        if (data.status === "ok" && Array.isArray(data.data)) {
-          // Filter posts that belong to the logged-in user
-          const filteredPosts = data.data.filter(
-            (post) => post.user_id === session.id
-          );
-          setUserPosts(filteredPosts);
-          setUserPostCount(filteredPosts.length);
-
-          // Find the most recent post
-          if (filteredPosts.length > 0) {
-            const mostRecent = filteredPosts.reduce((latest, post) => {
-              const postDate = new Date(post.createdAt);
-              const latestDate = new Date(latest.createdAt);
-              return postDate > latestDate ? post : latest;
-            });
-            setLastPostDate(new Date(mostRecent.createdAt));
-          } else {
-            setLastPostDate(null);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserPostData();
   }, [session?.id]);
+
+  useEffect(() => {
+    // Register callback to refetch posts when a new post is created
+    registerPostCreatedCallback(fetchUserPostData);
+  }, []);
 
   const formatDate = (date) => {
     if (!date) return "No posts yet";
