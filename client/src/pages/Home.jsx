@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
 import AvatarInitials from "../components/AvatarInitials";
+import { FiThumbsUp } from "react-icons/fi";
 
 const Home = () => {
   const { session } = useSession();
@@ -9,6 +10,7 @@ const Home = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [lastPostDate, setLastPostDate] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [likedPosts, setLikedPosts] = useState(new Set());
 
   useEffect(() => {
     const fetchUserPostData = async () => {
@@ -60,6 +62,54 @@ const Home = () => {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const handleLikePost = async (postId, currentLikes) => {
+    // Toggle like status
+    const isCurrentlyLiked = likedPosts.has(postId);
+    const newLikeCount = isCurrentlyLiked ? currentLikes - 1 : currentLikes + 1;
+
+    // Update local state
+    const newLikedPosts = new Set(likedPosts);
+    if (isCurrentlyLiked) {
+      newLikedPosts.delete(postId);
+    } else {
+      newLikedPosts.add(postId);
+    }
+    setLikedPosts(newLikedPosts);
+
+    // Update posts array with new like count
+    setUserPosts(
+      userPosts.map((post) =>
+        post._id === postId ? { ...post, likes: newLikeCount } : post
+      )
+    );
+
+    // Call backend to persist the like update
+    try {
+      await fetch(`http://localhost:5050/post/${postId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ likes: newLikeCount }),
+      });
+    } catch (error) {
+      console.error("Error updating post likes:", error);
+      // Revert on error
+      const revertedLikes = new Set(likedPosts);
+      if (isCurrentlyLiked) {
+        revertedLikes.add(postId);
+      } else {
+        revertedLikes.delete(postId);
+      }
+      setLikedPosts(revertedLikes);
+      setUserPosts(
+        userPosts.map((post) =>
+          post._id === postId ? { ...post, likes: currentLikes } : post
+        )
+      );
+    }
   };
 
   return (
@@ -146,7 +196,7 @@ const Home = () => {
                     <p style={{ color: "#1F2340", fontSize: "1rem", margin: "0 0 0.5rem 0", lineHeight: "1.6" }}>
                       {post.content}
                     </p>
-                    <p style={{ color: "#999", fontSize: "0.875rem", margin: 0 }}>
+                    <p style={{ color: "#999", fontSize: "0.875rem", margin: "0 0 1rem 0" }}>
                       {new Date(post.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -155,6 +205,38 @@ const Home = () => {
                         minute: "2-digit",
                       })}
                     </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <button
+                        onClick={() => handleLikePost(post._id, post.likes)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          backgroundColor: likedPosts.has(post._id) ? "#8D88EA" : "#F0F0F5",
+                          color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
+                          border: "none",
+                          borderRadius: "6px",
+                          padding: "0.5rem 1rem",
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontSize: "0.875rem",
+                          fontWeight: "500",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!likedPosts.has(post._id)) {
+                            e.currentTarget.style.backgroundColor = "#E3E6F5";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!likedPosts.has(post._id)) {
+                            e.currentTarget.style.backgroundColor = "#F0F0F5";
+                          }
+                        }}
+                      >
+                        <FiThumbsUp size={16} />
+                        <span>{post.likes}</span>
+                      </button>
+                    </div>
                   </div>
                 ))}
             </div>
