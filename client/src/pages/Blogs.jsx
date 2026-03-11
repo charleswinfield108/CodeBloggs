@@ -176,7 +176,7 @@ const Blogs = () => {
               flex: 1,
               minHeight: 0,
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
+              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "1.5rem",
               overflowY: "auto",
               paddingRight: "0.5rem",
@@ -207,72 +207,58 @@ const Blogs = () => {
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
-                  {/* Author Avatar Section */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                    <AvatarInitials
-                      firstName={session?.first_name}
-                      lastName={session?.last_name}
-                      size={40}
-                    />
-                    <div>
-                      <p style={{ color: "#1F2340", fontSize: "0.85rem", margin: 0, fontWeight: "600" }}>
-                        {session?.first_name} {session?.last_name}
-                      </p>
-                      <p style={{ color: "#999", fontSize: "0.7rem", margin: 0 }}>
-                        {new Date(post.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </p>
+                  {/* Top Section: Avatar and Post Content */}
+                  <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem" }}>
+                    {/* Avatar Initials - Top Left */}
+                    <div style={{ flexShrink: 0 }}>
+                      <AvatarInitials
+                        firstName={session?.first_name}
+                        lastName={session?.last_name}
+                        size={40}
+                      />
                     </div>
+
+                    {/* Post Content - Right of Avatar */}
+                    <p
+                      style={{
+                        color: "#1F2340",
+                        fontSize: "0.9rem",
+                        margin: 0,
+                        lineHeight: "1.4",
+                        flex: 1,
+                      }}
+                    >
+                      {post.content.length > 200
+                        ? `${post.content.substring(0, 200)}...`
+                        : post.content}
+                    </p>
                   </div>
 
-                  {/* Divider */}
-                  <div style={{ height: "1px", backgroundColor: "#E3E6F5", marginBottom: "1rem" }} />
-
-                  {/* Post Date */}
-                  <p style={{ color: "#999", fontSize: "0.7rem", margin: "0 0 0.75rem 0", fontWeight: "500" }}>
-                    {new Date(post.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-
-                  {/* Post Content */}
-                  <p
-                    style={{
-                      color: "#1F2340",
-                      fontSize: "1rem",
-                      margin: "0 0 1rem 0",
-                      lineHeight: "1.6",
-                      flex: 1,
-                    }}
-                  >
-                    {post.content}
-                  </p>
-
-                  {/* Like Button */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+                  {/* Date and Like Button */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+                    <p style={{ color: "#999", fontSize: "0.65rem", margin: 0 }}>
+                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
                     <button
                       onClick={() => handleLikePost(post._id, post.likes)}
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "0.5rem",
+                        gap: "0.25rem",
                         backgroundColor: likedPosts.has(post._id)
                           ? "#8D88EA"
                           : "#F0F0F5",
                         color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
                         border: "none",
-                        borderRadius: "8px",
-                        padding: "0.6rem 1rem",
+                        borderRadius: "6px",
+                        padding: "0.4rem 0.75rem",
                         cursor: "pointer",
                         transition: "all 0.2s ease",
-                        fontSize: "0.85rem",
+                        fontSize: "0.7rem",
                         fontWeight: "600",
                       }}
                       onMouseEnter={(e) => {
@@ -286,8 +272,8 @@ const Blogs = () => {
                         }
                       }}
                     >
-                      <FiThumbsUp size={16} />
-                      <span>{post.likes} {post.likes === 1 ? "like" : "likes"}</span>
+                      <FiThumbsUp size={12} />
+                      <span>{post.likes}</span>
                     </button>
                   </div>
 
@@ -296,15 +282,15 @@ const Blogs = () => {
                     <div
                       style={{
                         borderTop: "1px solid #E3E6F5",
-                        paddingTop: "1rem",
+                        paddingTop: "0.75rem",
                       }}
                     >
                       <p
                         style={{
                           color: "#666",
-                          fontSize: "0.8rem",
+                          fontSize: "0.75rem",
                           fontWeight: "700",
-                          margin: "0 0 0.75rem 0",
+                          margin: "0 0 0.5rem 0",
                         }}
                       >
                         Comments ({post.comments.length})
@@ -313,7 +299,9 @@ const Blogs = () => {
                         style={{
                           display: "flex",
                           flexDirection: "column",
-                          gap: "0.75rem",
+                          gap: "0.5rem",
+                          maxHeight: "120px",
+                          overflowY: "auto",
                         }}
                       >
                         {post.comments.map((comment) => (
@@ -321,59 +309,21 @@ const Blogs = () => {
                             key={comment._id}
                             style={{
                               backgroundColor: "#F9F9FB",
-                              padding: "0.75rem",
-                              borderRadius: "8px",
-                              borderLeft: "4px solid #8D88EA",
+                              padding: "0.5rem",
+                              borderRadius: "6px",
+                              borderLeft: "3px solid #8D88EA",
                             }}
                           >
                             <p
                               style={{
                                 color: "#1F2340",
-                                fontSize: "0.8rem",
-                                margin: "0 0 0.25rem 0",
-                                lineHeight: "1.4",
+                                fontSize: "0.7rem",
+                                margin: 0,
+                                lineHeight: "1.3",
                               }}
                             >
                               {comment.content}
                             </p>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                gap: "0.5rem",
-                              }}
-                            >
-                              <p
-                                style={{
-                                  color: "#999",
-                                  fontSize: "0.65rem",
-                                  margin: 0,
-                                }}
-                              >
-                                {new Date(comment.createdAt).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  }
-                                )}
-                              </p>
-                              {comment.likes > 0 && (
-                                <span
-                                  style={{
-                                    color: "#8D88EA",
-                                    fontSize: "0.65rem",
-                                    fontWeight: "600",
-                                  }}
-                                >
-                                  {comment.likes}{" "}
-                                  {comment.likes === 1 ? "like" : "likes"}
-                                </span>
-                              )}
-                            </div>
                           </div>
                         ))}
                       </div>
@@ -384,15 +334,16 @@ const Blogs = () => {
                   <div
                     style={{
                       borderTop: "1px solid #E3E6F5",
-                      paddingTop: "1rem",
+                      paddingTop: "0.75rem",
+                      marginTop: "0.75rem",
                     }}
                   >
                     {(!post.comments || post.comments.length === 0) && (
                       <p
                         style={{
                           color: "#999",
-                          fontSize: "0.8rem",
-                          margin: "0 0 1rem 0",
+                          fontSize: "0.75rem",
+                          margin: "0 0 0.5rem 0",
                         }}
                       >
                         No comments yet
@@ -409,14 +360,14 @@ const Blogs = () => {
                       placeholder="Add a comment..."
                       style={{
                         width: "100%",
-                        minHeight: "60px",
-                        padding: "0.75rem",
-                        borderRadius: "8px",
+                        minHeight: "40px",
+                        padding: "0.5rem",
+                        borderRadius: "6px",
                         border: "1px solid #E3E6F5",
-                        fontSize: "0.85rem",
+                        fontSize: "0.75rem",
                         fontFamily: "inherit",
                         resize: "none",
-                        marginBottom: "0.75rem",
+                        marginBottom: "0.5rem",
                       }}
                     />
                     <button
@@ -430,15 +381,15 @@ const Blogs = () => {
                             : "#8D88EA",
                         color: "#FFFFFF",
                         border: "none",
-                        borderRadius: "8px",
-                        padding: "0.6rem 1rem",
+                        borderRadius: "6px",
+                        padding: "0.4rem 0.75rem",
                         cursor:
                           creatingComment[post._id] ||
                           !commentInputs[post._id]?.trim()
                             ? "not-allowed"
                             : "pointer",
                         transition: "all 0.2s ease",
-                        fontSize: "0.85rem",
+                        fontSize: "0.7rem",
                         fontWeight: "600",
                       }}
                       onMouseEnter={(e) => {
@@ -458,7 +409,7 @@ const Blogs = () => {
                         }
                       }}
                     >
-                      {creatingComment[post._id] ? "Posting..." : "Post Comment"}
+                      {creatingComment[post._id] ? "Posting..." : "Post"}
                     </button>
                   </div>
                 </div>
