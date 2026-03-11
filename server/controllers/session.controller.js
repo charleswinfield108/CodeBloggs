@@ -49,13 +49,14 @@ const sessionLogin = async (req, res) => {
         await SESSIONS_COLLECTION.insertOne(NEW_SESSION);
 
         // Respond with user details and session token
-        const { _id, first_name, last_name, auth_level } = USER;
+        const { _id, first_name, last_name, auth_level, status } = USER;
         return res.status(200).json({
             session_token,
             id: _id.toString(),
             first_name,
             last_name,
-            auth_level
+            auth_level,
+            status: "Currently Logged In"
         });
     } catch (error) {
         console.error("Error during login:", error);
