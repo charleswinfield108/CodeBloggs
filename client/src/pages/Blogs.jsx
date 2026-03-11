@@ -2,34 +2,40 @@ import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
 import AvatarInitials from "../components/AvatarInitials";
-import { FiThumbsUp } from "react-icons/fi";
+import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
 const Blogs = () => {
   const { session } = useSession();
-  const [userPosts, setUserPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+  const [users, setUsers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [commentInputs, setCommentInputs] = useState({});
   const [creatingComment, setCreatingComment] = useState({});
+  const [openCommentModal, setOpenCommentModal] = useState(null);
 
   useEffect(() => {
-    const fetchUserPosts = async () => {
-      if (!session?.id) {
-        setLoading(false);
-        return;
-      }
-
+    const fetchAllPosts = async () => {
       try {
-        const response = await fetch("http://localhost:5050/posts");
-        const data = await response.json();
+        // Fetch all posts
+        const postsResponse = await fetch("http://localhost:5050/posts");
+        const postsData = await postsResponse.json();
 
-        if (data.status === "ok" && Array.isArray(data.data)) {
-          // Filter posts that belong to the logged-in user
-          const filteredPosts = data.data.filter(
-            (post) => post.user_id === session.id
-          );
-          setUserPosts(filteredPosts);
+        if (postsData.status === "ok" && Array.isArray(postsData.data)) {
+          setAllPosts(postsData.data);
+
+          // Fetch all users for author information
+          const usersResponse = await fetch("http://localhost:5050/users");
+          const usersData = await usersResponse.json();
+          
+          if (usersData.status === "ok" && Array.isArray(usersData.data)) {
+            const usersMap = {};
+            usersData.data.forEach((user) => {
+              usersMap[user._id] = user;
+            });
+            setUsers(usersMap);
+          }
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -39,8 +45,8 @@ const Blogs = () => {
       }
     };
 
-    fetchUserPosts();
-  }, [session?.id]);
+    fetchAllPosts();
+  }, []);
 
   const handleLikePost = async (postId, currentLikes) => {
     // Toggle like status
@@ -57,8 +63,8 @@ const Blogs = () => {
     setLikedPosts(newLikedPosts);
 
     // Update posts array with new like count
-    setUserPosts(
-      userPosts.map((post) =>
+    setAllPosts(
+      allPosts.map((post) =>
         post._id === postId ? { ...post, likes: newLikeCount } : post
       )
     );
@@ -82,8 +88,8 @@ const Blogs = () => {
         revertedLikes.delete(postId);
       }
       setLikedPosts(revertedLikes);
-      setUserPosts(
-        userPosts.map((post) =>
+      setAllPosts(
+        allPosts.map((post) =>
           post._id === postId ? { ...post, likes: currentLikes } : post
         )
       );
@@ -118,8 +124,8 @@ const Blogs = () => {
       const result = await response.json();
 
       // Add the new comment to the post
-      setUserPosts(
-        userPosts.map((post) =>
+      setAllPosts(
+        allPosts.map((post) =>
           post._id === postId
             ? {
                 ...post,
@@ -151,7 +157,7 @@ const Blogs = () => {
     <Layout>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
         <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
-          My Blogs
+          All Blogs
         </h2>
 
         {error && (
@@ -170,21 +176,23 @@ const Blogs = () => {
           </div>
         )}
 
-        {!loading && userPosts.length > 0 && (
+        {!loading && allPosts.length > 0 && (
           <div
             style={{
               flex: 1,
               minHeight: 0,
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              display: "flex",
+              flexDirection: "column",
               gap: "1.5rem",
               overflowY: "auto",
               paddingRight: "0.5rem",
             }}
           >
-            {userPosts
+            {allPosts
               .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-              .map((post) => (
+              .map((post) => {
+                const author = users[post.user_id];
+                return (
                 <div
                   key={post._id}
                   style={{
@@ -195,8 +203,7 @@ const Blogs = () => {
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
                     transition: "all 0.3s ease",
                     display: "flex",
-                    flexDirection: "column",
-                    height: "fit-content",
+                    flexDirection: "row",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";
@@ -207,217 +214,113 @@ const Blogs = () => {
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
-                  {/* Top Section: Avatar and Post Content */}
-                  <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem" }}>
-                    {/* Avatar Initials - Top Left */}
-                    <div style={{ flexShrink: 0 }}>
-                      <AvatarInitials
-                        firstName={session?.first_name}
-                        lastName={session?.last_name}
-                        size={40}
-                      />
-                    </div>
+                  {/* Left Side - Author Info (20%) */}
+                  <div style={{ width: "20%", paddingRight: "1.5rem", borderRight: "1px solid #E3E6F5", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                    {author && (
+                      <>
+                        <AvatarInitials
+                          firstName={author.first_name}
+                          lastName={author.last_name}
+                          size={60}
+                        />
+                        <p style={{ color: "#1F2340", fontSize: "0.9rem", margin: "0.75rem 0 0 0", fontWeight: "600" }}>
+                          {author.first_name} {author.last_name}
+                        </p>
+                        <p style={{ color: "#999", fontSize: "0.75rem", margin: "0.5rem 0 0 0" }}>
+                          {new Date(post.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </>
+                    )}
+                  </div>
 
-                    {/* Post Content - Right of Avatar */}
+                  {/* Right Side - Post Content (80%) */}
+                  <div style={{ width: "80%", paddingLeft: "1.5rem", display: "flex", flexDirection: "column" }}>
+                    {/* Post Content */}
                     <p
                       style={{
                         color: "#1F2340",
-                        fontSize: "0.9rem",
-                        margin: 0,
-                        lineHeight: "1.4",
-                        flex: 1,
+                        fontSize: "14px",
+                        margin: "0 0 1.5rem 0",
+                        lineHeight: "1.6",
                       }}
                     >
-                      {post.content.length > 200
-                        ? `${post.content.substring(0, 200)}...`
-                        : post.content}
+                      {post.content}
                     </p>
-                  </div>
 
-                  {/* Date and Like Button */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
-                    <p style={{ color: "#999", fontSize: "0.65rem", margin: 0 }}>
-                      {new Date(post.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </p>
-                    <button
-                      onClick={() => handleLikePost(post._id, post.likes)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.25rem",
-                        backgroundColor: likedPosts.has(post._id)
-                          ? "#8D88EA"
-                          : "#F0F0F5",
-                        color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
-                        border: "none",
-                        borderRadius: "6px",
-                        padding: "0.4rem 0.75rem",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                        fontSize: "0.7rem",
-                        fontWeight: "600",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!likedPosts.has(post._id)) {
-                          e.currentTarget.style.backgroundColor = "#E3E6F5";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!likedPosts.has(post._id)) {
-                          e.currentTarget.style.backgroundColor = "#F0F0F5";
-                        }
-                      }}
-                    >
-                      <FiThumbsUp size={12} />
-                      <span>{post.likes}</span>
-                    </button>
-                  </div>
-
-                  {/* Comments Section */}
-                  {post.comments && post.comments.length > 0 && (
-                    <div
-                      style={{
-                        borderTop: "1px solid #E3E6F5",
-                        paddingTop: "0.75rem",
-                      }}
-                    >
-                      <p
-                        style={{
-                          color: "#666",
-                          fontSize: "0.75rem",
-                          fontWeight: "700",
-                          margin: "0 0 0.5rem 0",
-                        }}
-                      >
-                        Comments ({post.comments.length})
-                      </p>
-                      <div
+                    {/* Like and Comment Buttons */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "auto" }}>
+                      <button
+                        onClick={() => handleLikePost(post._id, post.likes)}
                         style={{
                           display: "flex",
-                          flexDirection: "column",
+                          alignItems: "center",
                           gap: "0.5rem",
-                          maxHeight: "120px",
-                          overflowY: "auto",
+                          backgroundColor: likedPosts.has(post._id)
+                            ? "#8D88EA"
+                            : "#F0F0F5",
+                          color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "0.6rem 1rem",
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontSize: "0.85rem",
+                          fontWeight: "600",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!likedPosts.has(post._id)) {
+                            e.currentTarget.style.backgroundColor = "#E3E6F5";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!likedPosts.has(post._id)) {
+                            e.currentTarget.style.backgroundColor = "#F0F0F5";
+                          }
                         }}
                       >
-                        {post.comments.map((comment) => (
-                          <div
-                            key={comment._id}
-                            style={{
-                              backgroundColor: "#F9F9FB",
-                              padding: "0.5rem",
-                              borderRadius: "6px",
-                              borderLeft: "3px solid #8D88EA",
-                            }}
-                          >
-                            <p
-                              style={{
-                                color: "#1F2340",
-                                fontSize: "0.7rem",
-                                margin: 0,
-                                lineHeight: "1.3",
-                              }}
-                            >
-                              {comment.content}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                        <FiThumbsUp size={16} />
+                        <span>{post.likes} {post.likes === 1 ? "like" : "likes"}</span>
+                      </button>
 
-                  {/* Comment Input Section */}
-                  <div
-                    style={{
-                      borderTop: "1px solid #E3E6F5",
-                      paddingTop: "0.75rem",
-                      marginTop: "0.75rem",
-                    }}
-                  >
-                    {(!post.comments || post.comments.length === 0) && (
-                      <p
+                      <button
+                        onClick={() => setOpenCommentModal(post._id)}
                         style={{
-                          color: "#999",
-                          fontSize: "0.75rem",
-                          margin: "0 0 0.5rem 0",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          backgroundColor: "#F0F0F5",
+                          color: "#666",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "0.6rem 1rem",
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontSize: "0.85rem",
+                          fontWeight: "600",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#E3E6F5";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "#F0F0F5";
                         }}
                       >
-                        No comments yet
-                      </p>
-                    )}
-                    <textarea
-                      value={commentInputs[post._id] || ""}
-                      onChange={(e) =>
-                        setCommentInputs((prev) => ({
-                          ...prev,
-                          [post._id]: e.target.value,
-                        }))
-                      }
-                      placeholder="Add a comment..."
-                      style={{
-                        width: "100%",
-                        minHeight: "40px",
-                        padding: "0.5rem",
-                        borderRadius: "6px",
-                        border: "1px solid #E3E6F5",
-                        fontSize: "0.75rem",
-                        fontFamily: "inherit",
-                        resize: "none",
-                        marginBottom: "0.5rem",
-                      }}
-                    />
-                    <button
-                      onClick={() => handleCreateComment(post._id)}
-                      disabled={creatingComment[post._id] || !commentInputs[post._id]?.trim()}
-                      style={{
-                        width: "100%",
-                        backgroundColor:
-                          creatingComment[post._id] || !commentInputs[post._id]?.trim()
-                            ? "#CCC"
-                            : "#8D88EA",
-                        color: "#FFFFFF",
-                        border: "none",
-                        borderRadius: "6px",
-                        padding: "0.4rem 0.75rem",
-                        cursor:
-                          creatingComment[post._id] ||
-                          !commentInputs[post._id]?.trim()
-                            ? "not-allowed"
-                            : "pointer",
-                        transition: "all 0.2s ease",
-                        fontSize: "0.7rem",
-                        fontWeight: "600",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (
-                          !creatingComment[post._id] &&
-                          commentInputs[post._id]?.trim()
-                        ) {
-                          e.currentTarget.style.backgroundColor = "#7A77D8";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (
-                          !creatingComment[post._id] &&
-                          commentInputs[post._id]?.trim()
-                        ) {
-                          e.currentTarget.style.backgroundColor = "#8D88EA";
-                        }
-                      }}
-                    >
-                      {creatingComment[post._id] ? "Posting..." : "Post"}
-                    </button>
+                        <FiMessageCircle size={16} />
+                        <span>{post.comments?.length || 0} {post.comments?.length === 1 ? "comment" : "comments"}</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
           </div>
         )}
 
-        {!loading && userPosts.length === 0 && (
+        {!loading && allPosts.length === 0 && (
           <div
             style={{
               flex: 1,
@@ -432,7 +335,7 @@ const Blogs = () => {
             }}
           >
             <p style={{ color: "#8D88EA", fontSize: "0.875rem", margin: 0 }}>
-              No blogs yet. Click "Post" to create one!
+              No blogs yet. Be the first to post!
             </p>
           </div>
         )}
@@ -450,6 +353,183 @@ const Blogs = () => {
           </div>
         )}
       </div>
+
+      {/* Page-Level Comment Modal */}
+      {openCommentModal && (
+        (() => {
+          const modalPost = allPosts.find((p) => p._id === openCommentModal);
+          if (!modalPost) return null;
+
+          return (
+            <div
+              style={{
+                position: "fixed",
+                inset: 0,
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 2000,
+              }}
+              onClick={() => setOpenCommentModal(null)}
+            >
+              <div
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "12px",
+                  padding: "2rem",
+                  maxWidth: "500px",
+                  width: "90%",
+                  maxHeight: "80vh",
+                  display: "flex",
+                  flexDirection: "column",
+                  zIndex: 2001,
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+                  <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: 0, fontWeight: "600" }}>
+                    Comments
+                  </h2>
+                  <button
+                    onClick={() => setOpenCommentModal(null)}
+                    style={{
+                      backgroundColor: "transparent",
+                      border: "none",
+                      fontSize: "1.5rem",
+                      cursor: "pointer",
+                      color: "#999",
+                      padding: 0,
+                      width: "32px",
+                      height: "32px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+
+                {/* Comments List */}
+                <div
+                  style={{
+                    flex: 1,
+                    overflowY: "auto",
+                    marginBottom: "1rem",
+                    borderTop: "1px solid #E3E6F5",
+                    borderBottom: "1px solid #E3E6F5",
+                    paddingTop: "1rem",
+                    paddingBottom: "1rem",
+                  }}
+                >
+                  {modalPost.comments && modalPost.comments.length > 0 ? (
+                    modalPost.comments.map((comment) => {
+                      const commentAuthor = users[comment.user_id];
+                      return (
+                        <div
+                          key={comment._id}
+                          style={{
+                            backgroundColor: "#F9F9FB",
+                            padding: "0.75rem",
+                            borderRadius: "8px",
+                            marginBottom: "0.75rem",
+                            borderLeft: "3px solid #8D88EA",
+                          }}
+                        >
+                          {commentAuthor && (
+                            <p style={{ color: "#666", fontSize: "0.75rem", margin: "0 0 0.5rem 0", fontWeight: "600" }}>
+                              {commentAuthor.first_name} {commentAuthor.last_name}
+                            </p>
+                          )}
+                          <p
+                            style={{
+                              color: "#1F2340",
+                              fontSize: "0.85rem",
+                              margin: 0,
+                              lineHeight: "1.4",
+                            }}
+                          >
+                            {comment.content}
+                          </p>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p style={{ color: "#999", fontSize: "0.85rem", margin: 0, textAlign: "center" }}>
+                      No comments yet. Be the first to comment!
+                    </p>
+                  )}
+                </div>
+
+                {/* Comment Input */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  <textarea
+                    value={commentInputs[openCommentModal] || ""}
+                    onChange={(e) =>
+                      setCommentInputs((prev) => ({
+                        ...prev,
+                        [openCommentModal]: e.target.value,
+                      }))
+                    }
+                    placeholder="Add a comment..."
+                    style={{
+                      width: "100%",
+                      minHeight: "80px",
+                      padding: "0.75rem",
+                      borderRadius: "8px",
+                      border: "1px solid #E3E6F5",
+                      fontSize: "0.85rem",
+                      fontFamily: "inherit",
+                      resize: "none",
+                    }}
+                  />
+                  <button
+                    onClick={() => handleCreateComment(openCommentModal)}
+                    disabled={creatingComment[openCommentModal] || !commentInputs[openCommentModal]?.trim()}
+                    style={{
+                      backgroundColor:
+                        creatingComment[openCommentModal] || !commentInputs[openCommentModal]?.trim()
+                          ? "#CCC"
+                          : "#8D88EA",
+                      color: "#FFFFFF",
+                      border: "none",
+                      borderRadius: "8px",
+                      padding: "0.75rem 1rem",
+                      cursor:
+                        creatingComment[openCommentModal] ||
+                        !commentInputs[openCommentModal]?.trim()
+                          ? "not-allowed"
+                          : "pointer",
+                      transition: "all 0.2s ease",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (
+                        !creatingComment[openCommentModal] &&
+                        commentInputs[openCommentModal]?.trim()
+                      ) {
+                        e.currentTarget.style.backgroundColor = "#7A77D8";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (
+                        !creatingComment[openCommentModal] &&
+                        commentInputs[openCommentModal]?.trim()
+                      ) {
+                        e.currentTarget.style.backgroundColor = "#8D88EA";
+                      }
+                    }}
+                  >
+                    {creatingComment[openCommentModal] ? "Posting..." : "Post Comment"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()
+      )}
     </Layout>
   );
 };
