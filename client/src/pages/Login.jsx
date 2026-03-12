@@ -64,6 +64,7 @@ const Login = () => {
         first_name: data.first_name,
         last_name: data.last_name,
         auth_level: data.auth_level,
+        isOnline: data.isOnline,
       });
 
       navigate("/home");

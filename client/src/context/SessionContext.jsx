@@ -14,8 +14,8 @@ export const SessionProvider = ({ children }) => {
       try {
         const sessionData = JSON.parse(storedSession);
         setSession(sessionData);
-        // User was previously logged in, so they should be online when page loads
-        setIsOnline(sessionData ? true : false);
+        // Set online status based on stored session data
+        setIsOnline(sessionData?.isOnline ?? true);
       } catch (error) {
         console.error("Failed to parse stored session:", error);
         localStorage.removeItem("session");
