@@ -243,7 +243,7 @@ const Home = () => {
                   AUTH LEVEL
                 </p>
                 <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
-                  {session?.auth_level === "admin" ? "Administrator" : "User"}
+                  {session?.auth_level === "admin" ? "Administrator" : "Basic"}
                 </p>
               </div>
               <div
