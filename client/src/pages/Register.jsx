@@ -4,6 +4,8 @@ import logo from "../assets/CodeBloggs_ logo.png";
 
 const Register = () => {
   const navigate = useNavigate();
+  const GEOAPIFY_API_KEY = "f51cd660f45142338e2f6976fe759438";
+  
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -20,36 +22,51 @@ const Register = () => {
   const [locationSuggestions, setLocationSuggestions] = useState([]);
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
-  // Common global cities for autocomplete
-  const COMMON_LOCATIONS = [
-    "New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
-    "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose",
-    "Austin", "Jacksonville", "San Francisco", "Seattle", "Boston",
-    "Denver", "Portland", "Miami", "Atlanta", "London",
-    "Paris", "Berlin", "Madrid", "Rome", "Amsterdam",
-    "Tokyo", "Shanghai", "Hong Kong", "Singapore", "Bangkok",
-    "Sydney", "Toronto", "Vancouver", "Mexico City", "São Paulo",
-    "Dubai", "Mumbai", "Delhi", "Bangalore", "Toronto",
-    "Vancouver", "Montreal", "Calgary"
-  ];
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Special handling for location field to show suggestions
+    // Special handling for location field to fetch suggestions from Geoapify
     if (name === "location") {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
       }));
       
-      // Filter suggestions based on input
-      if (value.trim()) {
-        const filtered = COMMON_LOCATIONS.filter(loc =>
-          loc.toLowerCase().includes(value.toLowerCase())
-        );
-        setLocationSuggestions(filtered);
-        setShowLocationDropdown(filtered.length > 0);
+      // Fetch suggestions from Geoapify API
+      if (value.trim().length > 2) {
+        const fetchLocationSuggestions = async () => {
+          try {
+            const response = await fetch(
+              `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(value)}&apiKey=${GEOAPIFY_API_KEY}`
+            );
+            const data = await response.json();
+            
+            if (data.features && data.features.length > 0) {
+              // Format suggestions to show city, state/country
+              const suggestions = data.features.map((feature) => {
+                const properties = feature.properties;
+                const city = properties.city || properties.state || properties.country || "";
+                const state = properties.state ? `, ${properties.state}` : "";
+                const country = properties.country && !properties.state ? `, ${properties.country}` : "";
+                return `${city}${state}${country}`;
+              });
+              
+              // Remove duplicates
+              const uniqueSuggestions = [...new Set(suggestions)];
+              setLocationSuggestions(uniqueSuggestions);
+              setShowLocationDropdown(uniqueSuggestions.length > 0);
+            } else {
+              setLocationSuggestions([]);
+              setShowLocationDropdown(false);
+            }
+          } catch (error) {
+            console.error("Error fetching location suggestions:", error);
+            setLocationSuggestions([]);
+            setShowLocationDropdown(false);
+          }
+        };
+        
+        fetchLocationSuggestions();
       } else {
         setLocationSuggestions([]);
         setShowLocationDropdown(false);
@@ -621,12 +638,33 @@ const Register = () => {
                   maxLength="50"
                   placeholder="San Francisco, CA"
                   onFocus={() => {
-                    if (formData.location.trim()) {
-                      const filtered = COMMON_LOCATIONS.filter(loc =>
-                        loc.toLowerCase().includes(formData.location.toLowerCase())
-                      );
-                      setLocationSuggestions(filtered);
-                      setShowLocationDropdown(filtered.length > 0);
+                    if (formData.location.trim().length > 2) {
+                      const fetchLocationSuggestions = async () => {
+                        try {
+                          const response = await fetch(
+                            `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(formData.location)}&apiKey=${GEOAPIFY_API_KEY}`
+                          );
+                          const data = await response.json();
+                          
+                          if (data.features && data.features.length > 0) {
+                            const suggestions = data.features.map((feature) => {
+                              const properties = feature.properties;
+                              const city = properties.city || properties.state || properties.country || "";
+                              const state = properties.state ? `, ${properties.state}` : "";
+                              const country = properties.country && !properties.state ? `, ${properties.country}` : "";
+                              return `${city}${state}${country}`;
+                            });
+                            
+                            const uniqueSuggestions = [...new Set(suggestions)];
+                            setLocationSuggestions(uniqueSuggestions);
+                            setShowLocationDropdown(uniqueSuggestions.length > 0);
+                          }
+                        } catch (error) {
+                          console.error("Error fetching location suggestions:", error);
+                        }
+                      };
+                      
+                      fetchLocationSuggestions();
                     }
                   }}
                   onBlur={() => {
@@ -690,11 +728,6 @@ const Register = () => {
                   </div>
                 )}
                 
-                    boxSizing: "border-box",
-                    color: "#1F2340",
-                  }}
-                  disabled={loading}
-                />
                 {errors.location && (
                   <p
                     style={{
