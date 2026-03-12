@@ -51,6 +51,34 @@ export const SessionProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  // Activity tracker - ping server every 30 seconds to update lastSeen
+  useEffect(() => {
+    if (!session?.id) return; // Only run if user is logged in
+
+    const pingServer = async () => {
+      try {
+        await fetch("http://localhost:5050/user/ping", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: session.id }),
+        });
+      } catch (error) {
+        console.error("Activity ping failed:", error);
+      }
+    };
+
+    // Initial ping
+    pingServer();
+
+    // Set up interval to ping every 30 seconds
+    const pingInterval = setInterval(pingServer, 30000);
+
+    // Cleanup interval on unmount or when session changes
+    return () => clearInterval(pingInterval);
+  }, [session?.id]);
+
   const login = (sessionData) => {
     setSession(sessionData);
     setIsOnline(true);
