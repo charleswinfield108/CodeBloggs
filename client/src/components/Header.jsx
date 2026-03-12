@@ -60,26 +60,26 @@ const Header = () => {
         justifyContent: "center",
         paddingLeft: "2rem",
         paddingRight: "2rem",
-        borderBottom: "1px solid #8D88EA",
         boxShadow: "none",
+        borderBottom: "1px solid #8D88EA",
       }}
     >
-      {/* Create Post Button */}
+      {/* Post Button - Center/Right */}
       <button
         onClick={openModal}
         style={{
+          padding: "0.75rem 1.75rem",
           backgroundColor: "#8D88EA",
           color: "#FFFFFF",
           border: "none",
           borderRadius: "8px",
-          padding: "0.75rem 1.5rem",
-          fontSize: "0.95rem",
+          fontSize: "1rem",
           fontWeight: "600",
           cursor: "pointer",
+          transition: "all 0.3s ease",
           display: "flex",
           alignItems: "center",
           gap: "0.5rem",
-          transition: "all 0.2s ease",
           boxShadow: "0 2px 8px rgba(141, 136, 234, 0.3)",
           marginRight: "200px",
         }}
@@ -183,24 +183,26 @@ const Header = () => {
               borderRadius: "12px",
               boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
               minWidth: "200px",
+              zIndex: 2000,
+              overflow: "hidden",
             }}
           >
-            {/* Account Settings */}
+            {/* Account Settings Option */}
             <button
               onClick={handleAccountSettings}
               style={{
                 width: "100%",
+                padding: "0.85rem 1.25rem",
                 textAlign: "left",
-                padding: "0.75rem 1rem",
                 backgroundColor: "transparent",
                 border: "none",
                 color: "#1F2340",
-                fontSize: "0.9rem",
+                fontSize: "0.95rem",
                 cursor: "pointer",
+                transition: "background-color 0.2s ease",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.75rem",
-                transition: "all 0.2s ease",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "#F6F7FF";
@@ -209,38 +211,44 @@ const Header = () => {
                 e.currentTarget.style.backgroundColor = "transparent";
               }}
             >
-              <FiSettings size={18} color="#8D88EA" />
+              <FiSettings size={16} color="#8D88EA" />
               <span>Account Settings</span>
             </button>
 
             {/* Divider */}
-            <div style={{ height: "1px", backgroundColor: "#E3E6F5" }} />
+            <div
+              style={{
+                height: "1px",
+                backgroundColor: "#E3E6F5",
+              }}
+            />
 
-            {/* Logout */}
+            {/* Logout Option */}
             <button
               onClick={handleLogout}
               style={{
                 width: "100%",
+                padding: "0.85rem 1.25rem",
                 textAlign: "left",
-                padding: "0.75rem 1rem",
                 backgroundColor: "transparent",
                 border: "none",
                 color: "#E74C3C",
-                fontSize: "0.9rem",
+                fontSize: "0.95rem",
+                fontWeight: "600",
                 cursor: "pointer",
+                transition: "background-color 0.2s ease",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.75rem",
-                transition: "all 0.2s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor: "#F6F7FF";
+                e.currentTarget.style.backgroundColor = "#FADBD8";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "transparent";
               }}
             >
-              <FiLogOut size={18} />
+              <FiLogOut size={16} />
               <span>Logout</span>
             </button>
           </div>

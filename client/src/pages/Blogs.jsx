@@ -199,7 +199,7 @@ const Blogs = () => {
                   key={post._id}
                   style={{
                     backgroundColor: "#FFFFFF",
-                    border: "1px solid #8D88EA",
+                    border: "1px solid #E3E6F5",
                     borderRadius: "12px",
                     padding: "1.5rem",
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
@@ -217,7 +217,7 @@ const Blogs = () => {
                   }}
                 >
                   {/* Left Side - Author Info (20%) */}
-                  <div style={{ width: "20%", paddingRight: "1.5rem", borderRight: "1px solid #8D88EA", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                  <div style={{ width: "20%", paddingRight: "1.5rem", borderRight: "1px solid #E3E6F5", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
                     {author && (
                       <>
                         <AvatarInitials
@@ -483,7 +483,7 @@ const Blogs = () => {
                       minHeight: "80px",
                       padding: "0.75rem",
                       borderRadius: "8px",
-                      border: "1px solid #8D88EA",
+                      border: "1px solid #E3E6F5",
                       fontSize: "0.85rem",
                       fontFamily: "inherit",
                       resize: "none",

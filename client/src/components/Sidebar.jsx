@@ -28,8 +28,8 @@ const Sidebar = () => {
         top: 0,
         width: "250px",
         height: "100vh",
-        backgroundColor: "#F6F7FF",
-        borderRight: "1px solid #8D88EA",
+        backgroundColor: "#8D88EA",
+        borderRight: "1px solid #6C63D9",
         padding: "0",
         zIndex: 999,
         overflowY: "auto",
@@ -44,7 +44,7 @@ const Sidebar = () => {
           padding: "0 1.5rem",
           marginBottom: "0",
           borderBottom: "1px solid #8D88EA",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "#F6F7FF",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -81,7 +81,7 @@ const Sidebar = () => {
               style={{
                 padding: "0.75rem 1.5rem 0.75rem 40px",
                 textDecoration: "none",
-                color: isActive(item.path) ? "#8D88EA" : "#1F2340",
+                color: isActive(item.path) ? "#8D88EA" : "#FFFFFF",
                 backgroundColor: isActive(item.path) ? "#FFFFFF" : "transparent",
                 border: isActive(item.path) ? "2px solid #8D88EA" : "2px solid transparent",
                 borderRadius: "16px",
@@ -96,7 +96,7 @@ const Sidebar = () => {
               }}
               onMouseEnter={(e) => {
                 if (!isActive(item.path)) {
-                  e.currentTarget.style.backgroundColor = "#FFFFFF";
+                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.15)";
                 }
               }}
               onMouseLeave={(e) => {

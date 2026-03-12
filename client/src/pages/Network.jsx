@@ -169,7 +169,7 @@ const Network = () => {
                 key={user._id}
                 style={{
                   backgroundColor: "#FFFFFF",
-                  border: "1px solid #8D88EA",
+                  border: "1px solid #E3E6F5",
                   borderRadius: "12px",
                   padding: "1.5rem",
                   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
@@ -276,7 +276,7 @@ const Network = () => {
                     {user.latestPost.comments && user.latestPost.comments.length > 0 && (
                       <div
                         style={{
-                          borderTop: "1px solid #8D88EA",
+                          borderTop: "1px solid #E3E6F5",
                           paddingTop: "1rem",
                         }}
                       >

@@ -60,7 +60,7 @@ const Login = () => {
 
       login({
         session_token: data.session_token,
-        user_id: data.user_id,
+        id: data.id,
         first_name: data.first_name,
         last_name: data.last_name,
         auth_level: data.auth_level,

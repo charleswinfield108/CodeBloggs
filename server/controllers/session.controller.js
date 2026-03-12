@@ -25,13 +25,47 @@ const sessionLogin = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" }); // Same generic error message
         }
 
-        // Respond with user details
+        // Update user to mark them as online and record heartbeat
+        await DB.collection("users").updateOne(
+            { _id: USER._id },
+            { $set: { isOnline: true, lastSeen: new Date(), lastHeartbeat: new Date() } }
+        );
+
+        // Generate a unique session token
+        const session_token = uuidv4();
+
+        // Ensure the sessions collection has an expiration index
+        const SESSIONS_COLLECTION = DB.collection("sessions");
+        
+        // Drop the old index if it exists with different TTL
+        try {
+          await SESSIONS_COLLECTION.dropIndex("session_date_1");
+        } catch (err) {
+          // Index doesn't exist yet, which is fine
+        }
+        
+        // Create the TTL index (24 hours)
+        await SESSIONS_COLLECTION.createIndex({ "session_date": 1 }, { expireAfterSeconds: 86400 });
+
+        // Create a new session object
+        const NEW_SESSION = {
+            session_token,
+            session_date: new Date(),
+            user_id: USER._id.toString()
+        };
+
+        // Insert the session into the database
+        await SESSIONS_COLLECTION.insertOne(NEW_SESSION);
+
+        // Respond with user details and session token
         const { _id, first_name, last_name, auth_level } = USER;
         return res.status(200).json({
+            session_token,
             id: _id.toString(),
             first_name,
             last_name,
-            auth_level
+            auth_level,
+            isOnline: true  // User is online after login
         });
     } catch (error) {
         console.error("Error during login:", error);
@@ -49,13 +83,21 @@ const sessionLogout = async (req, res) => {
     }
 
     try {
-        // Attempt to delete the session
-        const SESSION = await DB.collection("sessions").findOneAndDelete({ session_token: TOKEN });
+        // Find the session to get the user_id
+        const SESSION = await DB.collection("sessions").findOne({ session_token: TOKEN });
 
-        // Check if the session existed and was deleted
-        if (!SESSION.value) {
+        if (!SESSION) {
             return res.status(404).json({ error: "Invalid or non-existent session token" });
         }
+
+        // Mark user as offline
+        await DB.collection("users").updateOne(
+            { _id: new ObjectId(SESSION.user_id) },
+            { $set: { isOnline: false, lastSeen: new Date() } }
+        );
+
+        // Delete the session
+        await DB.collection("sessions").deleteOne({ session_token: TOKEN });
 
         // Respond with a success message
         return res.status(200).json({ message: "Successfully logged out" });

@@ -5,6 +5,7 @@ const postRoutesEndpoint = (app) => {
     app.patch("/post/:id", POST_ROUTES.postUpdate);
     app.delete("/post/:id", POST_ROUTES.postDelete);
     app.get("/post/:id", POST_ROUTES.postGetById);
+    app.get("/posts/user/:userId", POST_ROUTES.postsByUserId);
     app.get("/posts", POST_ROUTES.postsGetAll);
 }
 

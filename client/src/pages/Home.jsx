@@ -141,7 +141,6 @@ const Home = () => {
               backgroundColor: "#F6F7FF",
               padding: "1rem",
               borderRadius: "8px",
-              border: "1px solid #8D88EA",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -163,7 +162,7 @@ const Home = () => {
           <div
             style={{
               backgroundColor: "#FFFFFF",
-              border: "1px solid #8D88EA",
+              border: "1px solid #E3E6F5",
               borderRadius: "8px",
               padding: "1rem",
               flexShrink: 0,
@@ -188,7 +187,7 @@ const Home = () => {
               <div
                 style={{
                   height: "1px",
-                  backgroundColor: "#8D88EA",
+                  backgroundColor: "#E3E6F5",
                 }}
               />
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -204,7 +203,7 @@ const Home = () => {
           <div
             style={{
               backgroundColor: "#FFFFFF",
-              border: "1px solid #8D88EA",
+              border: "1px solid #E3E6F5",
               borderRadius: "8px",
               padding: "1rem",
               flexShrink: 0,
@@ -225,7 +224,7 @@ const Home = () => {
               <div
                 style={{
                   height: "1px",
-                  backgroundColor: "#8D88EA",
+                  backgroundColor: "#E3E6F5",
                 }}
               />
               <div>
@@ -239,7 +238,7 @@ const Home = () => {
               <div
                 style={{
                   height: "1px",
-                  backgroundColor: "#8D88EA",
+                  backgroundColor: "#E3E6F5",
                 }}
               />
               <div>

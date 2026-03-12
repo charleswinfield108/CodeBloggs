@@ -26,14 +26,15 @@ const Toast = () => {
         position: "fixed",
         bottom: "2rem",
         right: "2rem",
-        zIndex: 9999,
+        zIndex: 3000,
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
+        gap: "1rem",
+        pointerEvents: "none",
       }}
     >
       {toasts.map((toast) => {
-        const { icon: IconComponent, color, bgColor } = getIconAndColor(toast.type);
+        const { icon: Icon, color, bgColor } = getIconAndColor(toast.type);
 
         return (
           <div
@@ -41,34 +42,55 @@ const Toast = () => {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "0.75rem",
-              padding: "1rem",
+              gap: "1rem",
+              padding: "1rem 1.5rem",
               backgroundColor: bgColor,
-              color: color,
+              borderLeft: `4px solid ${color}`,
               borderRadius: "8px",
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-              animation: "slideIn 0.3s ease",
+              minWidth: "300px",
+              maxWidth: "400px",
+              animation: "slideIn 0.3s ease-out",
+              pointerEvents: "auto",
             }}
           >
-            <IconComponent size={20} />
-            <span>{toast.message}</span>
+            <Icon
+              size={20}
+              style={{
+                color: color,
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                color: "#1F2340",
+                fontSize: "0.95rem",
+                fontWeight: "500",
+                flex: 1,
+              }}
+            >
+              {toast.message}
+            </span>
             <button
               onClick={() => removeToast(toast.id)}
               style={{
                 background: "none",
                 border: "none",
-                cursor: "pointer",
                 color: color,
-                fontSize: "1.25rem",
-                padding: 0,
-                marginLeft: "0.5rem",
+                cursor: "pointer",
+                padding: "0.25rem",
+                flexShrink: 0,
+                transition: "opacity 0.2s ease",
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              ×
+              <FiX size={18} />
             </button>
           </div>
         );
       })}
+
       <style>{`
         @keyframes slideIn {
           from {
