@@ -29,7 +29,7 @@ const Sidebar = () => {
         width: "250px",
         height: "100vh",
         backgroundColor: "#F6F7FF",
-        borderRight: "1px solid #E3E6F5",
+        borderRight: "1px solid #8D88EA",
         padding: "1.5rem 0",
         zIndex: 999,
         overflowY: "auto",
