@@ -139,22 +139,21 @@ const Home = () => {
           <div
             style={{
               backgroundColor: "#F6F7FF",
-              padding: "1rem",
+              padding: "0.8rem",
               borderRadius: "8px",
-              border: "1px solid #8D88EA",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "0.75rem",
+              gap: "0.6rem",
               flexShrink: 0,
             }}
           >
             <AvatarInitials
               firstName={session?.first_name}
               lastName={session?.last_name}
-              size={80}
+              size={64}
             />
-            <h2 style={{ color: "#1F2340", fontSize: "1rem", margin: 0, textAlign: "center" }}>
+            <h2 style={{ color: "#1F2340", fontSize: "0.9rem", margin: 0, textAlign: "center" }}>
               {session?.first_name} {session?.last_name}
             </h2>
           </div>
@@ -165,14 +164,14 @@ const Home = () => {
               backgroundColor: "#FFFFFF",
               border: "1px solid #8D88EA",
               borderRadius: "8px",
-              padding: "1rem",
+              padding: "0.8rem",
               flexShrink: 0,
             }}
           >
-            <h3 style={{ color: "#8D88EA", fontSize: "0.875rem", margin: "0 0 0.75rem 0", fontWeight: "600" }}>
+            <h3 style={{ color: "#8D88EA", fontSize: "0.8rem", margin: "0 0 0.6rem 0", fontWeight: "600" }}>
               Status
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span style={{ color: "#666", fontSize: "0.75rem" }}>Posts Created</span>
                 <span
@@ -206,14 +205,14 @@ const Home = () => {
               backgroundColor: "#FFFFFF",
               border: "1px solid #8D88EA",
               borderRadius: "8px",
-              padding: "1rem",
+              padding: "0.8rem",
               flexShrink: 0,
             }}
           >
-            <h3 style={{ color: "#8D88EA", fontSize: "0.875rem", margin: "0 0 0.75rem 0", fontWeight: "600" }}>
+            <h3 style={{ color: "#8D88EA", fontSize: "0.8rem", margin: "0 0 0.6rem 0", fontWeight: "600" }}>
               Information
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
               <div>
                 <p style={{ color: "#999", fontSize: "0.65rem", margin: "0 0 0.25rem 0" }}>
                   NAME
