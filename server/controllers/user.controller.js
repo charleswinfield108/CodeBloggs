@@ -25,6 +25,7 @@ const userCreate = async (req, res) => {
             ...userData,
             email,
             password: hashedPassword,
+            auth_level: userData.auth_level || "basic",
             createdAt: new Date(),
             updatedAt: new Date()
         };
