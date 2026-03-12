@@ -42,14 +42,20 @@ const Login = () => {
     }
 
     try {
+      // Create abort controller with 10 second timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
       const response = await fetch("http://localhost:5050/session/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        signal: controller.signal,
       });
 
+      clearTimeout(timeoutId);
       const data = await response.json();
 
       if (!response.ok) {
@@ -60,10 +66,11 @@ const Login = () => {
 
       login({
         session_token: data.session_token,
-        user_id: data.user_id,
+        id: data.id,
         first_name: data.first_name,
         last_name: data.last_name,
         auth_level: data.auth_level,
+        isOnline: data.isOnline,
       });
 
       navigate("/home");
@@ -143,7 +150,7 @@ const Login = () => {
                   style={{
                     width: "100%",
                     padding: "0.5rem 0.8rem",
-                    border: "1px solid #E3E6F5",
+                    border: "1px solid #8D88EA",
                     borderRadius: "0.5rem",
                     fontSize: "1rem",
                     outline: "none",
@@ -182,7 +189,7 @@ const Login = () => {
                       width: "100%",
                       padding: "0.5rem 0.8rem",
                       paddingRight: "2.5rem",
-                      border: "1px solid #E3E6F5",
+                      border: "1px solid #8D88EA",
                       borderRadius: "0.5rem",
                       fontSize: "1rem",
                       outline: "none",

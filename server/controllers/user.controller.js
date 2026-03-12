@@ -180,9 +180,23 @@ const usersGetAll = async (req, res) => {
             return res.status(404).json({ error: "No users found" });
         }
 
+        // Calculate isOnline based on lastSeen timestamp (2 minute timeout)
+        const TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
+        const NOW = Date.now();
+
+        const USERS_WITH_STATUS = USERS.map(user => {
+            const lastSeenTime = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
+            const isOnline = (NOW - lastSeenTime) < TIMEOUT_MS;
+
+            return {
+                ...user,
+                isOnline
+            };
+        });
+
         res.status(200).json({
             status: 'ok',
-            data: USERS,
+            data: USERS_WITH_STATUS,
             message: 'Users retrieved successfully'
         });
     } catch (error) {
@@ -313,6 +327,41 @@ const usersGetInfo = async (req, res) => {
     }
 };
 
+// Update user online status
+const userUpdateStatus = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { isOnline } = req.body;
+
+        if (!ObjectId.isValid(userId)) {
+            return res.status(400).json({ error: "Invalid user ID" });
+        }
+
+        const updateData = {
+            isOnline: Boolean(isOnline),
+            lastSeen: new Date(),
+            updatedAt: new Date()
+        };
+
+        const RESULT = await DB.collection("users").updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: updateData }
+        );
+
+        if (RESULT.matchedCount === 0) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({
+            status: 'ok',
+            message: 'User status updated successfully'
+        });
+    } catch (error) {
+        console.error("Error updating user status:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 export default {
     userCreate,
     userUpdate,
@@ -321,4 +370,5 @@ export default {
     usersGetAll,
     userGetInfo,
     usersGetInfo,
+    userUpdateStatus,
 };

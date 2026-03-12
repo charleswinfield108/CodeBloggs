@@ -289,7 +289,7 @@ const Register = () => {
                     style={{
                       width: "100%",
                       padding: "0.5rem 0.8rem",
-                      border: errors.first_name ? "1px solid #DC2626" : "1px solid #E3E6F5",
+                      border: errors.first_name ? "1px solid #DC2626" : "1px solid #8D88EA",
                       borderRadius: "0.5rem",
                       fontSize: "1rem",
                       outline: "none",
@@ -340,7 +340,7 @@ const Register = () => {
                     style={{
                       width: "100%",
                       padding: "0.5rem 0.8rem",
-                      border: errors.last_name ? "1px solid #DC2626" : "1px solid #E3E6F5",
+                      border: errors.last_name ? "1px solid #DC2626" : "1px solid #8D88EA",
                       borderRadius: "0.5rem",
                       fontSize: "1rem",
                       outline: "none",
@@ -393,7 +393,7 @@ const Register = () => {
                     style={{
                       width: "100%",
                       padding: "0.5rem 0.8rem",
-                      border: errors.email ? "1px solid #DC2626" : "1px solid #E3E6F5",
+                      border: errors.email ? "1px solid #DC2626" : "1px solid #8D88EA",
                       borderRadius: "0.5rem",
                       fontSize: "1rem",
                       outline: "none",
@@ -442,7 +442,7 @@ const Register = () => {
                     style={{
                       width: "100%",
                       padding: "0.5rem 0.8rem",
-                      border: errors.birthdate ? "1px solid #DC2626" : "1px solid #E3E6F5",
+                      border: errors.birthdate ? "1px solid #DC2626" : "1px solid #8D88EA",
                       borderRadius: "0.5rem",
                       fontSize: "1rem",
                       outline: "none",
@@ -497,7 +497,7 @@ const Register = () => {
                         width: "100%",
                         padding: "0.5rem 0.8rem 0.5rem 0.8rem",
                         paddingRight: "2.5rem",
-                        border: errors.password ? "1px solid #DC2626" : "1px solid #E3E6F5",
+                        border: errors.password ? "1px solid #DC2626" : "1px solid #8D88EA",
                         borderRadius: "0.5rem",
                         fontSize: "1rem",
                         outline: "none",
@@ -571,7 +571,7 @@ const Register = () => {
                     style={{
                       width: "100%",
                       padding: "0.5rem 0.8rem",
-                      border: errors.occupation ? "1px solid #DC2626" : "1px solid #E3E6F5",
+                      border: errors.occupation ? "1px solid #DC2626" : "1px solid #8D88EA",
                       borderRadius: "0.5rem",
                       fontSize: "1rem",
                       outline: "none",
@@ -635,7 +635,7 @@ const Register = () => {
                   style={{
                     width: "100%",
                     padding: "0.5rem 0.8rem",
-                    border: errors.location ? "1px solid #DC2626" : "1px solid #E3E6F5",
+                    border: errors.location ? "1px solid #DC2626" : "1px solid #8D88EA",
                     borderRadius: "0.5rem",
                     fontSize: "1rem",
                     outline: "none",

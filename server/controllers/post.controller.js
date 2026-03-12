@@ -200,12 +200,8 @@ const postsGetAll = async (req, res) => {
             }
         ]).toArray();
 
-        if (!POSTS_WITH_COMMENTS || POSTS_WITH_COMMENTS.length === 0) {
-            return res.status(404).json({ error: "No posts found" });
-        }
-
         // Map the posts to include necessary fields
-        const POSTS = POSTS_WITH_COMMENTS.map((post) => ({
+        const POSTS = (POSTS_WITH_COMMENTS || []).map((post) => ({
             _id: post._id,
             content: post.content,
             user_id: post.user_id,
@@ -217,6 +213,52 @@ const postsGetAll = async (req, res) => {
         res.json({
             status: 'ok',
             data: POSTS,
+            message: POSTS.length === 0 ? 'No posts found' : 'Posts retrieved successfully'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+// This route will help you get all posts by a specific user, sorted by newest first
+const postsByUserId = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Validate user ID
+        if (!ObjectId.isValid(userId)) {
+            return res.status(400).json({ error: "Invalid user ID" });
+        }
+
+        const COLLECTION = DB.collection("posts");
+        const QUERY = { user_id: new ObjectId(userId) };
+
+        // Fetch all posts for this user, sorted by createdAt descending (newest first)
+        const POSTS = await COLLECTION.find(QUERY)
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        // Fetch comments for each post
+        const POSTS_WITH_COMMENTS = await Promise.all(
+            POSTS.map(async (post) => {
+                const COMMENTS = await DB.collection("comments")
+                    .find({ post_id: post._id })
+                    .toArray();
+                return {
+                    _id: post._id,
+                    content: post.content,
+                    user_id: post.user_id,
+                    likes: post.likes,
+                    createdAt: post.createdAt,
+                    comments: COMMENTS || []
+                };
+            })
+        );
+
+        res.json({
+            status: 'ok',
+            data: POSTS_WITH_COMMENTS,
             message: 'Posts retrieved successfully'
         });
     } catch (error) {
@@ -230,5 +272,6 @@ export default {
     postUpdate,
     postDelete,
     postGetById,
-    postsGetAll
+    postsGetAll,
+    postsByUserId
 };

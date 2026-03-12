@@ -5,13 +5,17 @@ export const SessionContext = createContext();
 export const SessionProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isOnline, setIsOnline] = useState(false);
 
   // Initialize session from localStorage on mount
   useEffect(() => {
     const storedSession = localStorage.getItem("session");
     if (storedSession) {
       try {
-        setSession(JSON.parse(storedSession));
+        const sessionData = JSON.parse(storedSession);
+        setSession(sessionData);
+        // Set online status based on stored session data
+        setIsOnline(sessionData?.isOnline ?? true);
       } catch (error) {
         console.error("Failed to parse stored session:", error);
         localStorage.removeItem("session");
@@ -22,19 +26,16 @@ export const SessionProvider = ({ children }) => {
 
   const login = (sessionData) => {
     setSession(sessionData);
+    setIsOnline(true);
     localStorage.setItem("session", JSON.stringify(sessionData));
   };
 
   const logout = async () => {
-    // Call backend logout endpoint
+    // Call backend logout endpoint with token as query parameter
     if (session?.session_token) {
       try {
-        await fetch("http://localhost:5050/session/logout", {
+        await fetch(`http://localhost:5050/session/logout?token=${encodeURIComponent(session.session_token)}`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ session_token: session.session_token }),
         });
       } catch (error) {
         console.error("Logout request failed:", error);
@@ -43,11 +44,12 @@ export const SessionProvider = ({ children }) => {
     
     // Clear session from state and storage
     setSession(null);
+    setIsOnline(false);
     localStorage.removeItem("session");
   };
 
   return (
-    <SessionContext.Provider value={{ session, loading, login, logout }}>
+    <SessionContext.Provider value={{ session, loading, isOnline, login, logout }}>
       {children}
     </SessionContext.Provider>
   );
