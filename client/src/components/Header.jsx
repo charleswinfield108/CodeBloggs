@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { usePostModal } from "../context/PostModalContext";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
@@ -10,8 +10,19 @@ const Header = () => {
   const { session, logout } = useSession();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
+
+  // Get current page name from route
+  const getCurrentPageName = () => {
+    const path = location.pathname.toLowerCase();
+    if (path.includes("/home")) return "Home";
+    if (path.includes("/blogs")) return "Blogs";
+    if (path.includes("/network")) return "Network";
+    if (path.includes("/admin")) return "Admin";
+    return "Home";
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -52,7 +63,7 @@ const Header = () => {
         left: "250px",
         right: 0,
         height: "95px",
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#F6F7FF",
         zIndex: 1000,
         display: "flex",
         alignItems: "center",
@@ -60,19 +71,19 @@ const Header = () => {
         paddingLeft: "2rem",
         paddingRight: "2rem",
         boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
-        borderBottom: "3px solid #2ED3B7",
+        borderBottom: "1px solid #8D88EA",
       }}
     >
-      {/* Logo Placeholder */}
+      {/* Current Page Name */}
       <div
         style={{
           fontWeight: "700",
-          fontSize: "1.25rem",
-          color: "#8D88EA",
+          fontSize: "1.4rem",
+          color: "#1F2340",
           letterSpacing: "-0.5px",
         }}
       >
-        CodeBloggs
+        {getCurrentPageName()}
       </div>
 
       {/* Post Button - Center/Right */}
