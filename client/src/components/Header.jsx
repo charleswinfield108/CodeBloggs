@@ -70,7 +70,7 @@ const Header = () => {
         justifyContent: "space-between",
         paddingLeft: "2rem",
         paddingRight: "2rem",
-        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
+        boxShadow: "none",
         borderBottom: "1px solid #8D88EA",
       }}
     >
