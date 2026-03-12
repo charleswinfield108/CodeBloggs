@@ -1,6 +1,8 @@
 import React from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import PostModal from "./PostModal";
+import Toast from "./Toast";
 
 const Layout = ({ children }) => {
   return (
@@ -12,6 +14,8 @@ const Layout = ({ children }) => {
       }}
     >
       <Header />
+      <PostModal />
+      <Toast />
       <div
         style={{
           display: "flex",
