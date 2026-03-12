@@ -56,7 +56,7 @@ const Header = () => {
         zIndex: 1000,
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "center",
         paddingLeft: "2rem",
         paddingRight: "2rem",
         boxShadow: "none",
@@ -68,7 +68,7 @@ const Header = () => {
         onClick={openModal}
         style={{
           padding: "0.75rem 1.75rem",
-          backgroundColor: "#2ED3B7",
+          backgroundColor: "#8D88EA",
           color: "#FFFFFF",
           border: "none",
           borderRadius: "8px",
@@ -79,17 +79,18 @@ const Header = () => {
           display: "flex",
           alignItems: "center",
           gap: "0.5rem",
-          boxShadow: "0 2px 8px rgba(46, 211, 183, 0.3)",
+          boxShadow: "0 2px 8px rgba(141, 136, 234, 0.3)",
+          marginRight: "60px",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#1CB89C";
+          e.currentTarget.style.backgroundColor = "#6C63D9";
           e.currentTarget.style.transform = "translateY(-2px)";
-          e.currentTarget.style.boxShadow = "0 4px 16px rgba(46, 211, 183, 0.4)";
+          e.currentTarget.style.boxShadow = "0 4px 16px rgba(141, 136, 234, 0.4)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "#2ED3B7";
+          e.currentTarget.style.backgroundColor = "#8D88EA";
           e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.boxShadow = "0 2px 8px rgba(46, 211, 183, 0.3)";
+          e.currentTarget.style.boxShadow = "0 2px 8px rgba(141, 136, 234, 0.3)";
         }}
       >
         <FiEdit3 size={18} />
@@ -100,7 +101,8 @@ const Header = () => {
       <div
         ref={menuRef}
         style={{
-          position: "relative",
+          position: "absolute",
+          right: "2rem",
           display: "flex",
           alignItems: "center",
           gap: "1.5rem",
