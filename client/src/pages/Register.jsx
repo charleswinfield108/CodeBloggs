@@ -811,6 +811,7 @@ const Register = () => {
             >
               Already have an account?{" "}
               <button
+                type="button"
                 onClick={() => navigate("/login")}
                 style={{
                   color: "white",

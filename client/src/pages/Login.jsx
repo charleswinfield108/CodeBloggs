@@ -445,6 +445,7 @@ const Login = () => {
               }}>
                 Not a member?{" "}
                 <button
+                  type="button"
                   onClick={() => navigate("/register")}
                   style={{
                     color: "#8D88EA",
