@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
-import { AiOutlineHome } from "react-icons/ai";
+import { AiFillHome } from "react-icons/ai";
 import { MdArticle } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
@@ -13,7 +13,7 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   const navItems = [
-    { label: "Home", path: "/home", icon: AiOutlineHome },
+    { label: "Home", path: "/home", icon: AiFillHome },
     { label: "Blogs", path: "/blogs", icon: MdArticle },
     { label: "Network", path: "/network", icon: FaUsers },
     ...(session?.auth_level === "admin" ? [{ label: "Admin", path: "/admin", icon: MdAdminPanelSettings }] : []),
@@ -80,7 +80,7 @@ const Sidebar = () => {
                 }
               }}
             >
-              <IconComponent size={20} />
+              <IconComponent size={20} color={isActive(item.path) ? "#FFFFFF" : "#8D88EA"} />
               {item.label}
             </Link>
           );

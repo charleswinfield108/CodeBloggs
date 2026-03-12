@@ -42,7 +42,7 @@ const Admin = () => {
   return (
     <Layout>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-        <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: "0 0 0.5rem 0" }}>
+        <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: "0 0 0.5rem 0" }}>
           Admin Dashboard
         </h2>
         <p style={{ color: "#666", fontSize: "0.875rem", margin: "0 0 1.5rem 0" }}>
@@ -59,6 +59,8 @@ const Admin = () => {
             gap: "2rem",
             overflowY: "auto",
             paddingRight: "0.5rem",
+            paddingTop: "1rem",
+            marginTop: "15px",
           }}
         >
           {/* User Manager Card */}
