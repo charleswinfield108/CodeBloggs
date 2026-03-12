@@ -181,8 +181,8 @@ const usersGetAll = async (req, res) => {
             return res.status(404).json({ error: "No users found" });
         }
 
-        // Calculate isOnline based on lastSeen timestamp (2 minute timeout)
-        const TIMEOUT_MS = 2 * 60 * 1000; // 2 minutes
+        // Calculate isOnline based on lastSeen timestamp (8 minute timeout)
+        const TIMEOUT_MS = 8 * 60 * 1000; // 8 minutes
         const NOW = Date.now();
 
         const USERS_WITH_STATUS = USERS.map(user => {
@@ -363,6 +363,38 @@ const userUpdateStatus = async (req, res) => {
     }
 };
 
+// Ping endpoint to update lastSeen timestamp (activity tracker)
+const userPing = async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+
+        if (!ObjectId.isValid(userId)) {
+            return res.status(400).json({ error: "Invalid user ID" });
+        }
+
+        const RESULT = await DB.collection("users").updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { lastSeen: new Date() } }
+        );
+
+        if (RESULT.matchedCount === 0) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({
+            status: 'ok',
+            message: 'Activity recorded'
+        });
+    } catch (error) {
+        console.error("Error updating user activity:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 export default {
     userCreate,
     userUpdate,
@@ -372,4 +404,5 @@ export default {
     userGetInfo,
     usersGetInfo,
     userUpdateStatus,
+    userPing,
 };
