@@ -17,13 +17,50 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
+  // Common global cities for autocomplete
+  const COMMON_LOCATIONS = [
+    "New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
+    "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose",
+    "Austin", "Jacksonville", "San Francisco", "Seattle", "Boston",
+    "Denver", "Portland", "Miami", "Atlanta", "London",
+    "Paris", "Berlin", "Madrid", "Rome", "Amsterdam",
+    "Tokyo", "Shanghai", "Hong Kong", "Singapore", "Bangkok",
+    "Sydney", "Toronto", "Vancouver", "Mexico City", "São Paulo",
+    "Dubai", "Mumbai", "Delhi", "Bangalore", "Toronto",
+    "Vancouver", "Montreal", "Calgary"
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    // Special handling for location field to show suggestions
+    if (name === "location") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+      
+      // Filter suggestions based on input
+      if (value.trim()) {
+        const filtered = COMMON_LOCATIONS.filter(loc =>
+          loc.toLowerCase().includes(value.toLowerCase())
+        );
+        setLocationSuggestions(filtered);
+        setShowLocationDropdown(filtered.length > 0);
+      } else {
+        setLocationSuggestions([]);
+        setShowLocationDropdown(false);
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+    
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -31,6 +68,21 @@ const Register = () => {
       }));
     }
     if (successMessage) setSuccessMessage("");
+  };
+
+  const handleLocationSelect = (location) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: location,
+    }));
+    setLocationSuggestions([]);
+    setShowLocationDropdown(false);
+    if (errors.location) {
+      setErrors((prev) => ({
+        ...prev,
+        location: "",
+      }));
+    }
   };
 
   const validateForm = () => {
@@ -232,6 +284,7 @@ const Register = () => {
                     name="first_name"
                     value={formData.first_name}
                     onChange={handleChange}
+                    maxLength="50"
                     placeholder="John"
                     style={{
                       width: "100%",
@@ -282,6 +335,7 @@ const Register = () => {
                     name="last_name"
                     value={formData.last_name}
                     onChange={handleChange}
+                    maxLength="50"
                     placeholder="Doe"
                     style={{
                       width: "100%",
@@ -512,6 +566,7 @@ const Register = () => {
                     name="occupation"
                     value={formData.occupation}
                     onChange={handleChange}
+                    maxLength="50"
                     placeholder="Software Developer"
                     style={{
                       width: "100%",
@@ -543,7 +598,7 @@ const Register = () => {
               </div>
 
               {/* Location - Full Width */}
-              <div style={{ marginBottom: "0.8rem" }}>
+              <div style={{ marginBottom: "0.8rem", position: "relative" }}>
                 <label
                   htmlFor="location"
                   style={{
@@ -563,7 +618,20 @@ const Register = () => {
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
+                  maxLength="50"
                   placeholder="San Francisco, CA"
+                  onFocus={() => {
+                    if (formData.location.trim()) {
+                      const filtered = COMMON_LOCATIONS.filter(loc =>
+                        loc.toLowerCase().includes(formData.location.toLowerCase())
+                      );
+                      setLocationSuggestions(filtered);
+                      setShowLocationDropdown(filtered.length > 0);
+                    }
+                  }}
+                  onBlur={() => {
+                    setTimeout(() => setShowLocationDropdown(false), 200);
+                  }}
                   style={{
                     width: "100%",
                     padding: "0.5rem 0.8rem",
@@ -573,6 +641,55 @@ const Register = () => {
                     outline: "none",
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: "400",
+                    boxSizing: "border-box",
+                    color: "#1F2340",
+                  }}
+                  disabled={loading}
+                />
+
+                {/* Location Autocomplete Dropdown */}
+                {showLocationDropdown && locationSuggestions.length > 0 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      left: 0,
+                      right: 0,
+                      backgroundColor: "white",
+                      border: "1px solid #E3E6F5",
+                      borderRadius: "0.5rem",
+                      marginTop: "0.2rem",
+                      maxHeight: "200px",
+                      overflowY: "auto",
+                      zIndex: 10,
+                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    {locationSuggestions.map((location, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleLocationSelect(location)}
+                        style={{
+                          padding: "0.6rem 0.8rem",
+                          cursor: "pointer",
+                          borderBottom: index < locationSuggestions.length - 1 ? "1px solid #F0F0F0" : "none",
+                          color: "#1F2340",
+                          fontSize: "0.9rem",
+                          transition: "background-color 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#F6F7FF";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "white";
+                        }}
+                      >
+                        {location}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
                     boxSizing: "border-box",
                     color: "#1F2340",
                   }}
