@@ -30,7 +30,7 @@ const Sidebar = () => {
         height: "100vh",
         backgroundColor: "#F6F7FF",
         borderRight: "1px solid #8D88EA",
-        padding: "1.5rem 0",
+        padding: "0",
         zIndex: 999,
         overflowY: "auto",
         display: "flex",
@@ -40,9 +40,10 @@ const Sidebar = () => {
       <Link
         to="/home"
         style={{
-          padding: "1rem 1.5rem 2rem 1.5rem",
-          marginBottom: "1rem",
-          borderBottom: "1px solid #E3E6F5",
+          height: "95px",
+          padding: "0 1.5rem",
+          marginBottom: "0",
+          borderBottom: "1px solid #8D88EA",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
