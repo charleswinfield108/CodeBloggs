@@ -140,7 +140,7 @@ const PostModal = () => {
             width: "100%",
             height: "120px",
             padding: "1rem",
-            border: "1px solid #E3E6F5",
+            border: "1px solid #8D88EA",
             borderRadius: "8px",
             fontSize: "1rem",
             fontFamily: "inherit",

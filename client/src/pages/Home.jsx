@@ -141,6 +141,7 @@ const Home = () => {
               backgroundColor: "#F6F7FF",
               padding: "1rem",
               borderRadius: "8px",
+              border: "1px solid #8D88EA",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -162,7 +163,7 @@ const Home = () => {
           <div
             style={{
               backgroundColor: "#FFFFFF",
-              border: "1px solid #E3E6F5",
+              border: "1px solid #8D88EA",
               borderRadius: "8px",
               padding: "1rem",
               flexShrink: 0,
@@ -187,7 +188,7 @@ const Home = () => {
               <div
                 style={{
                   height: "1px",
-                  backgroundColor: "#E3E6F5",
+                  backgroundColor: "#8D88EA",
                 }}
               />
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -203,7 +204,7 @@ const Home = () => {
           <div
             style={{
               backgroundColor: "#FFFFFF",
-              border: "1px solid #E3E6F5",
+              border: "1px solid #8D88EA",
               borderRadius: "8px",
               padding: "1rem",
               flexShrink: 0,
@@ -224,7 +225,7 @@ const Home = () => {
               <div
                 style={{
                   height: "1px",
-                  backgroundColor: "#E3E6F5",
+                  backgroundColor: "#8D88EA",
                 }}
               />
               <div>
@@ -238,7 +239,7 @@ const Home = () => {
               <div
                 style={{
                   height: "1px",
-                  backgroundColor: "#E3E6F5",
+                  backgroundColor: "#8D88EA",
                 }}
               />
               <div>
@@ -277,7 +278,7 @@ const Home = () => {
                     key={post._id}
                     style={{
                       backgroundColor: "#FFFFFF",
-                      border: "1px solid #E3E6F5",
+                      border: "1px solid #8D88EA",
                       borderRadius: "8px",
                       padding: "0.75rem",
                       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
@@ -332,7 +333,7 @@ const Home = () => {
                         }}
                         onMouseEnter={(e) => {
                           if (!likedPosts.has(post._id)) {
-                            e.currentTarget.style.backgroundColor = "#E3E6F5";
+                            e.currentTarget.style.backgroundColor = "#8D88EA";
                           }
                         }}
                         onMouseLeave={(e) => {
@@ -351,7 +352,7 @@ const Home = () => {
                         style={{
                           marginTop: "0.5rem",
                           paddingTop: "0.5rem",
-                          borderTop: "1px solid #E3E6F5",
+                          borderTop: "1px solid #8D88EA",
                         }}
                       >
                         <p
@@ -440,7 +441,7 @@ const Home = () => {
                         style={{
                           marginTop: "0.5rem",
                           paddingTop: "0.5rem",
-                          borderTop: "1px solid #E3E6F5",
+                          borderTop: "1px solid #8D88EA",
                         }}
                       >
                         <p

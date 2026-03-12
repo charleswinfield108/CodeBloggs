@@ -143,7 +143,7 @@ const Login = () => {
                   style={{
                     width: "100%",
                     padding: "0.5rem 0.8rem",
-                    border: "1px solid #E3E6F5",
+                    border: "1px solid #8D88EA",
                     borderRadius: "0.5rem",
                     fontSize: "1rem",
                     outline: "none",
@@ -182,7 +182,7 @@ const Login = () => {
                       width: "100%",
                       padding: "0.5rem 0.8rem",
                       paddingRight: "2.5rem",
-                      border: "1px solid #E3E6F5",
+                      border: "1px solid #8D88EA",
                       borderRadius: "0.5rem",
                       fontSize: "1rem",
                       outline: "none",

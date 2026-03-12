@@ -179,7 +179,7 @@ const Header = () => {
               right: 0,
               marginTop: "0.75rem",
               backgroundColor: "#FFFFFF",
-              border: "1px solid #E3E6F5",
+              border: "1px solid #8D88EA",
               borderRadius: "12px",
               boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
               minWidth: "200px",
@@ -219,7 +219,7 @@ const Header = () => {
             <div
               style={{
                 height: "1px",
-                backgroundColor: "#E3E6F5",
+                backgroundColor: "#8D88EA",
               }}
             />
 

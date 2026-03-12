@@ -65,7 +65,7 @@ const Admin = () => {
           <div
             style={{
               backgroundColor: "#FFFFFF",
-              border: "1px solid #E3E6F5",
+              border: "1px solid #8D88EA",
               borderRadius: "12px",
               padding: "2rem",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
@@ -132,7 +132,7 @@ const Admin = () => {
           <div
             style={{
               backgroundColor: "#FFFFFF",
-              border: "1px solid #E3E6F5",
+              border: "1px solid #8D88EA",
               borderRadius: "12px",
               padding: "2rem",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",

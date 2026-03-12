@@ -199,7 +199,7 @@ const Blogs = () => {
                   key={post._id}
                   style={{
                     backgroundColor: "#FFFFFF",
-                    border: "1px solid #E3E6F5",
+                    border: "1px solid #8D88EA",
                     borderRadius: "12px",
                     padding: "1.5rem",
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
@@ -217,7 +217,7 @@ const Blogs = () => {
                   }}
                 >
                   {/* Left Side - Author Info (20%) */}
-                  <div style={{ width: "20%", paddingRight: "1.5rem", borderRight: "1px solid #E3E6F5", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                  <div style={{ width: "20%", paddingRight: "1.5rem", borderRight: "1px solid #8D88EA", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
                     {author && (
                       <>
                         <AvatarInitials
@@ -278,7 +278,7 @@ const Blogs = () => {
                         }}
                         onMouseEnter={(e) => {
                           if (!likedPosts.has(post._id)) {
-                            e.currentTarget.style.backgroundColor = "#E3E6F5";
+                            e.currentTarget.style.backgroundColor = "#8D88EA";
                           }
                         }}
                         onMouseLeave={(e) => {
@@ -308,7 +308,7 @@ const Blogs = () => {
                           fontWeight: "600",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = "#E3E6F5";
+                          e.currentTarget.style.backgroundColor = "#8D88EA";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = "#F0F0F5";
@@ -422,8 +422,8 @@ const Blogs = () => {
                     flex: 1,
                     overflowY: "auto",
                     marginBottom: "1rem",
-                    borderTop: "1px solid #E3E6F5",
-                    borderBottom: "1px solid #E3E6F5",
+                    borderTop: "1px solid #8D88EA",
+                    borderBottom: "1px solid #8D88EA",
                     paddingTop: "1rem",
                     paddingBottom: "1rem",
                   }}
@@ -483,7 +483,7 @@ const Blogs = () => {
                       minHeight: "80px",
                       padding: "0.75rem",
                       borderRadius: "8px",
-                      border: "1px solid #E3E6F5",
+                      border: "1px solid #8D88EA",
                       fontSize: "0.85rem",
                       fontFamily: "inherit",
                       resize: "none",

@@ -169,7 +169,7 @@ const Network = () => {
                 key={user._id}
                 style={{
                   backgroundColor: "#FFFFFF",
-                  border: "1px solid #E3E6F5",
+                  border: "1px solid #8D88EA",
                   borderRadius: "12px",
                   padding: "1.5rem",
                   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
@@ -215,7 +215,7 @@ const Network = () => {
                 </p>
 
                 {/* Divider */}
-                <div style={{ height: "1px", backgroundColor: "#E3E6F5", margin: "0 0 1rem 0" }} />
+                <div style={{ height: "1px", backgroundColor: "#8D88EA", margin: "0 0 1rem 0" }} />
 
                 {/* Latest Post Section */}
                 {user.latestPost ? (
@@ -258,7 +258,7 @@ const Network = () => {
                         }}
                         onMouseEnter={(e) => {
                           if (!likedPosts.has(user.latestPost._id)) {
-                            e.currentTarget.style.backgroundColor = "#E3E6F5";
+                            e.currentTarget.style.backgroundColor = "#8D88EA";
                           }
                         }}
                         onMouseLeave={(e) => {
@@ -276,7 +276,7 @@ const Network = () => {
                     {user.latestPost.comments && user.latestPost.comments.length > 0 && (
                       <div
                         style={{
-                          borderTop: "1px solid #E3E6F5",
+                          borderTop: "1px solid #8D88EA",
                           paddingTop: "1rem",
                         }}
                       >
