@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
-import logo from "../assets/CodeBloggs_ logo.png";
 import { AiOutlineHome } from "react-icons/ai";
 import { MdArticle } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
@@ -24,50 +23,27 @@ const Sidebar = () => {
     <aside
       style={{
         position: "fixed",
-        left: 0,
-        top: 0,
-        width: "250px",
-        height: "100vh",
-        backgroundColor: "#F6F7FF",
-        borderRight: "1px solid #8D88EA",
-        padding: "0",
+        left: "12px",
+        top: "119px",
+        width: "226px",
+        bottom: "20px",
+        backgroundColor: "#F5F7FC",
+        border: "none",
+        borderRadius: "20px",
+        padding: "1rem 0",
         zIndex: 999,
         overflowY: "auto",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      <Link
-        to="/home"
-        style={{
-          height: "95px",
-          padding: "0 1.5rem",
-          marginBottom: "0",
-          backgroundColor: "#F6F7FF",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          textDecoration: "none",
-          cursor: "pointer",
-        }}
-      >
-        <img
-          src={logo}
-          alt="CodeBloggs Logo"
-          style={{
-            width: "85%",
-            maxWidth: "140px",
-            height: "auto",
-            marginLeft: "-20px",
-          }}
-        />
-      </Link>
+
       <nav
         style={{
           display: "flex",
           flexDirection: "column",
           gap: "0.5rem",
-          marginTop: "40px",
+          marginTop: "10px",
           flex: 1,
         }}
       >
@@ -80,8 +56,8 @@ const Sidebar = () => {
               style={{
                 padding: "0.75rem 1.5rem 0.75rem 40px",
                 textDecoration: "none",
-                color: isActive(item.path) ? "#8D88EA" : "#1F2340",
-                backgroundColor: isActive(item.path) ? "#FFFFFF" : "transparent",
+                color: isActive(item.path) ? "#FFFFFF" : "#8D88EA",
+                backgroundColor: isActive(item.path) ? "#8D88EA" : "transparent",
                 border: isActive(item.path) ? "2px solid #8D88EA" : "2px solid transparent",
                 borderRadius: "16px",
                 marginLeft: "1.3rem",
@@ -95,7 +71,7 @@ const Sidebar = () => {
               }}
               onMouseEnter={(e) => {
                 if (!isActive(item.path)) {
-                  e.currentTarget.style.backgroundColor = "#FFFFFF";
+                  e.currentTarget.style.backgroundColor = "#E8E3FF";
                 }
               }}
               onMouseLeave={(e) => {

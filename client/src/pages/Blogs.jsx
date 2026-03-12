@@ -158,7 +158,7 @@ const Blogs = () => {
   return (
     <Layout>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-        <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
+        <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
           All Blogs
         </h2>
 
@@ -188,6 +188,7 @@ const Blogs = () => {
               gap: "1.5rem",
               overflowY: "auto",
               paddingRight: "0.5rem",
+              marginTop: "20px",
             }}
           >
             {allPosts
@@ -206,6 +207,7 @@ const Blogs = () => {
                     transition: "all 0.3s ease",
                     display: "flex",
                     flexDirection: "row",
+                    marginTop: "10px",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";

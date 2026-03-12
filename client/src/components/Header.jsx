@@ -5,6 +5,7 @@ import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
 import { FiChevronDown, FiEdit3, FiSettings, FiLogOut } from "react-icons/fi";
 import { getAvatarColor } from "../utils/avatarColors";
+import logo from "../assets/CodeBloggs_ logo.png";
 
 const Header = () => {
   const { openModal } = usePostModal();
@@ -49,22 +50,44 @@ const Header = () => {
     <header
       style={{
         position: "fixed",
-        top: 0,
-        left: "250px",
-        right: 0,
+        top: "12px",
+        left: "12px",
+        right: "12px",
         height: "95px",
-        backgroundColor: "#F6F7FF",
+        backgroundColor: "#F5F7FC",
         zIndex: 1000,
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
         paddingLeft: "2rem",
         paddingRight: "2rem",
         boxShadow: "none",
-        borderBottom: "1px solid #8D88EA",
+        borderBottom: "none",
+        gap: "2rem",
+        borderRadius: "20px",
       }}
     >
-      {/* Post Button - Center/Right */}
+      {/* Logo - Left */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flex: "0 0 auto",
+          marginLeft: "20px",
+        }}
+      >
+        <img
+          src={logo}
+          alt="CodeBloggs Logo"
+          style={{
+            width: "85%",
+            maxWidth: "200px",
+            height: "auto",
+            marginLeft: "-20px",
+          }}
+        />
+      </div>
+
+      {/* Post Button - Center */}
       <button
         onClick={openModal}
         style={{
@@ -81,7 +104,7 @@ const Header = () => {
           alignItems: "center",
           gap: "0.5rem",
           boxShadow: "0 2px 8px rgba(141, 136, 234, 0.3)",
-          marginRight: "200px",
+          margin: "0 auto",
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = "#6C63D9";
@@ -98,15 +121,15 @@ const Header = () => {
         <span>Create Post</span>
       </button>
 
-      {/* User Menu Section */}
+      {/* User Menu Section - Right */}
       <div
         ref={menuRef}
         style={{
-          position: "absolute",
-          right: "2rem",
           display: "flex",
           alignItems: "center",
           gap: "1.5rem",
+          minWidth: "fit-content",
+          flex: "0 0 auto",
         }}
       >
         {/* User Avatar with Status */}

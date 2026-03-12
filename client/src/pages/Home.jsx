@@ -256,7 +256,7 @@ const Home = () => {
 
         {/* Right Column - Posts List with Scrollbar */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden", maxHeight: "calc(100% - 150px)" }}>
-          <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
+          <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
             Your Recent Posts
           </h2>
 
@@ -269,6 +269,7 @@ const Home = () => {
                 flexDirection: "column",
                 gap: "0.5rem",
                 overflowY: "auto",
+                marginTop: "20px",
               }}
             >
               {userPosts
@@ -283,6 +284,7 @@ const Home = () => {
                       padding: "0.75rem",
                       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
                       transition: "all 0.2s ease",
+                      marginTop: "10px",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.1)";

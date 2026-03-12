@@ -132,7 +132,7 @@ const Network = () => {
   return (
     <Layout>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-        <h2 style={{ color: "#1F2340", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
+        <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
           Community Members
         </h2>
 
@@ -162,6 +162,7 @@ const Network = () => {
               gap: "1.5rem",
               overflowY: "auto",
               paddingRight: "0.5rem",
+              marginTop: "20px",
             }}
           >
             {usersWithPosts.map((user) => (
@@ -177,6 +178,7 @@ const Network = () => {
                   display: "flex",
                   flexDirection: "column",
                   height: "fit-content",
+                  marginTop: "10px",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";

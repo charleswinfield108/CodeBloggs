@@ -20,7 +20,7 @@ const Layout = ({ children }) => {
         style={{
           display: "flex",
           flex: 1,
-          marginTop: "80px",
+          marginTop: "119px",
         }}
       >
         <Sidebar />
@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
             backgroundColor: "#FFFFFF",
             flex: 1,
             overflowY: "auto",
-            height: "calc(100vh - 80px)",
+            height: "calc(100vh - 119px)",
           }}
         >
           {children}
