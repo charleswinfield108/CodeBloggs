@@ -80,7 +80,7 @@ const Header = () => {
           alignItems: "center",
           gap: "0.5rem",
           boxShadow: "0 2px 8px rgba(141, 136, 234, 0.3)",
-          marginRight: "60px",
+          marginRight: "200px",
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = "#6C63D9";
