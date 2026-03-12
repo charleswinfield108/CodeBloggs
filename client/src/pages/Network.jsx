@@ -165,7 +165,9 @@ const Network = () => {
               marginTop: "20px",
             }}
           >
-            {usersWithPosts.map((user) => (
+            {usersWithPosts
+              .filter((user) => user._id !== session?.id)
+              .map((user) => (
               <div
                 key={user._id}
                 style={{
