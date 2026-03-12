@@ -25,27 +25,14 @@ const sessionLogin = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" }); // Same generic error message
         }
 
-        // Update user to mark them as online and record heartbeat
+        // Update user to mark them as online
         await DB.collection("users").updateOne(
             { _id: USER._id },
-            { $set: { isOnline: true, lastSeen: new Date(), lastHeartbeat: new Date() } }
+            { $set: { isOnline: true, lastSeen: new Date() } }
         );
 
         // Generate a unique session token
         const session_token = uuidv4();
-
-        // Ensure the sessions collection has an expiration index
-        const SESSIONS_COLLECTION = DB.collection("sessions");
-        
-        // Drop the old index if it exists with different TTL
-        try {
-          await SESSIONS_COLLECTION.dropIndex("session_date_1");
-        } catch (err) {
-          // Index doesn't exist yet, which is fine
-        }
-        
-        // Create the TTL index (24 hours)
-        await SESSIONS_COLLECTION.createIndex({ "session_date": 1 }, { expireAfterSeconds: 86400 });
 
         // Create a new session object
         const NEW_SESSION = {
@@ -55,6 +42,7 @@ const sessionLogin = async (req, res) => {
         };
 
         // Insert the session into the database
+        const SESSIONS_COLLECTION = DB.collection("sessions");
         await SESSIONS_COLLECTION.insertOne(NEW_SESSION);
 
         // Respond with user details and session token
