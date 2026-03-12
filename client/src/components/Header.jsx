@@ -68,12 +68,17 @@ const Header = () => {
     >
       {/* Logo - Left */}
       <div
+        onClick={() => navigate("/home")}
         style={{
           display: "flex",
           alignItems: "center",
           flex: "0 0 auto",
           marginLeft: "20px",
+          cursor: "pointer",
+          transition: "opacity 0.2s ease",
         }}
+        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
+        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
       >
         <img
           src={logo}
