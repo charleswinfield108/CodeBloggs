@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { usePostModal } from "../context/PostModalContext";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
-import { FiChevronDown } from "react-icons/fi";
+import { FiChevronDown, FiEdit3, FiSettings, FiLogOut } from "react-icons/fi";
 
 const Header = () => {
   const { openModal } = usePostModal();
@@ -36,6 +36,14 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  // Get user initials for avatar
+  const getInitials = () => {
+    if (session?.first_name && session?.last_name) {
+      return (session.first_name[0] + session.last_name[0]).toUpperCase();
+    }
+    return "U";
+  };
+
   return (
     <header
       style={{
@@ -44,40 +52,60 @@ const Header = () => {
         left: "250px",
         right: 0,
         height: "95px",
-        backgroundColor: "#8D88EA",
+        backgroundColor: "#FFFFFF",
         zIndex: 1000,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         paddingLeft: "2rem",
         paddingRight: "2rem",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
+        borderBottom: "3px solid #2ED3B7",
       }}
     >
-      {/* Post Button */}
+      {/* Logo Placeholder */}
+      <div
+        style={{
+          fontWeight: "700",
+          fontSize: "1.25rem",
+          color: "#8D88EA",
+          letterSpacing: "-0.5px",
+        }}
+      >
+        CodeBloggs
+      </div>
+
+      {/* Post Button - Center/Right */}
       <button
         onClick={openModal}
         style={{
-          padding: "0.75rem 1.5rem",
-          backgroundColor: "white",
-          color: "#8D88EA",
+          padding: "0.75rem 1.75rem",
+          backgroundColor: "#2ED3B7",
+          color: "#FFFFFF",
           border: "none",
           borderRadius: "8px",
           fontSize: "1rem",
           fontWeight: "600",
           cursor: "pointer",
           transition: "all 0.3s ease",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          boxShadow: "0 2px 8px rgba(46, 211, 183, 0.3)",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#F0F0F5";
-          e.currentTarget.style.transform = "scale(1.05)";
+          e.currentTarget.style.backgroundColor = "#1CB89C";
+          e.currentTarget.style.transform = "translateY(-2px)";
+          e.currentTarget.style.boxShadow = "0 4px 16px rgba(46, 211, 183, 0.4)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "white";
-          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.backgroundColor = "#2ED3B7";
+          e.currentTarget.style.transform = "translateY(0)";
+          e.currentTarget.style.boxShadow = "0 2px 8px rgba(46, 211, 183, 0.3)";
         }}
       >
-        Post
+        <FiEdit3 size={18} />
+        <span>Create Post</span>
       </button>
 
       {/* User Menu Section */}
@@ -87,42 +115,69 @@ const Header = () => {
           position: "relative",
           display: "flex",
           alignItems: "center",
-          gap: "1rem",
+          gap: "1.5rem",
         }}
       >
-        {/* Username and Menu Trigger */}
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        {/* User Avatar with Status */}
+        <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "0.5rem",
-            backgroundColor: "transparent",
-            border: "none",
-            color: "white",
-            fontSize: "1rem",
-            fontWeight: "500",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            padding: "0.5rem 0.75rem",
-            borderRadius: "6px",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent";
+            gap: "0.75rem",
           }}
         >
-          <span>{session?.first_name || "User"}</span>
-          <FiChevronDown
-            size={20}
+          <div
             style={{
-              transform: isMenuOpen ? "rotate(180deg)" : "rotate(0deg)",
-              transition: "transform 0.3s ease",
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              backgroundColor: "#8D88EA",
+              color: "#FFFFFF",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "700",
+              fontSize: "0.85rem",
+              boxShadow: "0 2px 8px rgba(141, 136, 234, 0.3)",
             }}
-          />
-        </button>
+          >
+            {getInitials()}
+          </div>
+
+          {/* Username and Menu Trigger */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "#1F2340",
+              fontSize: "0.95rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              padding: "0.5rem 0.75rem",
+              borderRadius: "6px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#F6F7FF";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+            }}
+          >
+            <span>{session?.first_name || "User"}</span>
+            <FiChevronDown
+              size={18}
+              style={{
+                transform: isMenuOpen ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.3s ease",
+              }}
+            />
+          </button>
+        </div>
 
         {/* Dropdown Menu */}
         {isMenuOpen && (
@@ -131,12 +186,12 @@ const Header = () => {
               position: "absolute",
               top: "100%",
               right: 0,
-              marginTop: "0.5rem",
-              backgroundColor: "white",
+              marginTop: "0.75rem",
+              backgroundColor: "#FFFFFF",
               border: "1px solid #E3E6F5",
-              borderRadius: "8px",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-              minWidth: "180px",
+              borderRadius: "12px",
+              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
+              minWidth: "200px",
               zIndex: 2000,
               overflow: "hidden",
             }}
@@ -146,7 +201,7 @@ const Header = () => {
               onClick={handleAccountSettings}
               style={{
                 width: "100%",
-                padding: "0.75rem 1rem",
+                padding: "0.85rem 1.25rem",
                 textAlign: "left",
                 backgroundColor: "transparent",
                 border: "none",
@@ -154,6 +209,9 @@ const Header = () => {
                 fontSize: "0.95rem",
                 cursor: "pointer",
                 transition: "background-color 0.2s ease",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "#F6F7FF";
@@ -162,7 +220,8 @@ const Header = () => {
                 e.currentTarget.style.backgroundColor = "transparent";
               }}
             >
-              Account Settings
+              <FiSettings size={16} color="#8D88EA" />
+              <span>Account Settings</span>
             </button>
 
             {/* Divider */}
@@ -178,7 +237,7 @@ const Header = () => {
               onClick={handleLogout}
               style={{
                 width: "100%",
-                padding: "0.75rem 1rem",
+                padding: "0.85rem 1.25rem",
                 textAlign: "left",
                 backgroundColor: "transparent",
                 border: "none",
@@ -187,6 +246,9 @@ const Header = () => {
                 fontWeight: "600",
                 cursor: "pointer",
                 transition: "background-color 0.2s ease",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "#FADBD8";
@@ -195,7 +257,8 @@ const Header = () => {
                 e.currentTarget.style.backgroundColor = "transparent";
               }}
             >
-              Logout
+              <FiLogOut size={16} />
+              <span>Logout</span>
             </button>
           </div>
         )}
