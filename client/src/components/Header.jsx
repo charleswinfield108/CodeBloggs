@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { usePostModal } from "../context/PostModalContext";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
@@ -10,19 +10,8 @@ const Header = () => {
   const { session, logout } = useSession();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-
-  // Get current page name from route
-  const getCurrentPageName = () => {
-    const path = location.pathname.toLowerCase();
-    if (path.includes("/home")) return "Home";
-    if (path.includes("/blogs")) return "Blogs";
-    if (path.includes("/network")) return "Network";
-    if (path.includes("/admin")) return "Admin";
-    return "Home";
-  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -74,18 +63,6 @@ const Header = () => {
         borderBottom: "1px solid #8D88EA",
       }}
     >
-      {/* Current Page Name */}
-      <div
-        style={{
-          fontWeight: "700",
-          fontSize: "1.4rem",
-          color: "#1F2340",
-          letterSpacing: "-0.5px",
-        }}
-      >
-        {getCurrentPageName()}
-      </div>
-
       {/* Post Button - Center/Right */}
       <button
         onClick={openModal}
