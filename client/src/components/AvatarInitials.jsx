@@ -1,23 +1,12 @@
 import React from "react";
+import { getAvatarColor } from "../utils/avatarColors";
 
 const AvatarInitials = ({ firstName = "", lastName = "", size = 80 }) => {
   // Generate initials
   const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
-  // Generate a consistent color based on initials (deterministic)
-  const colors = [
-    "#8D88EA",
-    "#FF6B6B",
-    "#4ECDC4",
-    "#FFE66D",
-    "#95E1D3",
-    "#F38181",
-    "#AA96DA",
-    "#FCBAD3",
-  ];
-  
-  const colorIndex = initials.charCodeAt(0) % colors.length;
-  const backgroundColor = colors[colorIndex];
+  // Get consistent color based on initials
+  const backgroundColor = getAvatarColor(firstName, lastName);
 
   return (
     <div

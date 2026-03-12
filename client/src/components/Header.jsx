@@ -4,6 +4,7 @@ import { usePostModal } from "../context/PostModalContext";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
 import { FiChevronDown, FiEdit3, FiSettings, FiLogOut } from "react-icons/fi";
+import { getAvatarColor } from "../utils/avatarColors";
 
 const Header = () => {
   const { openModal } = usePostModal();
@@ -121,7 +122,7 @@ const Header = () => {
               width: "40px",
               height: "40px",
               borderRadius: "50%",
-              backgroundColor: "#8D88EA",
+              backgroundColor: getAvatarColor(session?.first_name, session?.last_name),
               color: "#FFFFFF",
               display: "flex",
               alignItems: "center",
