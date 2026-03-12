@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import logo from "../assets/CodeBloggs_ logo.png";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useSession();
+  const { login, session, loading } = useSession();
+
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (!loading && session) {
+      navigate("/home", { replace: true });
+    }
+  }, [session, loading, navigate]);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -26,18 +33,18 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setIsSubmitting(true);
 
     if (!formData.email || !formData.password) {
       setError("Email and password are required");
-      setLoading(false);
+      setIsSubmitting(false);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address");
-      setLoading(false);
+      setIsSubmitting(false);
       return;
     }
 
@@ -60,7 +67,7 @@ const Login = () => {
 
       if (!response.ok) {
         setError(data.message || "Login failed. Please try again.");
-        setLoading(false);
+        setIsSubmitting(false);
         return;
       }
 
@@ -77,7 +84,7 @@ const Login = () => {
     } catch (err) {
       console.error("Login error:", err);
       setError("An error occurred. Please try again.");
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -159,7 +166,7 @@ const Login = () => {
                     boxSizing: "border-box",
                     color: "#1F2340",
                   }}
-                  disabled={loading}
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -198,7 +205,7 @@ const Login = () => {
                       boxSizing: "border-box",
                       color: "#1F2340",
                     }}
-                    disabled={loading}
+                    disabled={isSubmitting}
                   />
                   <button
                     type="button"
@@ -210,7 +217,7 @@ const Login = () => {
                       transform: "translateY(-50%)",
                       background: "none",
                       border: "none",
-                      cursor: loading ? "not-allowed" : "pointer",
+                      cursor: isSubmitting ? "not-allowed" : "pointer",
                       fontSize: "1.2rem",
                       color: "#8D88EA",
                       padding: "0.4rem",
@@ -218,7 +225,7 @@ const Login = () => {
                       alignItems: "center",
                       justifyContent: "center",
                     }}
-                    disabled={loading}
+                    disabled={isSubmitting}
                   >
                     {showPassword ? "👁️" : "👁️‍🗨️"}
                   </button>
@@ -246,11 +253,11 @@ const Login = () => {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isSubmitting}
                 style={{
                   width: "100%",
-                  backgroundColor: loading ? "#D1D5DB" : "white",
-                  color: loading ? "#9CA3AF" : "#8D88EA",
+                  backgroundColor: isSubmitting ? "#D1D5DB" : "white",
+                  color: isSubmitting ? "#9CA3AF" : "#8D88EA",
                   fontWeight: "600",
                   padding: "0.5rem 0.8rem",
                   borderRadius: "0.5rem",
@@ -262,10 +269,10 @@ const Login = () => {
                   boxSizing: "border-box",
                   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
                 }}
-                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = "#6C63D9", e.target.style.color = "white")}
-                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = "white", e.target.style.color = "#8D88EA")}
+                onMouseEnter={(e) => !isSubmitting && (e.target.style.backgroundColor = "#6C63D9", e.target.style.color = "white")}
+                onMouseLeave={(e) => !isSubmitting && (e.target.style.backgroundColor = "white", e.target.style.color = "#8D88EA")}
               >
-                {loading ? "Logging in..." : "Log In"}
+                {isSubmitting ? "Logging in..." : "Log In"}
               </button>
             </form>
 
