@@ -6,7 +6,8 @@ export const SessionContext = createContext();
 const setCookie = (name, value, days = 1) => {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+  const isSecure = window.location.protocol === 'https:' ? ';secure' : '';
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/${isSecure}`;
 };
 
 const getCookie = (name) => {
