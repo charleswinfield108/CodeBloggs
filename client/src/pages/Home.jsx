@@ -138,7 +138,7 @@ const Home = () => {
           {/* Avatar Section */}
           <div
             style={{
-              backgroundColor: "#F6F7FF",
+              backgroundColor: "#FAFBFF",
               padding: "0.8rem",
               borderRadius: "8px",
               display: "flex",
@@ -146,6 +146,17 @@ const Home = () => {
               alignItems: "center",
               gap: "0.6rem",
               flexShrink: 0,
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+              transition: "all 0.3s ease",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.12)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.08)";
             }}
           >
             <AvatarInitials
@@ -277,7 +288,7 @@ const Home = () => {
                   <div
                     key={post._id}
                     style={{
-                      backgroundColor: "#FFFFFF",
+                      backgroundColor: "#FCFDFE",
                       border: "1px solid #8D88EA",
                       borderRadius: "8px",
                       padding: "0.75rem",
@@ -322,7 +333,7 @@ const Home = () => {
                           gap: "0.4rem",
                           backgroundColor: likedPosts.has(post._id)
                             ? "#8D88EA"
-                            : "#F0F0F5",
+                            : "#F5F7FB",
                           color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
                           border: "none",
                           borderRadius: "6px",
