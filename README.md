@@ -483,21 +483,6 @@ npm run preview
 
 For more information, refer to the feature documentation in the `docs/` folder or contact the project administrator.
 
-#### What, if any DATA is required from the backend to render the wireframe?
-
-#### What, if any, ACTIONS is this wireframe responsible for?
-
-```
-
-```
----
-
-## CodeBlogg - Base Frames and dropdown
-
-#### What, if any DATA is required from the backend to render the wireframe?
-
-#### What, if any, ACTIONS is this wireframe responsible for?
-
 ```
 
 ```

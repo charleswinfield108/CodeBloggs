@@ -205,75 +205,100 @@ const Register = () => {
   };
 
   return (
-    <div
-      style={{
+    <>
+      <div style={{
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
+        background: "#FBFCFD",
         fontFamily: "'Open Sans', sans-serif",
-      }}
-    >
-      <div
-        style={{
-          flex: 1,
+        padding: "1.5rem 1rem",
+      }}>
+        {/* Logo Section - Close to top */}
+        <div style={{
+          marginTop: "1rem",
+          marginBottom: "1.5rem",
+        }}>
+          <img
+            src={logo}
+            alt="CodeBloggs Logo"
+            style={{
+              height: "40px",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+
+        {/* Form container with flex grow to center card */}
+        <div style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(to bottom right, #F6F7FF, white)",
-          padding: "0",
-        }}
-      >
-        <div style={{ width: "100%", maxWidth: "63%", paddingTop: "1rem", paddingBottom: "1rem" }}>
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <img
-              src={logo}
-              alt="CodeBloggs Logo"
-              style={{
-                height: "48px",
-                marginBottom: "0.5rem",
-                objectFit: "contain",
-              }}
-            />
-            <h1
-              style={{
-                fontSize: "24px",
+          flex: 1,
+          width: "100%",
+          marginTop: "-20px",
+        }}>
+          {/* Sign Up Form Card - Styled like User Manager Card */}
+          <div style={{
+            width: "100%",
+            maxWidth: "540px",
+            backgroundColor: "#FFFFFF",
+            border: "1px solid #8D88EA",
+            borderRadius: "12px",
+            padding: "1.2rem",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+            transition: "all 0.3s ease",
+          }}>
+            {/* Welcome Section Inside Card */}
+            <div style={{
+              textAlign: "center",
+              marginBottom: "1rem",
+            }}>
+              <h1 style={{
+                fontSize: "1.8rem",
+                fontWeight: "700",
+                marginBottom: "0.3rem",
+                color: "#1F2340",
+                lineHeight: "1.3",
+                margin: "0 0 0.3rem 0",
+              }}>
+                Create Account
+              </h1>
+              <p style={{
+                fontSize: "0.9rem",
                 fontWeight: "400",
-                color: "#8D88EA",
-                marginBottom: "0.5rem",
-                fontFamily: "'Open Sans', sans-serif",
-              }}
-            >
-              Create Your CodeBloggs Account
-            </h1>
-          </div>
+                color: "#666",
+                marginBottom: 0,
+                lineHeight: "1.5",
+              }}>
+                Join our community and start sharing
+              </p>
+            </div>
 
-          <div
-            style={{
-              background: "linear-gradient(to bottom, #8D88EA 0%, #A49EF0 100%)",
-              borderRadius: "0.75rem",
-              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2)",
-              padding: "1.2rem",
-              border: "1px solid #8D88EA",
-            }}
-          >
             <form onSubmit={handleSubmit}>
               {errors.general && (
                 <div
                   style={{
-                    marginBottom: "0.8rem",
-                    padding: "0.6rem",
+                    marginBottom: "0.75rem",
+                    padding: "0.875rem 1rem",
                     backgroundColor: "#FEF2F2",
-                    border: "1px solid #FECACA",
-                    borderRadius: "0.5rem",
+                    border: "1px solid #FCA5A5",
+                    borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
                   }}
                 >
+                  <span style={{ fontSize: "1.2rem" }}>⚠️</span>
                   <p
                     style={{
-                      color: "#DC2626",
+                      color: "#B91C1C",
                       fontSize: "0.875rem",
                       fontWeight: "500",
                       fontFamily: "'Open Sans', sans-serif",
                       margin: "0",
+                      flex: 1,
                     }}
                   >
                     {errors.general}
@@ -281,18 +306,18 @@ const Register = () => {
                 </div>
               )}
 
-              {/* Two Column Row: First Name & Last Name */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem", marginBottom: "0.8rem" }}>
+              {/* Row 1: First Name, Last Name, Birthdate */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.8rem", marginBottom: "0.7rem" }}>
                 {/* First Name */}
                 <div>
                   <label
                     htmlFor="first_name"
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      color: "white",
-                      marginBottom: "0.4rem",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      color: "#1F2340",
+                      marginBottom: "0.6rem",
                       fontFamily: "'Open Sans', sans-serif",
                     }}
                   >
@@ -308,24 +333,36 @@ const Register = () => {
                     placeholder="John"
                     style={{
                       width: "100%",
-                      padding: "0.5rem 0.8rem",
-                      border: errors.first_name ? "1px solid #DC2626" : "1px solid #8D88EA",
-                      borderRadius: "0.5rem",
-                      fontSize: "1rem",
+                      padding: "0.75rem 1rem",
+                      border: errors.first_name ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                      borderRadius: "8px",
+                      fontSize: "12px",
                       outline: "none",
                       fontFamily: "'Open Sans', sans-serif",
                       fontWeight: "400",
                       boxSizing: "border-box",
                       color: "#1F2340",
+                      backgroundColor: errors.first_name ? "#FEF2F2" : "#F6F7FF",
+                      transition: "all 0.3s ease",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#8D88EA";
+                      e.target.style.backgroundColor = "#FFFFFF";
+                      e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = errors.first_name ? "#FCA5A5" : "#E3E6F5";
+                      e.target.style.backgroundColor = errors.first_name ? "#FEF2F2" : "#F6F7FF";
+                      e.target.style.boxShadow = "none";
                     }}
                     disabled={loading}
                   />
                   {errors.first_name && (
                     <p
                       style={{
-                        color: "#FCA5A5",
+                        color: "#B91C1C",
                         fontSize: "0.75rem",
-                        marginTop: "0.2rem",
+                        marginTop: "0.3rem",
                         fontFamily: "'Open Sans', sans-serif",
                       }}
                     >
@@ -340,10 +377,10 @@ const Register = () => {
                     htmlFor="last_name"
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      color: "white",
-                      marginBottom: "0.4rem",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      color: "#1F2340",
+                      marginBottom: "0.6rem",
                       fontFamily: "'Open Sans', sans-serif",
                     }}
                   >
@@ -359,81 +396,40 @@ const Register = () => {
                     placeholder="Doe"
                     style={{
                       width: "100%",
-                      padding: "0.5rem 0.8rem",
-                      border: errors.last_name ? "1px solid #DC2626" : "1px solid #8D88EA",
-                      borderRadius: "0.5rem",
-                      fontSize: "1rem",
+                      padding: "0.75rem 1rem",
+                      border: errors.last_name ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                      borderRadius: "8px",
+                      fontSize: "12px",
                       outline: "none",
                       fontFamily: "'Open Sans', sans-serif",
                       fontWeight: "400",
                       boxSizing: "border-box",
                       color: "#1F2340",
+                      backgroundColor: errors.last_name ? "#FEF2F2" : "#F6F7FF",
+                      transition: "all 0.3s ease",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#8D88EA";
+                      e.target.style.backgroundColor = "#FFFFFF";
+                      e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = errors.last_name ? "#FCA5A5" : "#E3E6F5";
+                      e.target.style.backgroundColor = errors.last_name ? "#FEF2F2" : "#F6F7FF";
+                      e.target.style.boxShadow = "none";
                     }}
                     disabled={loading}
                   />
                   {errors.last_name && (
                     <p
                       style={{
-                        color: "#FCA5A5",
+                        color: "#B91C1C",
                         fontSize: "0.75rem",
-                        marginTop: "0.2rem",
+                        marginTop: "0.3rem",
                         fontFamily: "'Open Sans', sans-serif",
                       }}
                     >
                       {errors.last_name}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Email and Birthdate Row */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem", marginBottom: "0.8rem" }}>
-                {/* Email */}
-                <div>
-                  <label
-                    htmlFor="email"
-                    style={{
-                      display: "block",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      color: "white",
-                      marginBottom: "0.4rem",
-                      fontFamily: "'Open Sans', sans-serif",
-                    }}
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="you@example.com"
-                    style={{
-                      width: "100%",
-                      padding: "0.5rem 0.8rem",
-                      border: errors.email ? "1px solid #DC2626" : "1px solid #8D88EA",
-                      borderRadius: "0.5rem",
-                      fontSize: "1rem",
-                      outline: "none",
-                      fontFamily: "'Open Sans', sans-serif",
-                      fontWeight: "400",
-                      boxSizing: "border-box",
-                      color: "#1F2340",
-                    }}
-                    disabled={loading}
-                  />
-                  {errors.email && (
-                    <p
-                      style={{
-                        color: "#FCA5A5",
-                        fontSize: "0.75rem",
-                        marginTop: "0.2rem",
-                        fontFamily: "'Open Sans', sans-serif",
-                      }}
-                    >
-                      {errors.email}
                     </p>
                   )}
                 </div>
@@ -444,10 +440,10 @@ const Register = () => {
                     htmlFor="birthdate"
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      color: "white",
-                      marginBottom: "0.4rem",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      color: "#1F2340",
+                      marginBottom: "0.6rem",
                       fontFamily: "'Open Sans', sans-serif",
                     }}
                   >
@@ -461,24 +457,36 @@ const Register = () => {
                     onChange={handleChange}
                     style={{
                       width: "100%",
-                      padding: "0.5rem 0.8rem",
-                      border: errors.birthdate ? "1px solid #DC2626" : "1px solid #8D88EA",
-                      borderRadius: "0.5rem",
-                      fontSize: "1rem",
+                      padding: "0.75rem 1rem",
+                      border: errors.birthdate ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                      borderRadius: "8px",
+                      fontSize: "12px",
                       outline: "none",
                       fontFamily: "'Open Sans', sans-serif",
                       fontWeight: "400",
                       boxSizing: "border-box",
                       color: "#1F2340",
+                      backgroundColor: errors.birthdate ? "#FEF2F2" : "#F6F7FF",
+                      transition: "all 0.3s ease",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#8D88EA";
+                      e.target.style.backgroundColor = "#FFFFFF";
+                      e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = errors.birthdate ? "#FCA5A5" : "#E3E6F5";
+                      e.target.style.backgroundColor = errors.birthdate ? "#FEF2F2" : "#F6F7FF";
+                      e.target.style.boxShadow = "none";
                     }}
                     disabled={loading}
                   />
                   {errors.birthdate && (
                     <p
                       style={{
-                        color: "#FCA5A5",
+                        color: "#B91C1C",
                         fontSize: "0.75rem",
-                        marginTop: "0.2rem",
+                        marginTop: "0.3rem",
                         fontFamily: "'Open Sans', sans-serif",
                       }}
                     >
@@ -488,18 +496,78 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Two Column Row: Password & Occupation */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem", marginBottom: "0.8rem" }}>
-                {/* Password */}
+              {/* Row 2: Email, Password, Occupation */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.8rem", marginBottom: "0.7rem" }}>
+                {/* Email */}
+                <div>
+                  <label
+                    htmlFor="email"
+                    style={{
+                      display: "block",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      color: "#1F2340",
+                      marginBottom: "0.6rem",
+                      fontFamily: "'Open Sans', sans-serif",
+                    }}
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your@email.com"
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem 1rem",
+                      border: errors.email ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                      borderRadius: "8px",
+                      fontSize: "12px",
+                      outline: "none",
+                      fontFamily: "'Open Sans', sans-serif",
+                      fontWeight: "400",
+                      boxSizing: "border-box",
+                      color: "#1F2340",
+                      backgroundColor: errors.email ? "#FEF2F2" : "#F6F7FF",
+                      transition: "all 0.3s ease",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#8D88EA";
+                      e.target.style.backgroundColor = "#FFFFFF";
+                      e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = errors.email ? "#FCA5A5" : "#E3E6F5";
+                      e.target.style.backgroundColor = errors.email ? "#FEF2F2" : "#F6F7FF";
+                      e.target.style.boxShadow = "none";
+                    }}
+                    disabled={loading}
+                  />
+                  {errors.email && (
+                    <p
+                      style={{
+                        color: "#B91C1C",
+                        fontSize: "0.75rem",
+                        marginTop: "0.3rem",
+                        fontFamily: "'Open Sans', sans-serif",
+                      }}
+                    >
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
                 <div>
                   <label
                     htmlFor="password"
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      color: "white",
-                      marginBottom: "0.4rem",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      color: "#1F2340",
+                      marginBottom: "0.6rem",
                       fontFamily: "'Open Sans', sans-serif",
                     }}
                   >
@@ -512,19 +580,31 @@ const Register = () => {
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="••••••••"
+                      placeholder="Enter your password"
                       style={{
                         width: "100%",
-                        padding: "0.5rem 0.8rem 0.5rem 0.8rem",
-                        paddingRight: "2.5rem",
-                        border: errors.password ? "1px solid #DC2626" : "1px solid #8D88EA",
-                        borderRadius: "0.5rem",
-                        fontSize: "1rem",
+                        padding: "0.75rem 1rem",
+                        paddingRight: "2.8rem",
+                        border: errors.password ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                        borderRadius: "8px",
+                        fontSize: "12px",
                         outline: "none",
                         fontFamily: "'Open Sans', sans-serif",
                         fontWeight: "400",
                         boxSizing: "border-box",
                         color: "#1F2340",
+                        backgroundColor: errors.password ? "#FEF2F2" : "#F6F7FF",
+                        transition: "all 0.3s ease",
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = "#8D88EA";
+                        e.target.style.backgroundColor = "#FFFFFF";
+                        e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = errors.password ? "#FCA5A5" : "#E3E6F5";
+                        e.target.style.backgroundColor = errors.password ? "#FEF2F2" : "#F6F7FF";
+                        e.target.style.boxShadow = "none";
                       }}
                       disabled={loading}
                     />
@@ -533,19 +613,23 @@ const Register = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       style={{
                         position: "absolute",
-                        right: "0.8rem",
+                        right: "1rem",
                         top: "50%",
                         transform: "translateY(-50%)",
                         background: "none",
                         border: "none",
                         cursor: loading ? "not-allowed" : "pointer",
-                        fontSize: "1.2rem",
+                        fontSize: "1.1rem",
                         color: "#8D88EA",
                         padding: "0.4rem",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        opacity: loading ? "0.5" : "1",
+                        transition: "color 0.2s ease",
                       }}
+                      onMouseEnter={(e) => !loading && (e.target.style.color = "#6E6AB8")}
+                      onMouseLeave={(e) => !loading && (e.target.style.color = "#8D88EA")}
                       disabled={loading}
                     >
                       {showPassword ? "👁️" : "👁️‍🗨️"}
@@ -554,9 +638,9 @@ const Register = () => {
                   {errors.password && (
                     <p
                       style={{
-                        color: "#FCA5A5",
+                        color: "#B91C1C",
                         fontSize: "0.75rem",
-                        marginTop: "0.2rem",
+                        marginTop: "0.3rem",
                         fontFamily: "'Open Sans', sans-serif",
                       }}
                     >
@@ -571,10 +655,10 @@ const Register = () => {
                     htmlFor="occupation"
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
-                      fontWeight: "500",
-                      color: "white",
-                      marginBottom: "0.4rem",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      color: "#1F2340",
+                      marginBottom: "0.6rem",
                       fontFamily: "'Open Sans', sans-serif",
                     }}
                   >
@@ -590,24 +674,36 @@ const Register = () => {
                     placeholder="Software Developer"
                     style={{
                       width: "100%",
-                      padding: "0.5rem 0.8rem",
-                      border: errors.occupation ? "1px solid #DC2626" : "1px solid #8D88EA",
-                      borderRadius: "0.5rem",
-                      fontSize: "1rem",
+                      padding: "0.75rem 1rem",
+                      border: errors.occupation ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                      borderRadius: "8px",
+                      fontSize: "12px",
                       outline: "none",
                       fontFamily: "'Open Sans', sans-serif",
                       fontWeight: "400",
                       boxSizing: "border-box",
                       color: "#1F2340",
+                      backgroundColor: errors.occupation ? "#FEF2F2" : "#F6F7FF",
+                      transition: "all 0.3s ease",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#8D88EA";
+                      e.target.style.backgroundColor = "#FFFFFF";
+                      e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = errors.occupation ? "#FCA5A5" : "#E3E6F5";
+                      e.target.style.backgroundColor = errors.occupation ? "#FEF2F2" : "#F6F7FF";
+                      e.target.style.boxShadow = "none";
                     }}
                     disabled={loading}
                   />
                   {errors.occupation && (
                     <p
                       style={{
-                        color: "#FCA5A5",
+                        color: "#B91C1C",
                         fontSize: "0.75rem",
-                        marginTop: "0.2rem",
+                        marginTop: "0.3rem",
                         fontFamily: "'Open Sans', sans-serif",
                       }}
                     >
@@ -617,16 +713,16 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Location - Full Width */}
-              <div style={{ marginBottom: "0.8rem", position: "relative" }}>
+              {/* Row 3: Location - Full Width */}
+              <div style={{ marginBottom: "0.7rem", position: "relative" }}>
                 <label
                   htmlFor="location"
                   style={{
                     display: "block",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    color: "white",
-                    marginBottom: "0.4rem",
+                    fontSize: "0.85rem",
+                    fontWeight: "600",
+                    color: "#1F2340",
+                    marginBottom: "0.6rem",
                     fontFamily: "'Open Sans', sans-serif",
                   }}
                 >
@@ -675,15 +771,17 @@ const Register = () => {
                   }}
                   style={{
                     width: "100%",
-                    padding: "0.5rem 0.8rem",
-                    border: errors.location ? "1px solid #DC2626" : "1px solid #8D88EA",
-                    borderRadius: "0.5rem",
-                    fontSize: "1rem",
+                    padding: "0.75rem 1rem",
+                    border: errors.location ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                    borderRadius: "8px",
+                    fontSize: "12px",
                     outline: "none",
                     fontFamily: "'Open Sans', sans-serif",
                     fontWeight: "400",
                     boxSizing: "border-box",
                     color: "#1F2340",
+                    backgroundColor: errors.location ? "#FEF2F2" : "#F6F7FF",
+                    transition: "all 0.3s ease",
                   }}
                   disabled={loading}
                 />
@@ -734,7 +832,7 @@ const Register = () => {
                 {errors.location && (
                   <p
                     style={{
-                      color: "#FCA5A5",
+                      color: "#B91C1C",
                       fontSize: "0.75rem",
                       marginTop: "0.2rem",
                       fontFamily: "'Open Sans', sans-serif",
@@ -748,7 +846,7 @@ const Register = () => {
               {successMessage && (
                 <div
                   style={{
-                    marginBottom: "0.8rem",
+                    marginBottom: "0.7rem",
                     padding: "0.6rem",
                     backgroundColor: "#DCFCE7",
                     border: "1px solid #86EFAC",
@@ -774,26 +872,34 @@ const Register = () => {
                 disabled={loading}
                 style={{
                   width: "100%",
-                  backgroundColor: loading ? "#D1D5DB" : "white",
-                  color: loading ? "#9CA3AF" : "#8D88EA",
+                  backgroundColor: loading ? "#D1D5DB" : "#8D88EA",
+                  color: "white",
                   fontWeight: "600",
-                  padding: "0.5rem 0.8rem",
-                  borderRadius: "0.5rem",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "8px",
                   border: "none",
                   cursor: loading ? "not-allowed" : "pointer",
                   fontSize: "1rem",
-                  transition: "background-color 0.2s",
+                  transition: "all 0.3s ease",
                   fontFamily: "'Open Sans', sans-serif",
                   boxSizing: "border-box",
                   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
-                  marginTop: "0.4rem",
+                  marginTop: "1rem",
                 }}
-                onMouseEnter={(e) =>
-                  !loading && (e.target.style.backgroundColor = "#6C63D9", (e.target.style.color = "white"))
-                }
-                onMouseLeave={(e) =>
-                  !loading && (e.target.style.backgroundColor = "white", (e.target.style.color = "#8D88EA"))
-                }
+                onMouseEnter={(e) => {
+                  if (!loading) {
+                    e.currentTarget.style.backgroundColor = "#6E6AB8";
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(141, 136, 234, 0.3)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading) {
+                    e.currentTarget.style.backgroundColor = "#8D88EA";
+                    e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.15)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }
+                }}
               >
                 {loading ? "Creating Account..." : "Create Account"}
               </button>
@@ -802,29 +908,30 @@ const Register = () => {
             <p
               style={{
                 textAlign: "center",
-                color: "white",
+                color: "#1F2340",
                 fontFamily: "'Open Sans', sans-serif",
                 fontWeight: "400",
-                fontSize: "1.125rem",
+                fontSize: "0.95rem",
                 marginTop: "1rem",
               }}
             >
               Already have an account?{" "}
               <button
+                type="button"
                 onClick={() => navigate("/login")}
                 style={{
-                  color: "white",
+                  color: "#8D88EA",
                   fontWeight: "700",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
                   textDecoration: "underline",
                   fontFamily: "'Open Sans', sans-serif",
-                  fontSize: "1.125rem",
-                  transition: "color 0.2s",
+                  fontSize: "0.95rem",
+                  transition: "color 0.3s ease",
                 }}
-                onMouseEnter={(e) => (e.target.style.color = "#6C63D9")}
-                onMouseLeave={(e) => (e.target.style.color = "white")}
+                onMouseEnter={(e) => (e.target.style.color = "#6E6AB8")}
+                onMouseLeave={(e) => (e.target.style.color = "#8D88EA")}
               >
                 Log In
               </button>
@@ -832,24 +939,7 @@ const Register = () => {
           </div>
         </div>
       </div>
-      
-      {/* Footer */}
-      <footer
-        style={{
-          height: "80px",
-          backgroundColor: "#8D88EA",
-          color: "white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "'Open Sans', sans-serif",
-          fontWeight: "300",
-          fontSize: "0.875rem",
-        }}
-      >
-        © 2026 CodeBloggs. All rights reserved.
-      </footer>
-    </div>
+    </>
   );
 };
 
