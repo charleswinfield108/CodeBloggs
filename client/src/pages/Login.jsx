@@ -3,44 +3,74 @@ import { useNavigate } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import logo from "../assets/CodeBloggs_ logo.png";
 
+/**
+ * Login Component
+ * Handles user authentication by collecting email and password,
+ * validating input, sending credentials to backend, and managing session.
+ * Auto-redirects to home if user is already logged in.
+ */
 const Login = () => {
+  // Router navigation hook
   const navigate = useNavigate();
+  // Session management: login function, session data, and loading state
   const { login, session, loading } = useSession();
 
-  // Redirect to home if already logged in
+  /**
+   * Auto-redirect effect
+   * If user is already authenticated (session exists), redirect to /home
+   * This prevents logged-in users from accessing the login page
+   */
   useEffect(() => {
     if (!loading && session) {
       navigate("/home", { replace: true });
     }
   }, [session, loading, navigate]);
+
+  // State for form fields
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  // State for error messages
   const [error, setError] = useState("");
+  // State to track if form submission is in progress
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // State for password visibility toggle
   const [showPassword, setShowPassword] = useState(false);
 
+  /**
+   * Handle input field changes
+   * Updates form data and clears error message on user input
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    // Clear error message when user starts typing
     if (error) setError("");
   };
 
+  /**
+   * Handle form submission
+   * Validates email and password, sends credentials to backend /session/login endpoint
+   * On success: stores session token and user data, then redirects to /home
+   * On error: displays error message and allows user to retry
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setIsSubmitting(true);
 
+    // Validate required fields
     if (!formData.email || !formData.password) {
       setError("Email and password are required");
       setIsSubmitting(false);
       return;
     }
 
+    // Validate email format using regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address");
@@ -50,9 +80,11 @@ const Login = () => {
 
     try {
       // Create abort controller with 10 second timeout
+      // This prevents hung requests from blocking the UI
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
       
+      // Send credentials to backend login endpoint
       const response = await fetch("http://localhost:5050/session/login", {
         method: "POST",
         headers: {
@@ -62,15 +94,19 @@ const Login = () => {
         signal: controller.signal,
       });
 
+      // Clear timeout after response received
       clearTimeout(timeoutId);
       const data = await response.json();
 
+      // Handle HTTP error responses
       if (!response.ok) {
         setError(data.message || "Login failed. Please try again.");
         setIsSubmitting(false);
         return;
       }
 
+      // Call login function from SessionContext to store session data
+      // This saves session_token to cookie and localStorage
       login({
         session_token: data.session_token,
         id: data.id,
@@ -80,6 +116,7 @@ const Login = () => {
         isOnline: data.isOnline,
       });
 
+      // Redirect to home page on successful login
       navigate("/home");
     } catch (err) {
       console.error("Login error:", err);
@@ -89,264 +126,302 @@ const Login = () => {
   };
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      fontFamily: "'Open Sans', sans-serif",
-    }}>
+    <>
+      <style>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+      `}</style>
       <div style={{
-        flex: 1,
+        height: "100vh",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(to bottom right, #F6F7FF, white)",
-        padding: "0",
+        background: "#FBFCFD",
+        fontFamily: "'Open Sans', sans-serif",
+        padding: "0.5rem",
+        overflow: "hidden",
       }}>
-        <div style={{ width: "100%", maxWidth: "28rem" }}>
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <img
-              src={logo}
-              alt="CodeBloggs Logo"
-              style={{
-                height: "48px",
-                marginBottom: "0.5rem",
-                objectFit: "contain",
-              }}
-            />
+        {/* Logo Section */}
+        <div style={{
+          marginBottom: "0.75rem",
+          position: "relative",
+          top: "-50px",
+        }}>
+          <img
+            src={logo}
+            alt="CodeBloggs Logo"
+            style={{
+              height: "40px",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+
+        {/* Form container */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}>
+          {/* Sign In Form Card - Styled like User Manager Card */}
+          <div style={{
+            width: "100%",
+            maxWidth: "375px",
+            backgroundColor: "#FFFFFF",
+            border: "1px solid #8D88EA",
+            borderRadius: "12px",
+            padding: "calc(0.88rem + 15px)",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+            transition: "all 0.3s ease",
+            maxHeight: "85vh",
+            overflowY: "auto",
+          }}>
+          {/* Welcome Section Inside Card */}
+          <div style={{
+            textAlign: "center",
+            marginBottom: "0.55rem",
+          }}>
             <h1 style={{
-              fontSize: "24px",
-              fontWeight: "400",
+              fontSize: "1.5rem",
+              fontWeight: "700",
+              marginBottom: "0.2rem",
               color: "#8D88EA",
-              marginBottom: "0.5rem",
-              fontFamily: "'Open Sans', sans-serif",
+              lineHeight: "1.2",
+              margin: "0 0 0.15rem 0",
             }}>
-              Welcome to CodeBloggs, Please Login
+              Please Login
             </h1>
+            <p style={{
+              fontSize: "0.8rem",
+              fontWeight: "400",
+              color: "#666",
+              marginBottom: 0,
+              lineHeight: "1.4",
+            }}>
+              Sign in to your account and continue the conversation
+            </p>
           </div>
 
-          <div style={{
-            background: "linear-gradient(to bottom, #8D88EA 0%, #A49EF0 100%)",
-            borderRadius: "0.75rem",
-            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2)",
-            padding: "1.2rem",
-            border: "1px solid #8D88EA",
-          }}>
-            <form onSubmit={handleSubmit}>
-              <div style={{ marginBottom: "0.8rem" }}>
-                <label
-                  htmlFor="email"
-                  style={{
-                    display: "block",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    color: "white",
-                    marginBottom: "0.4rem",
-                    fontFamily: "'Open Sans', sans-serif",
-                  }}
-                >
-                  Email
-                </label>
+          <form onSubmit={handleSubmit}>
+            {/* Email */}
+            <div style={{ marginBottom: "0.55rem" }}>
+              <label
+                htmlFor="email"
+                style={{
+                  display: "block",
+                  fontSize: "0.8rem",
+                  fontWeight: "600",
+                  color: "#1F2340",
+                  marginBottom: "0.4rem",
+                }}
+              >
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="your@email.com"
+                style={{
+                  width: "100%",
+                  padding: "0.6rem 0.8rem",
+                  border: "1px solid #E3E6F5",
+                  borderRadius: "8px",
+                  fontSize: "12px",
+                  fontFamily: "'Open Sans', sans-serif",
+                  boxSizing: "border-box",
+                  color: "#1F2340",
+                  backgroundColor: "#F6F7FF",
+                  transition: "all 0.3s ease",
+                  outline: "none",
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#8D88EA";
+                  e.target.style.backgroundColor = "#FFFFFF";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#E3E6F5";
+                  e.target.style.backgroundColor = "#F6F7FF";
+                  e.target.style.boxShadow = "none";
+                }}
+                disabled={isSubmitting}
+              />
+            </div>
+
+            {/* Password */}
+            <div style={{ marginBottom: "0.55rem" }}>
+              <label
+                htmlFor="password"
+                style={{
+                  display: "block",
+                  fontSize: "0.8rem",
+                  fontWeight: "600",
+                  color: "#1F2340",
+                  marginBottom: "0.4rem",
+                }}
+              >
+                Password
+              </label>
+              <div style={{ position: "relative" }}>
                 <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
                   onChange={handleChange}
-                  placeholder="you@example.com"
+                  placeholder="Enter your password"
                   style={{
                     width: "100%",
-                    padding: "0.5rem 0.8rem",
-                    border: "1px solid #8D88EA",
-                    borderRadius: "0.5rem",
-                    fontSize: "1rem",
-                    outline: "none",
+                    padding: "0.6rem 0.8rem",
+                    paddingRight: "2.5rem",
+                    border: "1px solid #E3E6F5",
+                    borderRadius: "8px",
+                    fontSize: "12px",
                     fontFamily: "'Open Sans', sans-serif",
-                    fontWeight: "400",
                     boxSizing: "border-box",
                     color: "#1F2340",
+                    backgroundColor: "#F6F7FF",
+                    transition: "all 0.3s ease",
+                    outline: "none",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#8D88EA";
+                    e.target.style.backgroundColor = "#FFFFFF";
+                    e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "#E3E6F5";
+                    e.target.style.backgroundColor = "#F6F7FF";
+                    e.target.style.boxShadow = "none";
                   }}
                   disabled={isSubmitting}
                 />
-              </div>
-
-              <div style={{ marginBottom: "0.8rem" }}>
-                <label
-                  htmlFor="password"
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
                   style={{
-                    display: "block",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    color: "white",
-                    marginBottom: "0.4rem",
-                    fontFamily: "'Open Sans', sans-serif",
+                    position: "absolute",
+                    right: "1rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: isSubmitting ? "not-allowed" : "pointer",
+                    fontSize: "1.1rem",
+                    color: "#8D88EA",
+                    padding: "0.4rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    opacity: isSubmitting ? "0.5" : "1",
+                    transition: "color 0.2s ease",
                   }}
+                  onMouseEnter={(e) => !isSubmitting && (e.target.style.color = "#6E6AB8")}
+                  onMouseLeave={(e) => !isSubmitting && (e.target.style.color = "#8D88EA")}
+                  disabled={isSubmitting}
                 >
-                  Password
-                </label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    style={{
-                      width: "100%",
-                      padding: "0.5rem 0.8rem",
-                      paddingRight: "2.5rem",
-                      border: "1px solid #8D88EA",
-                      borderRadius: "0.5rem",
-                      fontSize: "1rem",
-                      outline: "none",
-                      fontFamily: "'Open Sans', sans-serif",
-                      fontWeight: "400",
-                      boxSizing: "border-box",
-                      color: "#1F2340",
-                    }}
-                    disabled={isSubmitting}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    style={{
-                      position: "absolute",
-                      right: "0.8rem",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "none",
-                      border: "none",
-                      cursor: isSubmitting ? "not-allowed" : "pointer",
-                      fontSize: "1.2rem",
-                      color: "#8D88EA",
-                      padding: "0.4rem",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                    disabled={isSubmitting}
-                  >
-                    {showPassword ? "👁️" : "👁️‍🗨️"}
-                  </button>
-                </div>
+                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                </button>
               </div>
-
-              {error && (
-                <div style={{
-                  marginBottom: "0.8rem",
-                  padding: "0.6rem",
-                  backgroundColor: "#FEF2F2",
-                  border: "1px solid #FECACA",
-                  borderRadius: "0.5rem",
-                }}>
-                  <p style={{
-                    color: "#DC2626",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    fontFamily: "'Open Sans', sans-serif",
-                  }}>
-                    {error}
-                  </p>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                style={{
-                  width: "100%",
-                  backgroundColor: isSubmitting ? "#D1D5DB" : "white",
-                  color: isSubmitting ? "#9CA3AF" : "#8D88EA",
-                  fontWeight: "600",
-                  padding: "0.5rem 0.8rem",
-                  borderRadius: "0.5rem",
-                  border: "none",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  fontSize: "1rem",
-                  transition: "background-color 0.2s",
-                  fontFamily: "'Open Sans', sans-serif",
-                  boxSizing: "border-box",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
-                }}
-                onMouseEnter={(e) => !isSubmitting && (e.target.style.backgroundColor = "#6C63D9", e.target.style.color = "white")}
-                onMouseLeave={(e) => !isSubmitting && (e.target.style.backgroundColor = "white", e.target.style.color = "#8D88EA")}
-              >
-                {isSubmitting ? "Logging in..." : "Log In"}
-              </button>
-            </form>
-
-            <div style={{
-              margin: "0.8rem 0",
-              display: "flex",
-              alignItems: "center",
-            }}>
-              <div style={{
-                flex: 1,
-                borderTop: "1px solid white",
-              }}></div>
-              <span style={{
-                padding: "0 0.5rem",
-                color: "white",
-                fontSize: "0.875rem",
-                fontFamily: "'Open Sans', sans-serif",
-                fontWeight: "400",
-              }}>or</span>
-              <div style={{
-                flex: 1,
-                borderTop: "1px solid white",
-              }}></div>
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <div style={{
+                marginBottom: "0.55rem",
+                padding: "0.66rem 0.88rem",
+                backgroundColor: "#FEF2F2",
+                border: "1px solid #FCA5A5",
+                borderRadius: "8px",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}>
+                <span style={{ fontSize: "1.2rem" }}>⚠️</span>
+                <p style={{
+                  color: "#B91C1C",
+                  fontSize: "0.8rem",
+                  fontWeight: "500",
+                  margin: 0,
+                  flex: 1,
+                }}>
+                  {error}
+                </p>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                width: "100%",
+                backgroundColor: isSubmitting ? "#B1ADFF" : "#8D88EA",
+                color: "white",
+                fontWeight: "600",
+                padding: "0.715rem 1rem",
+                marginTop: "0.44rem",
+                borderRadius: "8px",
+                border: "none",
+                cursor: isSubmitting ? "not-allowed" : "pointer",
+                fontSize: "0.95rem",
+                transition: "all 0.3s ease",
+                fontFamily: "'Open Sans', sans-serif",
+                boxSizing: "border-box",
+                boxShadow: "0 2px 8px rgba(141, 136, 234, 0.2)",
+              }}
+              onMouseEnter={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = "#6E6AB8", e.currentTarget.style.boxShadow = "0 4px 12px rgba(110, 106, 184, 0.3)", e.currentTarget.style.transform = "translateY(-2px)")}
+              onMouseLeave={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = "#8D88EA", e.currentTarget.style.boxShadow = "0 2px 8px rgba(141, 136, 234, 0.2)", e.currentTarget.style.transform = "translateY(0)")}
+            >
+              {isSubmitting ? "Signing in..." : "Sign In"}
+            </button>
+
+            {/* Footer Link */}
             <p style={{
               textAlign: "center",
-              color: "white",
-              fontFamily: "'Open Sans', sans-serif",
+              color: "#666",
+              fontSize: "0.8rem",
               fontWeight: "400",
-              fontSize: "1.125rem",
+              marginTop: "0.55rem",
+              marginBottom: 0,
             }}>
-              Don't have an account?{" "}
+              Not a member?{" "}
               <button
+                type="button"
                 onClick={() => navigate("/register")}
                 style={{
-                  color: "white",
-                  fontWeight: "700",
+                  color: "#8D88EA",
+                  fontWeight: "600",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  textDecoration: "underline",
-                  fontFamily: "'Open Sans', sans-serif",
-                  fontSize: "1.125rem",
-                  transition: "color 0.2s",
+                  textDecoration: "none",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s ease",
+                  padding: "0",
                 }}
-                onMouseEnter={(e) => (e.target.style.color = "#6C63D9")}
-                onMouseLeave={(e) => (e.target.style.color = "white")}
+                onMouseEnter={(e) => (e.target.style.color = "#6E6AB8", e.target.style.textDecoration = "underline")}
+                onMouseLeave={(e) => (e.target.style.color = "#8D88EA", e.target.style.textDecoration = "none")}
               >
-                Sign up
+                Register now
               </button>
             </p>
-          </div>
+          </form>
+        </div>
         </div>
       </div>
-
-      <footer style={{
-        height: "80px",
-        backgroundColor: "#8D88EA",
-        color: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "'Open Sans', sans-serif",
-        fontSize: "1rem",
-      }}>
-        <p style={{
-          margin: 0,
-          color: "white",
-        }}>
-          © 2026 CodeBloggs. All rights reserved.
-        </p>
-      </footer>
-    </div>
+    </>
   );
 };
 

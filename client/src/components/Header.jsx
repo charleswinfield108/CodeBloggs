@@ -34,7 +34,7 @@ const Header = () => {
   };
 
   const handleAccountSettings = () => {
-    showToast("Account Settings was clicked", "info", 3000);
+    showToast("Feature Coming Soon", "info", 3000);
     setIsMenuOpen(false);
   };
 

@@ -1,14 +1,31 @@
 import React, { createContext, useState, useEffect } from "react";
 
+/**
+ * SessionContext
+ * React Context for managing user session state across entire application
+ * Provides session data, login/logout functions, and loading state
+ */
 export const SessionContext = createContext();
 
-// Utility functions for cookie management
+/**
+ * setCookie - Utility function to store session token in browser cookie
+ * @param {string} name - Cookie name
+ * @param {string} value - Cookie value
+ * @param {number} days - Expiration time in days (default: 1 day)
+ * Sets secure flag for HTTPS connections and path to root
+ */
 const setCookie = (name, value, days = 1) => {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+  const isSecure = window.location.protocol === 'https:' ? ';secure' : '';
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/${isSecure}`;
 };
 
+/**
+ * getCookie - Utility function to retrieve session token from browser cookie
+ * @param {string} name - Cookie name to retrieve
+ * @returns {string|null} - Cookie value or null if not found
+ */
 const getCookie = (name) => {
   const nameEQ = `${name}=`;
   const cookies = document.cookie.split(";");
@@ -21,40 +38,67 @@ const getCookie = (name) => {
   return null;
 };
 
+/**
+ * deleteCookie - Utility function to remove session token from browser cookie
+ * @param {string} name - Cookie name to delete
+ * Sets expiration date to past to effectively delete cookie
+ */
 const deleteCookie = (name) => {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
 };
 
+/**
+ * SessionProvider Component
+ * Wraps entire app to provide session context and authentication functions
+ * Manages session persistence via cookies and localStorage
+ * Tracks user activity via ping endpoint
+ */
 export const SessionProvider = ({ children }) => {
+  // Current user session object (null if not logged in)
   const [session, setSession] = useState(null);
+  // Loading state during app initialization
   const [loading, setLoading] = useState(true);
+  // User online status
   const [isOnline, setIsOnline] = useState(false);
 
-  // Initialize session from cookie on mount
+  /**
+   * Initialization effect - runs once on component mount
+   * Restores session from cookie and localStorage if available
+   * Clears invalid session data to prevent stale sessions
+   */
   useEffect(() => {
     const tokenFromCookie = getCookie("session_token");
     if (tokenFromCookie) {
       try {
+        // Get full session object from localStorage
         const storedSession = localStorage.getItem("session");
         if (storedSession) {
           const sessionData = JSON.parse(storedSession);
           setSession(sessionData);
-          // Set online status based on stored session data
+          // Set online status from stored session (defaults to true if missing)
           setIsOnline(sessionData?.isOnline ?? true);
         }
       } catch (error) {
         console.error("Failed to parse stored session:", error);
+        // Clear corrupted session data
         localStorage.removeItem("session");
         deleteCookie("session_token");
       }
     }
+    // Set loading to false after initialization
     setLoading(false);
   }, []);
 
-  // Activity tracker - ping server every 30 seconds to update lastSeen
+  /**
+   * Activity tracking effect
+   * Pings server every 30 seconds to update user's lastSeen timestamp
+   * Indicates user is active and online
+   * Only runs if user is logged in (session.id exists)
+   */
   useEffect(() => {
     if (!session?.id) return; // Only run if user is logged in
 
+    // Function to ping server with user activity
     const pingServer = async () => {
       try {
         await fetch("http://localhost:5050/user/ping", {
@@ -69,27 +113,40 @@ export const SessionProvider = ({ children }) => {
       }
     };
 
-    // Initial ping
+    // Initial ping on login
     pingServer();
 
-    // Set up interval to ping every 30 seconds
+    // Set up interval to ping every 30 seconds (30000 ms)
     const pingInterval = setInterval(pingServer, 30000);
 
-    // Cleanup interval on unmount or when session changes
+    // Cleanup: stop pinging when user logs out or component unmounts
     return () => clearInterval(pingInterval);
   }, [session?.id]);
 
+  /**
+   * login - Function to establish user session after successful authentication
+   * Stores session token in cookie (1 day expiration)
+   * Stores full session object in localStorage for reference
+   * Updates React state with session data
+   * @param {object} sessionData - User session object from backend
+   */
   const login = (sessionData) => {
     setSession(sessionData);
     setIsOnline(true);
-    // Store token in cookie (1 day expiration)
+    // Store token in cookie with 1 day expiration
     setCookie("session_token", sessionData.session_token, 1);
-    // Store full session data in localStorage for reference
+    // Store full session data in localStorage for reference and component access
     localStorage.setItem("session", JSON.stringify(sessionData));
   };
 
+  /**
+   * logout - Function to end user session and clean up all data
+   * Calls backend logout endpoint to invalidate session server-side
+   * Clears session from state, cookies, and localStorage
+   * @returns {Promise} - Async function
+   */
   const logout = async () => {
-    // Call backend logout endpoint with token as query parameter
+    // Call backend logout endpoint to mark user offline and delete session
     if (session?.session_token) {
       try {
         await fetch(`http://localhost:5050/session/logout?token=${encodeURIComponent(session.session_token)}`, {
@@ -100,13 +157,14 @@ export const SessionProvider = ({ children }) => {
       }
     }
     
-    // Clear session from state and storage
+    // Clear session from state and all storage mechanisms
     setSession(null);
     setIsOnline(false);
     localStorage.removeItem("session");
     deleteCookie("session_token");
   };
 
+  // Provide session context to all child components
   return (
     <SessionContext.Provider value={{ session, loading, isOnline, login, logout }}>
       {children}
@@ -114,6 +172,13 @@ export const SessionProvider = ({ children }) => {
   );
 };
 
+/**
+ * useSession - Custom hook to access session context
+ * Provides access to: session, loading, isOnline, login, logout
+ * Must be used within a component wrapped by SessionProvider
+ * @returns {object} - Session context value
+ * @throws {Error} - If used outside SessionProvider
+ */
 export const useSession = () => {
   const context = React.useContext(SessionContext);
   if (!context) {
