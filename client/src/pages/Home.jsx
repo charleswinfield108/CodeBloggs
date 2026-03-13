@@ -779,87 +779,57 @@ const Home = () => {
                   e.target.style.boxShadow = "none";
                 }}
               />
-              <div
+              <button
+                onClick={() => handleCreateComment(openCommentModal)}
+                disabled={
+                  creatingComment[openCommentModal] ||
+                  !commentInputs[openCommentModal]?.trim()
+                }
                 style={{
-                  display: "flex",
-                  gap: "0.75rem",
+                  width: "100%",
+                  padding: "0.75rem 1rem",
                   marginTop: "0.75rem",
-                }}
-              >
-                <button
-                  onClick={() => handleCreateComment(openCommentModal)}
-                  disabled={
+                  backgroundColor:
                     creatingComment[openCommentModal] ||
                     !commentInputs[openCommentModal]?.trim()
+                      ? "#D1D5DB"
+                      : "#8D88EA",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  cursor:
+                    creatingComment[openCommentModal] ||
+                    !commentInputs[openCommentModal]?.trim()
+                      ? "not-allowed"
+                      : "pointer",
+                  fontSize: "0.875rem",
+                  fontWeight: "600",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (
+                    !creatingComment[openCommentModal] &&
+                    commentInputs[openCommentModal]?.trim()
+                  ) {
+                    e.currentTarget.style.backgroundColor = "#6E6AB8";
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 12px rgba(110, 106, 184, 0.3)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
                   }
-                  style={{
-                    flex: 1,
-                    padding: "0.75rem 1rem",
-                    backgroundColor:
-                      creatingComment[openCommentModal] ||
-                      !commentInputs[openCommentModal]?.trim()
-                        ? "#D1D5DB"
-                        : "#8D88EA",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "8px",
-                    cursor:
-                      creatingComment[openCommentModal] ||
-                      !commentInputs[openCommentModal]?.trim()
-                        ? "not-allowed"
-                        : "pointer",
-                    fontSize: "0.875rem",
-                    fontWeight: "600",
-                    transition: "all 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (
-                      !creatingComment[openCommentModal] &&
-                      commentInputs[openCommentModal]?.trim()
-                    ) {
-                      e.currentTarget.style.backgroundColor = "#6E6AB8";
-                      e.currentTarget.style.boxShadow =
-                        "0 4px 12px rgba(110, 106, 184, 0.3)";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (
-                      !creatingComment[openCommentModal] &&
-                      commentInputs[openCommentModal]?.trim()
-                    ) {
-                      e.currentTarget.style.backgroundColor = "#8D88EA";
-                      e.currentTarget.style.boxShadow = "none";
-                      e.currentTarget.style.transform = "translateY(0)";
-                    }
-                  }}
-                >
-                  {creatingComment[openCommentModal] ? "Posting..." : "Post Comment"}
-                </button>
-                <button
-                  onClick={() => setOpenCommentModal(null)}
-                  style={{
-                    flex: 1,
-                    padding: "0.75rem 1rem",
-                    backgroundColor: "#F0F0F5",
-                    color: "#1F2340",
-                    border: "none",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                    fontSize: "0.875rem",
-                    fontWeight: "600",
-                    transition: "all 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#E3E6F5";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "#F0F0F5";
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
+                }}
+                onMouseLeave={(e) => {
+                  if (
+                    !creatingComment[openCommentModal] &&
+                    commentInputs[openCommentModal]?.trim()
+                  ) {
+                    e.currentTarget.style.backgroundColor = "#8D88EA";
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }
+                }}
+              >
+                {creatingComment[openCommentModal] ? "Posting..." : "Post Comment"}
+              </button>
             </div>
           </div>
         </div>
