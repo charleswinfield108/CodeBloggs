@@ -3,44 +3,74 @@ import { useNavigate } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import logo from "../assets/CodeBloggs_ logo.png";
 
+/**
+ * Login Component
+ * Handles user authentication by collecting email and password,
+ * validating input, sending credentials to backend, and managing session.
+ * Auto-redirects to home if user is already logged in.
+ */
 const Login = () => {
+  // Router navigation hook
   const navigate = useNavigate();
+  // Session management: login function, session data, and loading state
   const { login, session, loading } = useSession();
 
-  // Redirect to home if already logged in
+  /**
+   * Auto-redirect effect
+   * If user is already authenticated (session exists), redirect to /home
+   * This prevents logged-in users from accessing the login page
+   */
   useEffect(() => {
     if (!loading && session) {
       navigate("/home", { replace: true });
     }
   }, [session, loading, navigate]);
+
+  // State for form fields
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  // State for error messages
   const [error, setError] = useState("");
+  // State to track if form submission is in progress
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // State for password visibility toggle
   const [showPassword, setShowPassword] = useState(false);
 
+  /**
+   * Handle input field changes
+   * Updates form data and clears error message on user input
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    // Clear error message when user starts typing
     if (error) setError("");
   };
 
+  /**
+   * Handle form submission
+   * Validates email and password, sends credentials to backend /session/login endpoint
+   * On success: stores session token and user data, then redirects to /home
+   * On error: displays error message and allows user to retry
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setIsSubmitting(true);
 
+    // Validate required fields
     if (!formData.email || !formData.password) {
       setError("Email and password are required");
       setIsSubmitting(false);
       return;
     }
 
+    // Validate email format using regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address");
@@ -50,9 +80,11 @@ const Login = () => {
 
     try {
       // Create abort controller with 10 second timeout
+      // This prevents hung requests from blocking the UI
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
       
+      // Send credentials to backend login endpoint
       const response = await fetch("http://localhost:5050/session/login", {
         method: "POST",
         headers: {
@@ -62,15 +94,19 @@ const Login = () => {
         signal: controller.signal,
       });
 
+      // Clear timeout after response received
       clearTimeout(timeoutId);
       const data = await response.json();
 
+      // Handle HTTP error responses
       if (!response.ok) {
         setError(data.message || "Login failed. Please try again.");
         setIsSubmitting(false);
         return;
       }
 
+      // Call login function from SessionContext to store session data
+      // This saves session_token to cookie and localStorage
       login({
         session_token: data.session_token,
         id: data.id,
@@ -80,6 +116,7 @@ const Login = () => {
         isOnline: data.isOnline,
       });
 
+      // Redirect to home page on successful login
       navigate("/home");
     } catch (err) {
       console.error("Login error:", err);
