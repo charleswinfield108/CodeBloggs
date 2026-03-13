@@ -207,18 +207,21 @@ const Register = () => {
   return (
     <>
       <div style={{
-        minHeight: "100vh",
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
         background: "#FBFCFD",
         fontFamily: "'Open Sans', sans-serif",
-        padding: "1.5rem 1rem",
+        padding: "0.5rem",
+        overflow: "hidden",
       }}>
-        {/* Logo Section - Close to top */}
+        {/* Logo Section */}
         <div style={{
-          marginTop: "1rem",
-          marginBottom: "1.5rem",
+          marginBottom: "0.75rem",
+          position: "relative",
+          top: "-20px",
         }}>
           <img
             src={logo}
@@ -230,14 +233,12 @@ const Register = () => {
           />
         </div>
 
-        {/* Form container with flex grow to center card */}
+        {/* Form container */}
         <div style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          flex: 1,
           width: "100%",
-          marginTop: "-20px",
         }}>
           {/* Sign Up Form Card - Styled like User Manager Card */}
           <div style={{
@@ -246,31 +247,33 @@ const Register = () => {
             backgroundColor: "#FFFFFF",
             border: "1px solid #8D88EA",
             borderRadius: "12px",
-            padding: "1.2rem",
+            padding: "0.8rem",
             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             transition: "all 0.3s ease",
+            maxHeight: "85vh",
+            overflowY: "auto",
           }}>
             {/* Welcome Section Inside Card */}
             <div style={{
               textAlign: "center",
-              marginBottom: "1rem",
+              marginBottom: "0.5rem",
             }}>
               <h1 style={{
-                fontSize: "1.8rem",
+                fontSize: "1.5rem",
                 fontWeight: "700",
-                marginBottom: "0.3rem",
+                marginBottom: "0.2rem",
                 color: "#1F2340",
-                lineHeight: "1.3",
-                margin: "0 0 0.3rem 0",
+                lineHeight: "1.2",
+                margin: "0 0 0.15rem 0",
               }}>
                 Create Account
               </h1>
               <p style={{
-                fontSize: "0.9rem",
+                fontSize: "0.8rem",
                 fontWeight: "400",
                 color: "#666",
                 marginBottom: 0,
-                lineHeight: "1.5",
+                lineHeight: "1.4",
               }}>
                 Join our community and start sharing
               </p>
@@ -280,14 +283,14 @@ const Register = () => {
               {errors.general && (
                 <div
                   style={{
-                    marginBottom: "0.75rem",
-                    padding: "0.875rem 1rem",
+                    marginBottom: "0.5rem",
+                    padding: "0.6rem 0.8rem",
                     backgroundColor: "#FEF2F2",
                     border: "1px solid #FCA5A5",
                     borderRadius: "8px",
                     display: "flex",
                     alignItems: "center",
-                    gap: "0.75rem",
+                    gap: "0.5rem",
                   }}
                 >
                   <span style={{ fontSize: "1.2rem" }}>⚠️</span>
@@ -307,17 +310,17 @@ const Register = () => {
               )}
 
               {/* Row 1: First Name, Last Name, Birthdate */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.8rem", marginBottom: "0.7rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.6rem", marginBottom: "0.5rem" }}>
                 {/* First Name */}
                 <div>
                   <label
                     htmlFor="first_name"
                     style={{
                       display: "block",
-                      fontSize: "0.85rem",
+                      fontSize: "0.8rem",
                       fontWeight: "600",
                       color: "#1F2340",
-                      marginBottom: "0.6rem",
+                      marginBottom: "0.4rem",
                       fontFamily: "'Open Sans', sans-serif",
                     }}
                   >
@@ -333,7 +336,7 @@ const Register = () => {
                     placeholder="John"
                     style={{
                       width: "100%",
-                      padding: "0.75rem 1rem",
+                      padding: "0.6rem 0.8rem",
                       border: errors.first_name ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
                       borderRadius: "8px",
                       fontSize: "12px",

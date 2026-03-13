@@ -101,18 +101,21 @@ const Login = () => {
         }
       `}</style>
       <div style={{
-        minHeight: "100vh",
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
         background: "#FBFCFD",
         fontFamily: "'Open Sans', sans-serif",
-        padding: "1.5rem 1rem",
+        padding: "0.5rem",
+        overflow: "hidden",
       }}>
-        {/* Logo Section - Close to top */}
+        {/* Logo Section */}
         <div style={{
-          marginTop: "1.75rem",
-          marginBottom: "2rem",
+          marginBottom: "0.75rem",
+          position: "relative",
+          top: "-50px",
         }}>
           <img
             src={logo}
@@ -124,47 +127,47 @@ const Login = () => {
           />
         </div>
 
-        {/* Form container with flex grow to center card */}
+        {/* Form container */}
         <div style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          flex: 1,
           width: "100%",
-          marginTop: "-60px",
         }}>
           {/* Sign In Form Card - Styled like User Manager Card */}
           <div style={{
             width: "100%",
-            maxWidth: "500px",
+            maxWidth: "375px",
             backgroundColor: "#FFFFFF",
             border: "1px solid #8D88EA",
             borderRadius: "12px",
-            padding: "1.2rem",
+            padding: "0.8rem",
             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             transition: "all 0.3s ease",
+            maxHeight: "85vh",
+            overflowY: "auto",
           }}>
           {/* Welcome Section Inside Card */}
           <div style={{
             textAlign: "center",
-            marginBottom: "1rem",
+            marginBottom: "0.5rem",
           }}>
             <h1 style={{
-              fontSize: "1.8rem",
+              fontSize: "1.5rem",
               fontWeight: "700",
-              marginBottom: "0.3rem",
+              marginBottom: "0.2rem",
               color: "#1F2340",
-              lineHeight: "1.3",
-              margin: "0 0 0.3rem 0",
+              lineHeight: "1.2",
+              margin: "0 0 0.15rem 0",
             }}>
               Welcome Back!
             </h1>
             <p style={{
-              fontSize: "0.9rem",
+              fontSize: "0.8rem",
               fontWeight: "400",
               color: "#666",
               marginBottom: 0,
-              lineHeight: "1.5",
+              lineHeight: "1.4",
             }}>
               Sign in to your account and continue the conversation
             </p>
@@ -172,15 +175,15 @@ const Login = () => {
 
           <form onSubmit={handleSubmit}>
             {/* Email */}
-            <div style={{ marginBottom: "0.7rem" }}>
+            <div style={{ marginBottom: "0.5rem" }}>
               <label
                 htmlFor="email"
                 style={{
                   display: "block",
-                  fontSize: "0.85rem",
+                  fontSize: "0.8rem",
                   fontWeight: "600",
                   color: "#1F2340",
-                  marginBottom: "0.6rem",
+                  marginBottom: "0.4rem",
                 }}
               >
                 Email Address
@@ -194,7 +197,7 @@ const Login = () => {
                 placeholder="your@email.com"
                 style={{
                   width: "100%",
-                  padding: "0.75rem 1rem",
+                  padding: "0.6rem 0.8rem",
                   border: "1px solid #E3E6F5",
                   borderRadius: "8px",
                   fontSize: "12px",
@@ -220,15 +223,15 @@ const Login = () => {
             </div>
 
             {/* Password */}
-            <div style={{ marginBottom: "0.75rem" }}>
+            <div style={{ marginBottom: "0.5rem" }}>
               <label
                 htmlFor="password"
                 style={{
                   display: "block",
-                  fontSize: "0.85rem",
+                  fontSize: "0.8rem",
                   fontWeight: "600",
                   color: "#1F2340",
-                  marginBottom: "0.6rem",
+                  marginBottom: "0.4rem",
                 }}
               >
                 Password
@@ -243,8 +246,8 @@ const Login = () => {
                   placeholder="Enter your password"
                   style={{
                     width: "100%",
-                    padding: "0.75rem 1rem",
-                    paddingRight: "2.8rem",
+                    padding: "0.6rem 0.8rem",
+                    paddingRight: "2.5rem",
                     border: "1px solid #E3E6F5",
                     borderRadius: "8px",
                     fontSize: "12px",
@@ -299,19 +302,19 @@ const Login = () => {
             {/* Error Message */}
             {error && (
               <div style={{
-                marginBottom: "0.75rem",
-                padding: "0.875rem 1rem",
+                marginBottom: "0.5rem",
+                padding: "0.6rem 0.8rem",
                 backgroundColor: "#FEF2F2",
                 border: "1px solid #FCA5A5",
                 borderRadius: "8px",
                 display: "flex",
                 alignItems: "center",
-                gap: "0.75rem",
+                gap: "0.5rem",
               }}>
                 <span style={{ fontSize: "1.2rem" }}>⚠️</span>
                 <p style={{
                   color: "#B91C1C",
-                  fontSize: "0.875rem",
+                  fontSize: "0.8rem",
                   fontWeight: "500",
                   margin: 0,
                   flex: 1,
@@ -330,7 +333,8 @@ const Login = () => {
                 backgroundColor: isSubmitting ? "#B1ADFF" : "#8D88EA",
                 color: "white",
                 fontWeight: "600",
-                padding: "0.85rem 1rem",
+                padding: "0.65rem 1rem",
+                marginTop: "0.4rem",
                 borderRadius: "8px",
                 border: "none",
                 cursor: isSubmitting ? "not-allowed" : "pointer",
@@ -350,9 +354,9 @@ const Login = () => {
             <p style={{
               textAlign: "center",
               color: "#666",
-              fontSize: "0.9rem",
+              fontSize: "0.8rem",
               fontWeight: "400",
-              marginTop: "1rem",
+              marginTop: "0.5rem",
               marginBottom: 0,
             }}>
               Not a member?{" "}
@@ -366,7 +370,7 @@ const Login = () => {
                   border: "none",
                   cursor: "pointer",
                   textDecoration: "none",
-                  fontSize: "0.9rem",
+                  fontSize: "0.85rem",
                   transition: "all 0.2s ease",
                   padding: "0",
                 }}
