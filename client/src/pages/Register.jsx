@@ -247,7 +247,7 @@ const Register = () => {
             backgroundColor: "#FFFFFF",
             border: "1px solid #8D88EA",
             borderRadius: "12px",
-            padding: "0.8rem",
+            padding: "calc(0.8rem + 15px)",
             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             transition: "all 0.3s ease",
             maxHeight: "85vh",

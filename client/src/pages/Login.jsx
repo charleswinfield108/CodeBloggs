@@ -141,7 +141,7 @@ const Login = () => {
             backgroundColor: "#FFFFFF",
             border: "1px solid #8D88EA",
             borderRadius: "12px",
-            padding: "0.8rem",
+            padding: "calc(0.88rem + 15px)",
             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
             transition: "all 0.3s ease",
             maxHeight: "85vh",
@@ -150,17 +150,17 @@ const Login = () => {
           {/* Welcome Section Inside Card */}
           <div style={{
             textAlign: "center",
-            marginBottom: "0.5rem",
+            marginBottom: "0.55rem",
           }}>
             <h1 style={{
               fontSize: "1.5rem",
               fontWeight: "700",
               marginBottom: "0.2rem",
-              color: "#1F2340",
+              color: "#8D88EA",
               lineHeight: "1.2",
               margin: "0 0 0.15rem 0",
             }}>
-              Welcome Back!
+              Please Login
             </h1>
             <p style={{
               fontSize: "0.8rem",
@@ -175,7 +175,7 @@ const Login = () => {
 
           <form onSubmit={handleSubmit}>
             {/* Email */}
-            <div style={{ marginBottom: "0.5rem" }}>
+            <div style={{ marginBottom: "0.55rem" }}>
               <label
                 htmlFor="email"
                 style={{
@@ -223,7 +223,7 @@ const Login = () => {
             </div>
 
             {/* Password */}
-            <div style={{ marginBottom: "0.5rem" }}>
+            <div style={{ marginBottom: "0.55rem" }}>
               <label
                 htmlFor="password"
                 style={{
@@ -302,8 +302,8 @@ const Login = () => {
             {/* Error Message */}
             {error && (
               <div style={{
-                marginBottom: "0.5rem",
-                padding: "0.6rem 0.8rem",
+                marginBottom: "0.55rem",
+                padding: "0.66rem 0.88rem",
                 backgroundColor: "#FEF2F2",
                 border: "1px solid #FCA5A5",
                 borderRadius: "8px",
@@ -333,8 +333,8 @@ const Login = () => {
                 backgroundColor: isSubmitting ? "#B1ADFF" : "#8D88EA",
                 color: "white",
                 fontWeight: "600",
-                padding: "0.65rem 1rem",
-                marginTop: "0.4rem",
+                padding: "0.715rem 1rem",
+                marginTop: "0.44rem",
                 borderRadius: "8px",
                 border: "none",
                 cursor: isSubmitting ? "not-allowed" : "pointer",
@@ -356,7 +356,7 @@ const Login = () => {
               color: "#666",
               fontSize: "0.8rem",
               fontWeight: "400",
-              marginTop: "0.5rem",
+              marginTop: "0.55rem",
               marginBottom: 0,
             }}>
               Not a member?{" "}
