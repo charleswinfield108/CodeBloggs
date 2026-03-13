@@ -434,7 +434,7 @@ The application uses the following color scheme:
 ---
 
 ## 👤 Author
-
+**Creator:** Charles Winfield
 **Project:** CodeBloggs  
 **Organization:** CodeBoxx School  
 **Module:** 09-10 (MERN Stack Development)  
