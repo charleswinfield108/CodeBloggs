@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
 import { usePostModal } from "../context/PostModalContext";
 import AvatarInitials from "../components/AvatarInitials";
-import { FiThumbsUp } from "react-icons/fi";
+import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
 const Home = () => {
   const { session } = useSession();
@@ -14,6 +14,9 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [currentUser, setCurrentUser] = useState(null);
+  const [openCommentModal, setOpenCommentModal] = useState(null);
+  const [commentInputs, setCommentInputs] = useState({});
+  const [creatingComment, setCreatingComment] = useState({});
 
   const fetchUserPostData = async () => {
     if (!session?.id) {
@@ -127,6 +130,64 @@ const Home = () => {
           post._id === postId ? { ...post, likes: currentLikes } : post
         )
       );
+    }
+  };
+
+  const handleCreateComment = async (postId) => {
+    const content = commentInputs[postId]?.trim();
+    if (!content) {
+      return;
+    }
+
+    setCreatingComment((prev) => ({ ...prev, [postId]: true }));
+
+    try {
+      const response = await fetch("http://localhost:5050/comment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content,
+          user_id: session?.id,
+          post_id: postId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create comment");
+      }
+
+      const result = await response.json();
+
+      // Add the new comment to the post
+      setUserPosts(
+        userPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                comments: [
+                  ...(post.comments || []),
+                  {
+                    _id: result.data._id || new Date().getTime().toString(),
+                    content: result.data.content || content,
+                    user_id: session?.id,
+                    createdAt: new Date().toISOString(),
+                    likes: 0,
+                  },
+                ],
+              }
+            : post
+        )
+      );
+
+      // Clear the input and close modal
+      setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
+      setOpenCommentModal(null);
+    } catch (error) {
+      console.error("Error creating comment:", error);
+    } finally {
+      setCreatingComment((prev) => ({ ...prev, [postId]: false }));
     }
   };
 
@@ -357,6 +418,36 @@ const Home = () => {
                         <FiThumbsUp size={14} />
                         <span>{post.likes}</span>
                       </button>
+                      <button
+                        onClick={() => setOpenCommentModal(post._id)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.4rem",
+                          backgroundColor: openCommentModal === post._id ? "#8D88EA" : "#F5F7FB",
+                          color: openCommentModal === post._id ? "#FFFFFF" : "#666",
+                          border: "none",
+                          borderRadius: "6px",
+                          padding: "0.4rem 0.8rem",
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          fontSize: "0.75rem",
+                          fontWeight: "500",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (openCommentModal !== post._id) {
+                            e.currentTarget.style.backgroundColor = "#8D88EA";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (openCommentModal !== post._id) {
+                            e.currentTarget.style.backgroundColor = "#F0F0F5";
+                          }
+                        }}
+                      >
+                        <FiMessageCircle size={14} />
+                        <span>{post.comments?.length || 0}</span>
+                      </button>
                     </div>
 
                     {post.comments && post.comments.length > 0 && (
@@ -506,6 +597,273 @@ const Home = () => {
           )}
         </div>
       </div>
+
+      {/* Comment Modal */}
+      {openCommentModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setOpenCommentModal(null)}
+        >
+          <div
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderRadius: "12px",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+              width: "90%",
+              maxWidth: "600px",
+              maxHeight: "80vh",
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div
+              style={{
+                padding: "1.25rem",
+                borderBottom: "1px solid #E3E6F5",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <h2 style={{ fontSize: "1.2rem", margin: 0, color: "#1F2340" }}>
+                Comments
+              </h2>
+              <button
+                onClick={() => setOpenCommentModal(null)}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  fontSize: "1.5rem",
+                  cursor: "pointer",
+                  color: "#999",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Comments List */}
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                padding: "1rem",
+              }}
+            >
+              {(() => {
+                const modalPost = userPosts.find((p) => p._id === openCommentModal);
+                if (!modalPost || !modalPost.comments || modalPost.comments.length === 0) {
+                  return (
+                    <p
+                      style={{
+                        color: "#999",
+                        fontSize: "0.875rem",
+                        textAlign: "center",
+                        padding: "1rem",
+                      }}
+                    >
+                      No comments yet
+                    </p>
+                  );
+                }
+                return modalPost.comments.map((comment) => (
+                  <div
+                    key={comment._id}
+                    style={{
+                      backgroundColor: "#F9F9FB",
+                      padding: "0.8rem",
+                      borderRadius: "8px",
+                      marginBottom: "0.75rem",
+                      borderLeft: "3px solid #8D88EA",
+                    }}
+                  >
+                    <p
+                      style={{
+                        color: "#1F2340",
+                        fontSize: "0.875rem",
+                        margin: "0 0 0.4rem 0",
+                        lineHeight: "1.4",
+                      }}
+                    >
+                      {comment.content}
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <p
+                        style={{
+                          color: "#999",
+                          fontSize: "0.75rem",
+                          margin: 0,
+                        }}
+                      >
+                        {new Date(comment.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                      {comment.likes > 0 && (
+                        <span
+                          style={{
+                            color: "#8D88EA",
+                            fontSize: "0.75rem",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {comment.likes} {comment.likes === 1 ? "like" : "likes"}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+
+            {/* Comment Input */}
+            <div
+              style={{
+                padding: "1rem",
+                borderTop: "1px solid #E3E6F5",
+              }}
+            >
+              <textarea
+                placeholder="Write a comment..."
+                value={commentInputs[openCommentModal] || ""}
+                onChange={(e) =>
+                  setCommentInputs({
+                    ...commentInputs,
+                    [openCommentModal]: e.target.value,
+                  })
+                }
+                style={{
+                  width: "100%",
+                  padding: "0.75rem",
+                  borderRadius: "8px",
+                  border: "1px solid #E3E6F5",
+                  fontSize: "0.875rem",
+                  fontFamily: "'Open Sans', sans-serif",
+                  resize: "none",
+                  height: "80px",
+                  boxSizing: "border-box",
+                  fontColor: "#1F2340",
+                  transition: "all 0.3s ease",
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#8D88EA";
+                  e.target.style.backgroundColor = "#FFFFFF";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#E3E6F5";
+                  e.target.style.backgroundColor = "#F6F7FF";
+                  e.target.style.boxShadow = "none";
+                }}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.75rem",
+                  marginTop: "0.75rem",
+                }}
+              >
+                <button
+                  onClick={() => handleCreateComment(openCommentModal)}
+                  disabled={
+                    creatingComment[openCommentModal] ||
+                    !commentInputs[openCommentModal]?.trim()
+                  }
+                  style={{
+                    flex: 1,
+                    padding: "0.75rem 1rem",
+                    backgroundColor:
+                      creatingComment[openCommentModal] ||
+                      !commentInputs[openCommentModal]?.trim()
+                        ? "#D1D5DB"
+                        : "#8D88EA",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor:
+                      creatingComment[openCommentModal] ||
+                      !commentInputs[openCommentModal]?.trim()
+                        ? "not-allowed"
+                        : "pointer",
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (
+                      !creatingComment[openCommentModal] &&
+                      commentInputs[openCommentModal]?.trim()
+                    ) {
+                      e.currentTarget.style.backgroundColor = "#6E6AB8";
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 12px rgba(110, 106, 184, 0.3)";
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (
+                      !creatingComment[openCommentModal] &&
+                      commentInputs[openCommentModal]?.trim()
+                    ) {
+                      e.currentTarget.style.backgroundColor = "#8D88EA";
+                      e.currentTarget.style.boxShadow = "none";
+                      e.currentTarget.style.transform = "translateY(0)";
+                    }
+                  }}
+                >
+                  {creatingComment[openCommentModal] ? "Posting..." : "Post Comment"}
+                </button>
+                <button
+                  onClick={() => setOpenCommentModal(null)}
+                  style={{
+                    flex: 1,
+                    padding: "0.75rem 1rem",
+                    backgroundColor: "#F0F0F5",
+                    color: "#1F2340",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#E3E6F5";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#F0F0F5";
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };
