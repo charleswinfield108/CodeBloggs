@@ -262,7 +262,7 @@ const Register = () => {
                 fontSize: "1.5rem",
                 fontWeight: "700",
                 marginBottom: "0.2rem",
-                color: "#1F2340",
+                color: "#8D88EA",
                 lineHeight: "1.2",
                 margin: "0 0 0.15rem 0",
               }}>
