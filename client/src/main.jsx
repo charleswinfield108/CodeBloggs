@@ -44,6 +44,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/home/:userId",
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: "/blogs",
     element: (
       <ProtectedRoute>

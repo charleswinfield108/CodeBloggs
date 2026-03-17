@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
+import { useToast } from "../context/ToastContext";
 import { usePostModal } from "../context/PostModalContext";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
@@ -8,25 +10,36 @@ import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 /**
  * Home Component - User Dashboard with Responsive Layout
  * 
- * MDN Responsive Design:
- * - Mobile (<768px): Single column layout, user info at top
- * - Desktop (≥768px): Two-column layout, user sidebar + posts
- * - Flexible spacing and text sizing
+ * Features:
+ * - /home shows logged-in user's profile
+ * - /home/{userId} shows specific user's profile (admin only for other users)
+ * - Responsive layout: mobile (single column), desktop (two-column)
+ * - Permission checks with toast notifications
  */
 const Home = () => {
+  const { userId: paramUserId } = useParams();
+  const navigate = useNavigate();
   const { session } = useSession();
+  const { showToast } = useToast();
   const { registerPostCreatedCallback } = usePostModal();
+  
+  // Determine which user to view
+  const targetUserId = paramUserId || session?.id;
+  
+  // State
   const [userPostCount, setUserPostCount] = useState(0);
   const [userPosts, setUserPosts] = useState([]);
   const [lastPostDate, setLastPostDate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState(new Set());
-  const [currentUser, setCurrentUser] = useState(null);
+  const [viewingUser, setViewingUser] = useState(null);
   const [openCommentModal, setOpenCommentModal] = useState(null);
   const [commentInputs, setCommentInputs] = useState({});
   const [creatingComment, setCreatingComment] = useState({});
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+  const [hasPermission, setHasPermission] = useState(true);
 
+  // Handle window resize for responsive layout
   useEffect(() => {
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 768);
@@ -36,30 +49,68 @@ const Home = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Check permission to view user profile
+  useEffect(() => {
+    const checkPermission = () => {
+      // If viewing own profile, always allowed
+      if (targetUserId === session?.id) {
+        setHasPermission(true);
+        return;
+      }
+
+      // If not admin and trying to view another user, deny access
+      if (session?.auth_level !== "admin") {
+        setHasPermission(false);
+        showToast("Unauthorized: You can only view your own profile", "error");
+        navigate("/home", { replace: true });
+        return;
+      }
+
+      // Admin can view any user
+      setHasPermission(true);
+    };
+
+    checkPermission();
+  }, [targetUserId, session?.id, session?.auth_level, navigate, showToast]);
+
+  // Fetch user and post data
   const fetchUserPostData = async () => {
-    if (!session?.id) {
+    if (!hasPermission || !targetUserId) {
       setLoading(false);
       return;
     }
 
     try {
-      // Fetch current user's data (including status)
-      const usersResponse = await fetch("http://localhost:5050/users");
+      // Fetch all users to find the target user
+      const usersResponse = await fetch("http://localhost:5050/users?limit=1000", {
+        credentials: "include",
+      });
       const usersData = await usersResponse.json();
       
-      if (usersData.status === "ok" && Array.isArray(usersData.data)) {
-        const user = usersData.data.find((u) => u._id === session.id);
-        setCurrentUser(user);
+      let targetUser = null;
+      if (usersData.users && Array.isArray(usersData.users)) {
+        targetUser = usersData.users.find((u) => u._id === targetUserId);
       }
 
-      // Fetch user's posts
-      const response = await fetch("http://localhost:5050/posts");
-      const data = await response.json();
+      if (!targetUser) {
+        showToast("User not found", "error");
+        navigate("/home", { replace: true });
+        setLoading(false);
+        return;
+      }
 
-      if (data.status === "ok" && Array.isArray(data.data)) {
-        // Filter posts that belong to the logged-in user
-        const filteredPosts = data.data.filter(
-          (post) => post.user_id === session.id
+      setViewingUser(targetUser);
+
+      // Fetch all posts
+      const postsResponse = await fetch("http://localhost:5050/posts", {
+        credentials: "include",
+      });
+      const postsData = await postsResponse.json();
+
+      if (postsData.status === "ok" && Array.isArray(postsData.data)) {
+        // Filter posts that belong to the target user
+        const filteredPosts = postsData.data.filter(
+          (post) => post.user_id === targetUserId
         );
         setUserPosts(filteredPosts);
         setUserPostCount(filteredPosts.length);
@@ -78,17 +129,19 @@ const Home = () => {
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
+      showToast("Error loading user data", "error");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUserPostData();
-  }, [session?.id]);
+    if (hasPermission) {
+      fetchUserPostData();
+    }
+  }, [targetUserId, hasPermission]);
 
   useEffect(() => {
-    // Register callback to refetch posts when a new post is created
     registerPostCreatedCallback(fetchUserPostData);
   }, []);
 
@@ -239,12 +292,12 @@ const Home = () => {
             }}
           >
             <AvatarInitials
-              firstName={session?.first_name}
-              lastName={session?.last_name}
+              firstName={viewingUser?.first_name}
+              lastName={viewingUser?.last_name}
               size={64}
             />
-            <h2 style={{ color: "#1F2340", fontSize: "0.9rem", margin: 0, textAlign: "center" }}>
-              {session?.first_name} {session?.last_name}
+            <h2 style={{ color: "#1F2340", fontSize: isDesktop ? "0.9rem" : "0.85rem", margin: 0, textAlign: "center" }}>
+              {viewingUser?.first_name} {viewingUser?.last_name}
             </h2>
           </div>
 
@@ -308,7 +361,7 @@ const Home = () => {
                   NAME
                 </p>
                 <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
-                  {session?.first_name} {session?.last_name}
+                  {viewingUser?.first_name} {viewingUser?.last_name}
                 </p>
               </div>
               <div
@@ -322,7 +375,7 @@ const Home = () => {
                   AUTH LEVEL
                 </p>
                 <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
-                  {session?.auth_level === "admin" ? "Administrator" : "Basic"}
+                  {viewingUser?.auth_level === "admin" ? "Administrator" : "Basic"}
                 </p>
               </div>
               <div
@@ -336,7 +389,7 @@ const Home = () => {
                   LOGIN STATUS
                 </p>
                 <p style={{ color: "#1F2340", fontSize: "0.75rem", margin: 0, fontWeight: "500" }}>
-                  {currentUser?.isOnline ? "🟢" : "🔴"} {currentUser?.isOnline ? "Online" : "Offline"}
+                  {viewingUser?.isOnline ? "🟢" : "🔴"} {viewingUser?.isOnline ? "Online" : "Offline"}
                 </p>
               </div>
             </div>
@@ -346,8 +399,8 @@ const Home = () => {
         {/* Right Column - Posts List with Scrollbar */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: isDesktop ? 0 : "auto", overflow: isDesktop ? "hidden" : "visible", maxHeight: isDesktop ? "calc(100% - 150px)" : "auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-            <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
-              Your Recent Posts
+            <h2 style={{ color: "#8D88EA", fontSize: isDesktop ? "1.25rem" : "1rem", margin: 0 }}>
+              {viewingUser?.first_name}'s Posts
             </h2>
           </div>
 
