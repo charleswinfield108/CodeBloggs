@@ -264,7 +264,7 @@ const Home = () => {
 
   return (
     <Layout>
-      <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "1.5rem", height: "100%", overflow: "hidden" }}>
+      <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "1.5rem", height: isDesktop ? "100%" : "auto", overflow: isDesktop ? "hidden" : "visible", marginLeft: isDesktop ? 0 : "10px" }}>
         {/* Left Column - User Info (240px on desktop, full width on mobile) */}
         <div style={{ flex: isDesktop ? "0 0 240px" : "0 0 auto", display: "flex", flexDirection: "column", gap: "0.75rem", overflowY: isDesktop ? "auto" : "visible", maxHeight: isDesktop ? "100%" : "auto", minHeight: 0 }}>
           {/* Avatar Section */}
@@ -397,7 +397,7 @@ const Home = () => {
         </div>
 
         {/* Right Column - Posts List with Scrollbar */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
+        <div style={{ flex: isDesktop ? 1 : "0 0 auto", display: "flex", flexDirection: "column", minHeight: 0, overflow: isDesktop ? "hidden" : "visible" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem", flexShrink: 0, paddingBottom: "0.75rem", borderBottom: "1px solid #E0E0E0" }}>
             <h2 style={{ color: "#8D88EA", fontSize: isDesktop ? "1.25rem" : "1rem", margin: 0 }}>
               {viewingUser?.first_name}'s Posts
@@ -407,12 +407,12 @@ const Home = () => {
           {!loading && userPosts.length > 0 && (
             <div
               style={{
-                flex: 1,
+                flex: isDesktop ? 1 : "0 0 auto",
                 minHeight: 0,
                 display: "flex",
                 flexDirection: "column",
                 gap: "0.5rem",
-                overflowY: "auto",
+                overflowY: isDesktop ? "auto" : "visible",
               }}
             >
               {userPosts
