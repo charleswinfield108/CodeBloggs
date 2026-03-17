@@ -158,16 +158,34 @@ const Blogs = () => {
   return (
     <Layout>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-        {/* Scrollable Container with sticky header */}
-        <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflowY: "auto", paddingRight: "0.5rem" }}>
-          {/* Sticky Header */}
-          <div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#FBFCFD", paddingBottom: "0.75rem", marginBottom: "0.75rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
-                All Blogs
-              </h2>
-            </div>
-          </div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+          <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
+            All Blogs
+          </h2>
+          <button
+            onClick={() => openModal()}
+            style={{
+              backgroundColor: "#8D88EA",
+              color: "#FFFFFF",
+              border: "none",
+              borderRadius: "8px",
+              padding: "0.5rem 1rem",
+              fontSize: "0.85rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = "#6B65D4";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = "#8D88EA";
+            }}
+          >
+            + Create Post
+          </button>
+        </div>
 
         {error && (
           <div
