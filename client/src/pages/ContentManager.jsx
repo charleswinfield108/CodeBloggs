@@ -473,7 +473,7 @@ const ContentManager = () => {
               {Array.from({ length: Math.ceil(totalPosts / itemsPerPage) }, (_, i) => i + 1).map((pageNum) => (
                 <button
                   key={pageNum}
-                  onClick={() => setCurrentPage(pageNum)}
+                  onClick={() => fetchPosts(pageNum)}
                   style={{
                     backgroundColor: currentPage === pageNum ? "#8D88EA" : "#F5F5F5",
                     color: currentPage === pageNum ? "#FFFFFF" : "#1F2340",
