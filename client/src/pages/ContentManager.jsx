@@ -56,6 +56,9 @@ const ContentManager = () => {
           });
         }
 
+        // Sort posts by creation date - newest first
+        allPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
         // Calculate pagination
         const total = allPosts.length;
         const size = pageSize || itemsPerPage;
