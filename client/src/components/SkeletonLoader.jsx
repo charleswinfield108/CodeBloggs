@@ -2,9 +2,9 @@ import React from "react";
 
 const SkeletonLoader = ({ type = "post", count = 10 }) => {
   const skeletonStyle = {
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#D3D3D3",
     borderRadius: "6px",
-    animation: "pulse 1.5s ease-in-out infinite",
+    animation: "pulse 2s ease-in-out infinite",
   };
 
   const postSkeleton = (

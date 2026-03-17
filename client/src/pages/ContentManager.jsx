@@ -32,6 +32,7 @@ const ContentManager = () => {
   const fetchPosts = async (page = 1, pageSize = null) => {
     setLoading(true);
     setError(null);
+    const startTime = Date.now(); // Track start time for minimum loading duration
     try {
       // Fetch all posts
       const postsResponse = await fetch("http://localhost:5050/posts");
@@ -86,7 +87,14 @@ const ContentManager = () => {
       setError(err.message);
       showToast("Error loading posts", "error");
     } finally {
-      setLoading(false);
+      // Ensure skeleton loaders are visible for at least 400ms
+      const elapsedTime = Date.now() - startTime;
+      const minimumLoadingTime = 400;
+      const remainingDelay = Math.max(0, minimumLoadingTime - elapsedTime);
+      
+      setTimeout(() => {
+        setLoading(false);
+      }, remainingDelay);
     }
   };
 

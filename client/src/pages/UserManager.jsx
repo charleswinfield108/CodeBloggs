@@ -31,6 +31,7 @@ const UserManager = () => {
   const fetchUsers = async (page = 1, fname = firstName, lname = lastName, pageSize = null) => {
     setLoading(true);
     setError(null);
+    const startTime = Date.now(); // Track start time for minimum loading duration
     try {
       const params = new URLSearchParams();
       params.append("page", page);
@@ -65,7 +66,14 @@ const UserManager = () => {
       setError(err.message);
       showToast("Error loading users", "error");
     } finally {
-      setLoading(false);
+      // Ensure skeleton loaders are visible for at least 400ms
+      const elapsedTime = Date.now() - startTime;
+      const minimumLoadingTime = 400;
+      const remainingDelay = Math.max(0, minimumLoadingTime - elapsedTime);
+      
+      setTimeout(() => {
+        setLoading(false);
+      }, remainingDelay);
     }
   };
 
