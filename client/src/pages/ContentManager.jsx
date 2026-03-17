@@ -180,7 +180,7 @@ const ContentManager = () => {
 
   return (
     <Layout>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0.25rem 2rem 1rem 2rem", display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0.25rem 2rem 1rem 2rem", display: "flex", flexDirection: "column", height: isDesktop ? "100%" : "auto", overflow: isDesktop ? "hidden" : "auto" }}>
         {/* Sticky Header */}
         <div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#FBFCFD", paddingBottom: "0.75rem", marginBottom: "0.75rem" }}>
           <h1 style={{ color: "#8D88EA", marginBottom: "0.75rem", fontSize: isDesktop ? "1.5rem" : "1.25rem", fontWeight: "700" }}>
@@ -299,7 +299,7 @@ const ContentManager = () => {
         </div>
 
         {/* Scrollable Content Area */}
-        <div style={{ flex: 1, minHeight: 0, overflowY: "auto", paddingRight: "0.5rem" }}>
+        <div style={{ flex: isDesktop ? 1 : "none", minHeight: isDesktop ? 0 : "auto", overflowY: isDesktop ? "auto" : "visible", paddingRight: "0.5rem" }}>
           {/* Error Message */}
           {error && (
             <div style={{
