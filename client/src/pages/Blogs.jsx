@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
-import { usePostModal } from "../context/PostModalContext";
+
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
 const Blogs = () => {
   const { session } = useSession();
-  const { openModal, registerPostCreatedCallback } = usePostModal();
   const [allPosts, setAllPosts] = useState([]);
   const [users, setUsers] = useState({});
   const [loading, setLoading] = useState(true);
@@ -162,29 +161,6 @@ const Blogs = () => {
           <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
             All Blogs
           </h2>
-          <button
-            onClick={() => openModal()}
-            style={{
-              backgroundColor: "#8D88EA",
-              color: "#FFFFFF",
-              border: "none",
-              borderRadius: "8px",
-              padding: "0.5rem 1rem",
-              fontSize: "0.85rem",
-              fontWeight: "600",
-              cursor: "pointer",
-              transition: "all 0.2s",
-              whiteSpace: "nowrap",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#6B65D4";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = "#8D88EA";
-            }}
-          >
-            + Create Post
-          </button>
         </div>
 
         {error && (
