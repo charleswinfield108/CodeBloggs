@@ -189,6 +189,7 @@ const Network = () => {
               overflowY: "auto",
               paddingRight: "0.5rem",
               marginTop: "20px",
+              marginLeft: isDesktop ? 0 : "10px",
             }}
           >
             {usersWithPosts
