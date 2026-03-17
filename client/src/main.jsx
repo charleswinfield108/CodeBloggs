@@ -13,6 +13,7 @@ import Blogs from "./pages/Blogs";
 import Network from "./pages/Network";
 import Admin from "./pages/Admin";
 import UserManager from "./pages/UserManager";
+import UserUpdate from "./pages/UserUpdate";
 import ContentManager from "./pages/ContentManager";
 import { SessionProvider } from "./context/SessionContext";
 import { PostModalProvider } from "./context/PostModalContext";
@@ -71,6 +72,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <UserManager />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/users/:id",
+    element: (
+      <ProtectedRoute>
+        <UserUpdate />
       </ProtectedRoute>
     ),
   },

@@ -175,10 +175,40 @@ const userGetById = async (req, res) => {
 // This route will help you get a list of all the Users with their information.
 const usersGetAll = async (req, res) => {
     try {
-        const USERS = await DB.collection("users").find({}, { projection: { password: 0 } }).toArray();
+        // Get pagination and filter parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const firstName = req.query.firstName || "";
+        const lastName = req.query.lastName || "";
+
+        // Build filter query (using first_name and last_name from schema)
+        const filter = {};
+        if (firstName) {
+            filter.first_name = { $regex: firstName, $options: "i" }; // Case-insensitive search
+        }
+        if (lastName) {
+            filter.last_name = { $regex: lastName, $options: "i" };
+        }
+
+        // Get total count for pagination
+        const total = await DB.collection("users").countDocuments(filter);
+
+        // Calculate skip for pagination
+        const skip = (page - 1) * limit;
+
+        // Fetch paginated and filtered users
+        const USERS = await DB.collection("users")
+            .find(filter, { projection: { password: 0 } })
+            .skip(skip)
+            .limit(limit)
+            .toArray();
 
         if (!USERS || USERS.length === 0) {
-            return res.status(404).json({ error: "No users found" });
+            return res.status(200).json({ 
+                users: [], 
+                total: 0, 
+                pages: 0 
+            });
         }
 
         // Calculate isOnline based on lastSeen timestamp (8 minute timeout)
@@ -191,14 +221,18 @@ const usersGetAll = async (req, res) => {
 
             return {
                 ...user,
+                birthdate: user.birthday, // Add birthdate field for frontend compatibility
                 isOnline
             };
         });
 
+        // Calculate total pages
+        const pages = Math.ceil(total / limit);
+
         res.status(200).json({
-            status: 'ok',
-            data: USERS_WITH_STATUS,
-            message: 'Users retrieved successfully'
+            users: USERS_WITH_STATUS,
+            total: total,
+            pages: pages
         });
     } catch (error) {
         console.error("Error retrieving users:", error);

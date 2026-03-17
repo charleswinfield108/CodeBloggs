@@ -9,7 +9,10 @@ import COOKIE_PARSER from "cookie-parser"
 import DB from "./db/connection.js";
 
 APP.use(EXPRESS.json());
-APP.use(CORS());
+APP.use(CORS({
+  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true
+}));
 APP.use(COOKIE_PARSER())
 APP.use(SESSION({
     secret: process.env.JWT_SECRET,

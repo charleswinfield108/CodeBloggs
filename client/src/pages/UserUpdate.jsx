@@ -1,0 +1,474 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Layout from "../components/Layout";
+import { useSession } from "../context/SessionContext";
+import { useToast } from "../context/ToastContext";
+
+const UserUpdate = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { session, loading: sessionLoading } = useSession();
+  const { showToast } = useToast();
+
+  // State
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+
+  // Form fields
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [occupation, setOccupation] = useState("");
+  const [location, setLocation] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [authLevel, setAuthLevel] = useState("basic");
+
+  // Fetch user details
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`http://localhost:5050/user/${id}`, {
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user");
+        }
+
+        const result = await response.json();
+        const userData = result.data || result;
+
+        setUser(userData);
+        setFirstName(userData.first_name || "");
+        setLastName(userData.last_name || "");
+        setEmail(userData.email || "");
+        setOccupation(userData.occupation || "");
+        setLocation(userData.location || "");
+        setAuthLevel(userData.auth_level || "basic");
+
+        // Format date for input (YYYY-MM-DD) - using "birthday" field from schema
+        if (userData.birthday) {
+          const date = new Date(userData.birthday);
+          const formatted = date.toISOString().split("T")[0];
+          setBirthdate(formatted);
+        }
+      } catch (err) {
+        setError(err.message);
+        showToast("Error loading user", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (session?.auth_level === "admin") {
+      fetchUser();
+    }
+  }, [id, session?.auth_level]);
+
+  // Check admin access
+  useEffect(() => {
+    if (!sessionLoading && session?.auth_level !== "admin") {
+      navigate("/home", { replace: true });
+    }
+  }, [session, sessionLoading, navigate]);
+
+  // Handle save
+  const handleSave = async () => {
+    if (!firstName.trim() || !lastName.trim() || !email.trim()) {
+      showToast("First Name, Last Name, and Email are required", "error");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const updateData = {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        occupation,
+        location,
+        birthday: birthdate ? new Date(birthdate).toISOString() : undefined,
+        auth_level: authLevel,
+      };
+
+      const response = await fetch(`http://localhost:5050/user/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update user");
+      }
+
+      showToast("User updated successfully", "success");
+      navigate("/admin/users");
+    } catch (err) {
+      showToast(err.message || "Error updating user", "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Handle cancel
+  const handleCancel = () => {
+    navigate("/admin/users");
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
+          Loading user details...
+        </div>
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout>
+      <div style={{ maxWidth: "700px", margin: "0 auto", padding: "0.5rem 2rem 2rem 2rem" }}>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
+          <button
+            onClick={handleCancel}
+            style={{
+              backgroundColor: "transparent",
+              border: "none",
+              color: "#8D88EA",
+              fontSize: "1rem",
+              cursor: "pointer",
+              padding: "0",
+              marginRight: "0.5rem",
+            }}
+          >
+            ← Back
+          </button>
+          <h1 style={{ color: "#1F2340", margin: "0", fontSize: "1.5rem", fontWeight: "700" }}>
+            Edit User
+          </h1>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div
+            style={{
+              backgroundColor: "#FADBD8",
+              color: "#D32F2F",
+              padding: "0.75rem",
+              borderRadius: "6px",
+              marginBottom: "1rem",
+              borderLeft: "4px solid #D32F2F",
+              fontSize: "0.9rem",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        {/* Form */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSave();
+          }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "1rem",
+            marginBottom: "2rem",
+          }}
+        >
+          {/* First Name */}
+          <div>
+            <label
+              htmlFor="firstName"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              First Name *
+            </label>
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                border: "1px solid #E0E0E0",
+                borderRadius: "6px",
+                fontSize: "0.9rem",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          {/* Last Name */}
+          <div>
+            <label
+              htmlFor="lastName"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Last Name *
+            </label>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                border: "1px solid #E0E0E0",
+                borderRadius: "6px",
+                fontSize: "0.9rem",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          {/* Email */}
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label
+              htmlFor="email"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Email *
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                border: "1px solid #E0E0E0",
+                borderRadius: "6px",
+                fontSize: "0.9rem",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          {/* Occupation */}
+          <div>
+            <label
+              htmlFor="occupation"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Occupation
+            </label>
+            <input
+              id="occupation"
+              name="occupation"
+              type="text"
+              value={occupation}
+              onChange={(e) => setOccupation(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                border: "1px solid #E0E0E0",
+                borderRadius: "6px",
+                fontSize: "0.9rem",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          {/* Location */}
+          <div>
+            <label
+              htmlFor="location"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Location
+            </label>
+            <input
+              id="location"
+              name="location"
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                border: "1px solid #E0E0E0",
+                borderRadius: "6px",
+                fontSize: "0.9rem",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          {/* Birthdate */}
+          <div>
+            <label
+              htmlFor="birthdate"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Birthdate
+            </label>
+            <input
+              id="birthdate"
+              name="birthdate"
+              type="date"
+              value={birthdate}
+              onChange={(e) => setBirthdate(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                border: "1px solid #E0E0E0",
+                borderRadius: "6px",
+                fontSize: "0.9rem",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          {/* Auth Level */}
+          <div>
+            <label
+              htmlFor="authLevel"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Auth Level
+            </label>
+            <select
+              id="authLevel"
+              name="authLevel"
+              value={authLevel}
+              onChange={(e) => setAuthLevel(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                border: "1px solid #E0E0E0",
+                borderRadius: "6px",
+                fontSize: "0.9rem",
+                boxSizing: "border-box",
+              }}
+            >
+              <option value="basic">Basic</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          {/* Buttons */}
+          <div style={{ gridColumn: "1 / -1", display: "flex", gap: "1rem", marginTop: "1rem" }}>
+            <button
+              type="submit"
+              disabled={saving}
+              style={{
+                backgroundColor: "#8D88EA",
+                color: "#FFFFFF",
+                border: "none",
+                borderRadius: "6px",
+                padding: "0.75rem 2rem",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                cursor: saving ? "not-allowed" : "pointer",
+                transition: "background-color 0.2s",
+                flex: 1,
+                opacity: saving ? 0.6 : 1,
+              }}
+              onMouseEnter={(e) => {
+                if (!saving) e.target.style.backgroundColor = "#6F6AC0";
+              }}
+              onMouseLeave={(e) => {
+                if (!saving) e.target.style.backgroundColor = "#8D88EA";
+              }}
+            >
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              disabled={saving}
+              style={{
+                backgroundColor: "#F5F5F5",
+                color: "#1F2340",
+                border: "1px solid #E0E0E0",
+                borderRadius: "6px",
+                padding: "0.75rem 2rem",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                cursor: saving ? "not-allowed" : "pointer",
+                transition: "all 0.2s",
+                flex: 1,
+                opacity: saving ? 0.6 : 1,
+              }}
+              onMouseEnter={(e) => {
+                if (!saving) {
+                  e.target.style.backgroundColor = "#E8E8E8";
+                  e.target.style.borderColor = "#1F2340";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!saving) {
+                  e.target.style.backgroundColor = "#F5F5F5";
+                  e.target.style.borderColor = "#E0E0E0";
+                }
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </Layout>
+  );
+};
+
+export default UserUpdate;

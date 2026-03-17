@@ -27,7 +27,7 @@ const Layout = ({ children }) => {
         <main
           style={{
             marginLeft: "250px",
-            padding: "2rem",
+            padding: "0.5rem 2rem 2rem 2rem",
             backgroundColor: "#FFFFFF",
             flex: 1,
             overflowY: "auto",

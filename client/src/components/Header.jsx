@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { usePostModal } from "../context/PostModalContext";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
@@ -12,8 +12,10 @@ const Header = () => {
   const { session, logout } = useSession();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const showCreatePostButton = !location.pathname.startsWith('/admin/users');
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -93,38 +95,43 @@ const Header = () => {
       </div>
 
       {/* Post Button - Center */}
-      <button
-        onClick={openModal}
-        style={{
-          padding: "0.75rem 1.75rem",
-          backgroundColor: "#8D88EA",
-          color: "#FFFFFF",
-          border: "none",
-          borderRadius: "8px",
-          fontSize: "1rem",
-          fontWeight: "600",
-          cursor: "pointer",
-          transition: "all 0.3s ease",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          boxShadow: "0 2px 8px rgba(141, 136, 234, 0.3)",
-          margin: "0 auto",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#6C63D9";
-          e.currentTarget.style.transform = "translateY(-2px)";
-          e.currentTarget.style.boxShadow = "0 4px 16px rgba(141, 136, 234, 0.4)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "#8D88EA";
-          e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.boxShadow = "0 2px 8px rgba(141, 136, 234, 0.3)";
-        }}
-      >
-        <FiEdit3 size={18} />
-        <span>Create Post</span>
-      </button>
+      {showCreatePostButton && (
+        <button
+          onClick={openModal}
+          style={{
+            padding: "0.75rem 1.75rem",
+            backgroundColor: "#8D88EA",
+            color: "#FFFFFF",
+            border: "none",
+            borderRadius: "8px",
+            fontSize: "1rem",
+            fontWeight: "600",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            boxShadow: "0 2px 8px rgba(141, 136, 234, 0.3)",
+            margin: "0 auto",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#6C63D9";
+            e.currentTarget.style.transform = "translateY(-2px)";
+            e.currentTarget.style.boxShadow = "0 4px 16px rgba(141, 136, 234, 0.4)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#8D88EA";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 2px 8px rgba(141, 136, 234, 0.3)";
+          }}
+        >
+          <FiEdit3 size={18} />
+          <span>Create Post</span>
+        </button>
+      )}
+
+      {/* Spacer to push user menu to the right */}
+      <div style={{ flex: "1" }} />
 
       {/* User Menu Section - Right */}
       <div
