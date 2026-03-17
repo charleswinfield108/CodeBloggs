@@ -19,6 +19,7 @@ const UserUpdate = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingUpdateData, setPendingUpdateData] = useState(null);
   const [confirmChanges, setConfirmChanges] = useState({});
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
 
   // Form fields
   const [firstName, setFirstName] = useState("");
@@ -32,6 +33,16 @@ const UserUpdate = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
+  // Handle window resize for responsive layout
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Fetch user details
   useEffect(() => {
@@ -191,8 +202,8 @@ const UserUpdate = () => {
   return (
     <Layout>
       <div style={{ maxWidth: "700px", margin: "0 auto", padding: "0.5rem 2rem 2rem 2rem" }}>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem", justifyContent: "space-between" }}>
-          <h1 style={{ color: "#8D88EA", margin: "0", fontSize: "1.5rem", fontWeight: "700" }}>
+        <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", alignItems: isDesktop ? "center" : "flex-start", marginBottom: "1rem", justifyContent: "space-between", gap: isDesktop ? "0" : "0.75rem" }}>
+          <h1 style={{ color: "#8D88EA", margin: "0", fontSize: isDesktop ? "1.5rem" : "1.25rem", fontWeight: "700" }}>
             Edit User
           </h1>
           <button
@@ -205,8 +216,9 @@ const UserUpdate = () => {
               cursor: "pointer",
               padding: "0.75rem 1.5rem",
               borderRadius: "6px",
-              marginLeft: "0.5rem",
+              marginLeft: isDesktop ? "0.5rem" : "0",
               fontWeight: "600",
+              width: isDesktop ? "auto" : "100%",
             }}
           >
             Return to User Manager
@@ -238,7 +250,7 @@ const UserUpdate = () => {
           }}
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
+            gridTemplateColumns: isDesktop ? "1fr 1fr" : "1fr",
             gap: "1rem",
             marginBottom: "2rem",
           }}
@@ -306,7 +318,7 @@ const UserUpdate = () => {
           </div>
 
           {/* Email */}
-          <div style={{ gridColumn: "1 / -1" }}>
+          <div style={{ gridColumn: isDesktop ? "1 / -1" : "auto" }}>
             <label
               htmlFor="email"
               style={{
@@ -572,7 +584,7 @@ const UserUpdate = () => {
           </div>
 
           {/* Buttons */}
-          <div style={{ gridColumn: "1 / -1", display: "flex", gap: "1rem", marginTop: "1rem" }}>
+          <div style={{ gridColumn: isDesktop ? "1 / -1" : "auto", display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "1rem", marginTop: "1rem" }}>
             <button
               type="submit"
               disabled={saving}
