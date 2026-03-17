@@ -139,7 +139,7 @@ const UserManager = () => {
       setCurrentPage(1);
       fetchUsers(1, firstName, lastName);
     }
-  }, [firstName, lastName]);
+  }, [firstName, lastName, sortBy, sortOrder]);
 
   // Handle clear filters
   const handleClear = () => {
@@ -170,7 +170,7 @@ const UserManager = () => {
   return (
     <Layout>
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0.25rem 2rem 1rem 2rem" }}>
-        <h1 style={{ color: "#1F2340", marginBottom: "0.75rem", fontSize: "1.5rem", fontWeight: "700" }}>
+        <h1 style={{ color: "#8D88EA", marginBottom: "0.75rem", fontSize: "1.5rem", fontWeight: "700" }}>
           User Manager
         </h1>
 
@@ -221,6 +221,34 @@ const UserManager = () => {
               }}
             />
           </div>
+
+          {/* Search Button */}
+          <button
+            onClick={() => {
+              setCurrentPage(1);
+              fetchUsers(1, firstName, lastName);
+            }}
+            style={{
+              backgroundColor: "#8D88EA",
+              color: "#FFFFFF",
+              border: "none",
+              borderRadius: "6px",
+              padding: "0.5rem 1rem",
+              fontSize: "0.75rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = "#6F6AC0";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = "#8D88EA";
+            }}
+          >
+            Search
+          </button>
 
           {/* Clear Button */}
           <button
