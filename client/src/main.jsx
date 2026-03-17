@@ -12,6 +12,8 @@ import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import Network from "./pages/Network";
 import Admin from "./pages/Admin";
+import UserManager from "./pages/UserManager";
+import ContentManager from "./pages/ContentManager";
 import { SessionProvider } from "./context/SessionContext";
 import { PostModalProvider } from "./context/PostModalContext";
 import { ToastProvider } from "./context/ToastContext";
@@ -61,6 +63,22 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Admin />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/users",
+    element: (
+      <ProtectedRoute>
+        <UserManager />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/posts",
+    element: (
+      <ProtectedRoute>
+        <ContentManager />
       </ProtectedRoute>
     ),
   },

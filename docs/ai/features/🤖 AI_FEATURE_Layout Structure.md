@@ -1,4 +1,6 @@
-# 🤖🛠️ AI Feature Specification - Layout Structure
+🤖🛠️ AI Feature Specification - Layout Structure
+
+---
 
 **Feature Goal:** Establish the foundational application layout with a header, left navigation panel, and main content area. Login and Registration pages remain independent without the header or navigation.
 

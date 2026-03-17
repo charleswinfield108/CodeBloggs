@@ -75,7 +75,6 @@ const Admin = () => {
               display: "flex",
               flexDirection: "column",
               height: "fit-content",
-              cursor: "pointer",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";
@@ -111,23 +110,30 @@ const Admin = () => {
               Manage users, roles, and permissions. Monitor user accounts, handle moderation actions, and maintain platform security.
             </p>
 
-            {/* Placeholder Content */}
-            <div
+            {/* Button */}
+            <button
+              onClick={() => navigate("/admin/users")}
               style={{
-                backgroundColor: "#F6F7FF",
-                border: "1px dashed #8D88EA",
+                backgroundColor: "#8D88EA",
+                color: "#FFFFFF",
+                border: "none",
                 borderRadius: "8px",
-                padding: "2rem",
-                textAlign: "center",
+                padding: "0.75rem 1.5rem",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                alignSelf: "flex-start",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#7B77D8";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#8D88EA";
               }}
             >
-              <p style={{ color: "#8D88EA", fontSize: "0.9rem", fontWeight: "500", margin: 0 }}>
-                🚀 Coming Soon
-              </p>
-              <p style={{ color: "#999", fontSize: "0.8rem", margin: "0.5rem 0 0 0" }}>
-                Feature in development
-              </p>
-            </div>
+              Open User Manager
+            </button>
           </div>
 
           {/* Content Manager Card */}
@@ -142,7 +148,6 @@ const Admin = () => {
               display: "flex",
               flexDirection: "column",
               height: "fit-content",
-              cursor: "pointer",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";
@@ -178,23 +183,30 @@ const Admin = () => {
               Moderate posts, comments, and reports. Review flagged content, manage community guidelines, and ensure platform safety.
             </p>
 
-            {/* Placeholder Content */}
-            <div
+            {/* Button */}
+            <button
+              onClick={() => navigate("/admin/posts")}
               style={{
-                backgroundColor: "#F6F7FF",
-                border: "1px dashed #8D88EA",
+                backgroundColor: "#8D88EA",
+                color: "#FFFFFF",
+                border: "none",
                 borderRadius: "8px",
-                padding: "2rem",
-                textAlign: "center",
+                padding: "0.75rem 1.5rem",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                alignSelf: "flex-start",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#7B77D8";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#8D88EA";
               }}
             >
-              <p style={{ color: "#8D88EA", fontSize: "0.9rem", fontWeight: "500", margin: 0 }}>
-                🚀 Coming Soon
-              </p>
-              <p style={{ color: "#999", fontSize: "0.8rem", margin: "0.5rem 0 0 0" }}>
-                Feature in development
-              </p>
-            </div>
+              Open Content Manager
+            </button>
           </div>
         </div>
       </div>
