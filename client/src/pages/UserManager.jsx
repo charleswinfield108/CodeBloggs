@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
+import SkeletonLoader from "../components/SkeletonLoader";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
 
@@ -316,17 +317,18 @@ const UserManager = () => {
         }}>
         {/* Loading State */}
         {loading && (
-          <div style={{
-            backgroundColor: "#D6EAF8",
-            color: "#3498DB",
-            padding: "0.5rem",
-            borderRadius: "6px",
-            marginBottom: "0.5rem",
-            borderLeft: "4px solid #3498DB",
-            fontSize: "0.75rem"
-          }}>
-            Loading users...
-          </div>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              backgroundColor: "#FFFFFF",
+              fontSize: "0.7rem",
+            }}
+          >
+            <tbody>
+              <SkeletonLoader type="user" count={itemsPerPage} />
+            </tbody>
+          </table>
         )}
 
         {/* Sort Buttons & Results Per Page */}

@@ -5,6 +5,7 @@ import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import AvatarInitials from "../components/AvatarInitials";
+import SkeletonLoader from "../components/SkeletonLoader";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
 const ContentManager = () => {
@@ -293,16 +294,7 @@ const ContentManager = () => {
 
           {/* Loading State */}
           {loading && (
-            <div style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "2rem",
-              fontSize: "0.75rem",
-              color: "#8D88EA"
-            }}>
-              Loading posts...
-            </div>
+            <SkeletonLoader type="post" count={itemsPerPage} />
           )}
 
           {/* No Posts Message */}
