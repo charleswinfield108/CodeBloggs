@@ -209,6 +209,8 @@ const Blogs = () => {
               overflowY: "auto",
               paddingRight: "0.5rem",
               marginTop: "20px",
+              marginRight: isDesktop ? 0 : "10px",
+              marginLeft: isDesktop ? 0 : "10px",
             }}
           >
             {allPosts
