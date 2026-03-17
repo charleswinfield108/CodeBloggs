@@ -264,7 +264,7 @@ const Home = () => {
 
   return (
     <Layout>
-      <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "1.5rem", height: "100%", overflow: "hidden" }}>
+      <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "1.5rem", height: isDesktop ? "auto" : "100%", overflow: "visible" }}>
         {/* Left Column - User Info (240px on desktop, full width on mobile) */}
         <div style={{ flex: isDesktop ? "0 0 240px" : "0 0 auto", display: "flex", flexDirection: "column", gap: "0.75rem", overflowY: isDesktop ? "auto" : "visible", maxHeight: isDesktop ? "100%" : "auto" }}>
           {/* Avatar Section */}
@@ -397,7 +397,7 @@ const Home = () => {
         </div>
 
         {/* Right Column - Posts List with Scrollbar */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: isDesktop ? 0 : "auto", overflow: isDesktop ? "hidden" : "visible", maxHeight: isDesktop ? "calc(100% - 150px)" : "auto" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "visible", maxHeight: "auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
             <h2 style={{ color: "#8D88EA", fontSize: isDesktop ? "1.25rem" : "1rem", margin: 0 }}>
               {viewingUser?.first_name}'s Posts

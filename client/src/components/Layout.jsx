@@ -57,7 +57,7 @@ const Layout = ({ children }) => {
         <main
           style={{
             marginLeft: isDesktop ? "250px" : "0",
-            padding: isDesktop ? "0.5rem 2rem 2rem 2rem" : "1rem",
+            padding: isDesktop ? "0.5rem 2rem 0.5rem 2rem" : "1rem",
             backgroundColor: "#FFFFFF",
             flex: 1,
             overflowY: "auto",
