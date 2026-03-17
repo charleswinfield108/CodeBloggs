@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
+import { usePostModal } from "../context/PostModalContext";
 import { FiChevronDown, FiSettings, FiLogOut } from "react-icons/fi";
 import { getAvatarColor } from "../utils/avatarColors";
 import logo from "../assets/CodeBloggs_ logo.png";
@@ -17,6 +18,7 @@ import logo from "../assets/CodeBloggs_ logo.png";
 const Header = () => {
   const { session, logout } = useSession();
   const { showToast } = useToast();
+  const { openModal } = usePostModal();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
@@ -108,11 +110,41 @@ const Header = () => {
         />
       </div>
 
-      {/* Post Button - Center */}
-      {/* Removed: Create Post button */}
-
-      {/* Spacer to push user menu to the right */}
-      <div style={{ flex: "1" }} />
+      {/* Post Button - Center (Desktop Only) */}
+      <div
+        style={{
+          flex: "1",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {isDesktop && (
+          <button
+            onClick={() => openModal()}
+            style={{
+              backgroundColor: "#8D88EA",
+              color: "#FFFFFF",
+              border: "none",
+              borderRadius: "6px",
+              padding: "0.5rem 1rem",
+              fontSize: "0.85rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#7B74D6";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#8D88EA";
+            }}
+          >
+            + Create Post
+          </button>
+        )}
+      </div>
 
       {/* User Menu Section - Right */}
       <div

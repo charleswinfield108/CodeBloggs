@@ -165,6 +165,68 @@ export const SessionProvider = ({ children }) => {
   }, [session?.id]);
 
   /**
+   * Token validation effect
+   * Validates session token every 5 minutes to ensure token hasn't expired
+   * Instantly logs user out if token is invalid
+   * Provides consistent access control across protected screens
+   */
+  useEffect(() => {
+    if (!session?.id) return; // Only run if user is logged in
+
+    const validateTokenPeriodically = async () => {
+      try {
+        const tokenFromCookie = getCookie("session_token");
+        if (!tokenFromCookie) {
+          // Token missing, clear session
+          setSession(null);
+          setIsOnline(false);
+          localStorage.removeItem("session");
+          deleteCookie("session_token");
+          return;
+        }
+
+        // Validate token with backend
+        const validateResponse = await fetch(
+          `http://localhost:5050/validate_token?token=${encodeURIComponent(tokenFromCookie)}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        if (validateResponse.ok) {
+          const validateData = await validateResponse.json();
+          if (validateData.status !== "ok" || !validateData.data.valid) {
+            // Token is invalid or expired
+            console.warn("Session token validation failed - logging out");
+            setSession(null);
+            setIsOnline(false);
+            localStorage.removeItem("session");
+            deleteCookie("session_token");
+          }
+        } else {
+          // Backend error - treat as invalid token
+          console.error("Token validation endpoint error - logging out");
+          setSession(null);
+          setIsOnline(false);
+          localStorage.removeItem("session");
+          deleteCookie("session_token");
+        }
+      } catch (error) {
+        console.error("Periodic token validation error:", error);
+        // Don't logout on network errors - let user retry
+      }
+    };
+
+    // Validate token immediately, then every 5 minutes (300000 ms)
+    validateTokenPeriodically();
+    const validationInterval = setInterval(validateTokenPeriodically, 300000);
+
+    // Cleanup: stop validation when user logs out or component unmounts
+    return () => clearInterval(validationInterval);
+  }, [session?.id]);
+
+  /**
    * login - Function to establish user session after successful authentication
    * Stores session token in cookie (1 day expiration)
    * Stores full session object in localStorage for reference
