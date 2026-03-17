@@ -64,29 +64,70 @@ export const SessionProvider = ({ children }) => {
   /**
    * Initialization effect - runs once on component mount
    * Restores session from cookie and localStorage if available
+   * Validates token with backend to ensure session is still valid
    * Clears invalid session data to prevent stale sessions
    */
   useEffect(() => {
-    const tokenFromCookie = getCookie("session_token");
-    if (tokenFromCookie) {
+    const initializeSession = async () => {
       try {
-        // Get full session object from localStorage
-        const storedSession = localStorage.getItem("session");
-        if (storedSession) {
-          const sessionData = JSON.parse(storedSession);
-          setSession(sessionData);
-          // Set online status from stored session (defaults to true if missing)
-          setIsOnline(sessionData?.isOnline ?? true);
+        const tokenFromCookie = getCookie("session_token");
+        if (tokenFromCookie) {
+          // Validate token with backend
+          const validateResponse = await fetch(`http://localhost:5050/validate_token?token=${encodeURIComponent(tokenFromCookie)}`, {
+            method: "GET",
+            credentials: "include",
+          });
+
+          if (validateResponse.ok) {
+            const validateData = await validateResponse.json();
+            if (validateData.status === "ok" && validateData.data.valid) {
+              // Token is valid, restore session from localStorage
+              const storedSession = localStorage.getItem("session");
+              if (storedSession) {
+                const sessionData = JSON.parse(storedSession);
+                setSession(sessionData);
+                setIsOnline(sessionData?.isOnline ?? true);
+              }
+            } else {
+              // Token is invalid, clear all session data
+              localStorage.removeItem("session");
+              deleteCookie("session_token");
+            }
+          } else {
+            // Backend returned error, token is invalid or expired
+            localStorage.removeItem("session");
+            deleteCookie("session_token");
+          }
+        } else {
+          // No token found, check if there's valid session in localStorage anyway
+          const storedSession = localStorage.getItem("session");
+          if (storedSession) {
+            // Sessions without a valid token should be cleared
+            localStorage.removeItem("session");
+          }
         }
       } catch (error) {
-        console.error("Failed to parse stored session:", error);
-        // Clear corrupted session data
-        localStorage.removeItem("session");
-        deleteCookie("session_token");
+        console.error("Failed to initialize session:", error);
+        // On network error, still try to restore from localStorage as fallback
+        try {
+          const storedSession = localStorage.getItem("session");
+          if (storedSession) {
+            const sessionData = JSON.parse(storedSession);
+            setSession(sessionData);
+            setIsOnline(sessionData?.isOnline ?? true);
+          }
+        } catch (parseError) {
+          console.error("Failed to parse stored session:", parseError);
+          localStorage.removeItem("session");
+          deleteCookie("session_token");
+        }
+      } finally {
+        // Set loading to false after initialization
+        setLoading(false);
       }
-    }
-    // Set loading to false after initialization
-    setLoading(false);
+    };
+
+    initializeSession();
   }, []);
 
   /**
