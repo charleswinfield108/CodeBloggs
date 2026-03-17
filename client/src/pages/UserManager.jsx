@@ -169,10 +169,21 @@ const UserManager = () => {
 
   return (
     <Layout>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0.25rem 2rem 1rem 2rem" }}>
-        <h1 style={{ color: "#8D88EA", marginBottom: "0.75rem", fontSize: "1.5rem", fontWeight: "700" }}>
-          User Manager
-        </h1>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+        {/* Sticky Header Section */}
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.75rem",
+          marginBottom: "0.75rem",
+          paddingRight: "0.5rem",
+          flexShrink: 0,
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h1 style={{ color: "#8D88EA", marginBottom: 0, fontSize: "1.5rem", fontWeight: "700" }}>
+              User Manager
+            </h1>
+          </div>
 
         {/* Search Section */}
         <div style={{ marginBottom: "0.75rem", display: "flex", gap: "0.75rem", alignItems: "flex-end" }}>
@@ -292,7 +303,17 @@ const UserManager = () => {
             {error}
           </div>
         )}
+        </div>
 
+        {/* Scrollable Content Area */}
+        <div style={{
+          flex: 1,
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "auto",
+          paddingRight: "0.5rem",
+        }}>
         {/* Loading State */}
         {loading && (
           <div style={{
@@ -585,6 +606,7 @@ const UserManager = () => {
             </p>
           </div>
         )}
+      </div>
       </div>
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}

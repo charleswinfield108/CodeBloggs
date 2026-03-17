@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
+import { usePostModal } from "../context/PostModalContext";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
 const Blogs = () => {
   const { session } = useSession();
+  const { openModal, registerPostCreatedCallback } = usePostModal();
   const [allPosts, setAllPosts] = useState([]);
   const [users, setUsers] = useState({});
   const [loading, setLoading] = useState(true);
@@ -156,9 +158,16 @@ const Blogs = () => {
   return (
     <Layout>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-        <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
-          All Blogs
-        </h2>
+        {/* Scrollable Container with sticky header */}
+        <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflowY: "auto", paddingRight: "0.5rem" }}>
+          {/* Sticky Header */}
+          <div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#FBFCFD", paddingBottom: "0.75rem", marginBottom: "0.75rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
+                All Blogs
+              </h2>
+            </div>
+          </div>
 
         {error && (
           <div

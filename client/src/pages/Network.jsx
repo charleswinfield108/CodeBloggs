@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
+import { usePostModal } from "../context/PostModalContext";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp } from "react-icons/fi";
 
 const Network = () => {
   const { session } = useSession();
+  const { openModal } = usePostModal();
   const [users, setUsers] = useState([]);
   const [usersWithPosts, setUsersWithPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -132,9 +134,11 @@ const Network = () => {
   return (
     <Layout>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-        <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
-          Community Members
-        </h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+          <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
+            Community Members
+          </h2>
+        </div>
 
         {error && (
           <div

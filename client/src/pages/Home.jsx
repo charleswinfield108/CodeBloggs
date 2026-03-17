@@ -7,7 +7,7 @@ import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
 const Home = () => {
   const { session } = useSession();
-  const { registerPostCreatedCallback } = usePostModal();
+  const { openModal, registerPostCreatedCallback } = usePostModal();
   const [userPostCount, setUserPostCount] = useState(0);
   const [userPosts, setUserPosts] = useState([]);
   const [lastPostDate, setLastPostDate] = useState(null);
@@ -327,9 +327,34 @@ const Home = () => {
 
         {/* Right Column - Posts List with Scrollbar */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden", maxHeight: "calc(100% - 150px)" }}>
-          <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: "0 0 0.75rem 0" }}>
-            Your Recent Posts
-          </h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+            <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
+              Your Recent Posts
+            </h2>
+            <button
+              onClick={() => openModal()}
+              style={{
+                backgroundColor: "#8D88EA",
+                color: "#FFFFFF",
+                border: "none",
+                borderRadius: "8px",
+                padding: "0.5rem 1rem",
+                fontSize: "0.85rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.2s",
+                whiteSpace: "nowrap",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = "#6B65D4";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = "#8D88EA";
+              }}
+            >
+              + Create Post
+            </button>
+          </div>
 
           {!loading && userPosts.length > 0 && (
             <div
