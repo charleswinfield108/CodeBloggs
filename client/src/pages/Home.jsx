@@ -429,6 +429,7 @@ const Home = () => {
                       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
                       transition: "all 0.2s ease",
                       marginTop: "10px",
+                      marginRight: "20px",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.1)";
