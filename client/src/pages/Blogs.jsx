@@ -5,6 +5,15 @@ import { useSession } from "../context/SessionContext";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
+/**
+ * Blogs Component - Responsive Post Display
+ * 
+ * MDN Responsive Design:
+ * - Mobile-first approach (<768px: single column, stacked author/content)
+ * - Desktop (≥768px: side-by-side author/content layout)
+ * - Flexible spacing and font sizing
+ * - Touch-friendly button sizes
+ */
 const Blogs = () => {
   const { session } = useSession();
   const [allPosts, setAllPosts] = useState([]);
@@ -15,6 +24,16 @@ const Blogs = () => {
   const [commentInputs, setCommentInputs] = useState({});
   const [creatingComment, setCreatingComment] = useState({});
   const [openCommentModal, setOpenCommentModal] = useState(null);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchAllPosts = async () => {
@@ -203,12 +222,13 @@ const Blogs = () => {
                     backgroundColor: "#FFFFFF",
                     border: "1px solid #8D88EA",
                     borderRadius: "12px",
-                    padding: "1.5rem",
+                    padding: isDesktop ? "1.5rem" : "1rem",
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
                     transition: "all 0.3s ease",
                     display: "flex",
-                    flexDirection: "row",
+                    flexDirection: isDesktop ? "row" : "column",
                     marginTop: "10px",
+                    gap: isDesktop ? "0" : "1rem",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";
@@ -219,8 +239,8 @@ const Blogs = () => {
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
-                  {/* Left Side - Author Info (20%) */}
-                  <div style={{ width: "20%", paddingRight: "1.5rem", borderRight: "1px solid #8D88EA", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                  {/* Left Side - Author Info (20% desktop, 100% mobile) */}
+                  <div style={{ width: isDesktop ? "20%" : "100%", paddingRight: isDesktop ? "1.5rem" : "0", borderRight: isDesktop ? "1px solid #8D88EA" : "none", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
                     {author && (
                       <>
                         <AvatarInitials
@@ -245,8 +265,8 @@ const Blogs = () => {
                     )}
                   </div>
 
-                  {/* Right Side - Post Content (80%) */}
-                  <div style={{ width: "80%", paddingLeft: "1.5rem", display: "flex", flexDirection: "column" }}>
+                  {/* Right Side - Post Content (80% desktop, 100% mobile) */}
+                  <div style={{ width: isDesktop ? "80%" : "100%", paddingLeft: isDesktop ? "1.5rem" : "0", display: "flex", flexDirection: "column" }}>
                     {/* Post Content */}
                     <p
                       style={{
@@ -260,7 +280,7 @@ const Blogs = () => {
                     </p>
 
                     {/* Like and Comment Buttons */}
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "auto" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "auto", flexWrap: "wrap" }}>
                       <button
                         onClick={() => handleLikePost(post._id, post.likes)}
                         style={{
@@ -385,8 +405,8 @@ const Blogs = () => {
                 style={{
                   backgroundColor: "#FFFFFF",
                   borderRadius: "12px",
-                  padding: "2rem",
-                  maxWidth: "500px",
+                  padding: isDesktop ? "2rem" : "1.5rem",
+                  maxWidth: isDesktop ? "500px" : "90%",
                   width: "90%",
                   maxHeight: "80vh",
                   display: "flex",

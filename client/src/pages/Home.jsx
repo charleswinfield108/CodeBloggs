@@ -5,6 +5,14 @@ import { usePostModal } from "../context/PostModalContext";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
+/**
+ * Home Component - User Dashboard with Responsive Layout
+ * 
+ * MDN Responsive Design:
+ * - Mobile (<768px): Single column layout, user info at top
+ * - Desktop (≥768px): Two-column layout, user sidebar + posts
+ * - Flexible spacing and text sizing
+ */
 const Home = () => {
   const { session } = useSession();
   const { registerPostCreatedCallback } = usePostModal();
@@ -17,6 +25,16 @@ const Home = () => {
   const [openCommentModal, setOpenCommentModal] = useState(null);
   const [commentInputs, setCommentInputs] = useState({});
   const [creatingComment, setCreatingComment] = useState({});
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const fetchUserPostData = async () => {
     if (!session?.id) {
@@ -193,9 +211,9 @@ const Home = () => {
 
   return (
     <Layout>
-      <div style={{ display: "flex", gap: "1.5rem", height: "100%", overflow: "hidden" }}>
-        {/* Left Column */}
-        <div style={{ flex: "0 0 240px", display: "flex", flexDirection: "column", gap: "0.75rem", overflowY: "auto" }}>
+      <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "1.5rem", height: "100%", overflow: "hidden" }}>
+        {/* Left Column - User Info (240px on desktop, full width on mobile) */}
+        <div style={{ flex: isDesktop ? "0 0 240px" : "0 0 auto", display: "flex", flexDirection: "column", gap: "0.75rem", overflowY: isDesktop ? "auto" : "visible", maxHeight: isDesktop ? "100%" : "auto" }}>
           {/* Avatar Section */}
           <div
             style={{
@@ -326,7 +344,7 @@ const Home = () => {
         </div>
 
         {/* Right Column - Posts List with Scrollbar */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden", maxHeight: "calc(100% - 150px)" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: isDesktop ? 0 : "auto", overflow: isDesktop ? "hidden" : "visible", maxHeight: isDesktop ? "calc(100% - 150px)" : "auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
             <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
               Your Recent Posts

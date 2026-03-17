@@ -2,18 +2,34 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
-import { usePostModal } from "../context/PostModalContext";
 import { FiChevronDown, FiSettings, FiLogOut } from "react-icons/fi";
 import { getAvatarColor } from "../utils/avatarColors";
 import logo from "../assets/CodeBloggs_ logo.png";
 
+/**
+ * Header Component - Responsive Application Header
+ * 
+ * MDN Responsive Design:
+ * - Fixed at top with responsive padding
+ * - Mobile-friendly logo sizing
+ * - Touch-friendly dropdown menu
+ */
 const Header = () => {
   const { session, logout } = useSession();
   const { showToast } = useToast();
-  const { openModal } = usePostModal();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -58,11 +74,11 @@ const Header = () => {
         zIndex: 1000,
         display: "flex",
         alignItems: "center",
-        paddingLeft: "2rem",
-        paddingRight: "2rem",
+        paddingLeft: isDesktop ? "2rem" : "1rem",
+        paddingRight: isDesktop ? "2rem" : "1rem",
         boxShadow: "none",
         border: "0.5px solid #F8F8F8",
-        gap: "2rem",
+        gap: isDesktop ? "2rem" : "1rem",
         borderRadius: "20px",
       }}
     >
@@ -73,7 +89,7 @@ const Header = () => {
           display: "flex",
           alignItems: "center",
           flex: "0 0 auto",
-          marginLeft: "20px",
+          marginLeft: isDesktop ? "20px" : "0",
           cursor: "pointer",
           transition: "opacity 0.2s ease",
         }}
@@ -84,40 +100,19 @@ const Header = () => {
           src={logo}
           alt="CodeBloggs Logo"
           style={{
-            width: "85%",
-            maxWidth: "200px",
+            width: isDesktop ? "85%" : "100%",
+            maxWidth: isDesktop ? "200px" : "120px",
             height: "auto",
-            marginLeft: "-20px",
+            marginLeft: isDesktop ? "-20px" : "0",
           }}
         />
       </div>
 
       {/* Post Button - Center */}
-      <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <button
-          onClick={() => openModal()}
-          style={{
-            backgroundColor: "#8D88EA",
-            color: "#FFFFFF",
-            border: "none",
-            borderRadius: "8px",
-            padding: "0.6rem 1.2rem",
-            fontSize: "0.85rem",
-            fontWeight: "600",
-            cursor: "pointer",
-            transition: "all 0.2s",
-            whiteSpace: "nowrap",
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = "#6B65D4";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "#8D88EA";
-          }}
-        >
-          + Create Post
-        </button>
-      </div>
+      {/* Removed: Create Post button */}
+
+      {/* Spacer to push user menu to the right */}
+      <div style={{ flex: "1" }} />
 
       {/* User Menu Section - Right */}
       <div

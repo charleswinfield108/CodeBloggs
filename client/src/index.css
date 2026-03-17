@@ -1,7 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
+/* =============================================
+   MDN RESPONSIVE DESIGN BEST PRACTICES
+   Mobile-First Approach with Progressive Enhancement
+   ============================================= */
+
 * {
   font-family: 'Open Sans', sans-serif !important;
+  box-sizing: border-box;
 }
 
 html, body, #root {
@@ -9,10 +15,167 @@ html, body, #root {
   padding: 0;
   height: 100vh;
   font-family: 'Open Sans', sans-serif;
+  /* Mobile-first: 100% width by default */
+  width: 100%;
 }
 
 body {
   font-family: 'Open Sans', sans-serif;
+  background-color: #FFFFFF;
+}
+
+/* =============================================
+   RESPONSIVE BREAKPOINTS (Mobile-First)
+   ============================================= */
+
+/* Extra small devices (320px and up) */
+@media (max-width: 479px) {
+  * {
+    /* Ensure touch targets are at least 44-48px */
+  }
+
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Single column layouts */
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Reduce padding on very small screens */
+  main {
+    padding: 0.5rem !important;
+  }
+}
+
+/* Small devices: Phones in landscape (480px and up) */
+@media (min-width: 480px) {
+  /* Two column layouts */
+  .responsive-grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* Medium devices: Tablets (768px and up) */
+@media (min-width: 768px) {
+  /* Three+ column layouts */
+  .responsive-grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Two-column asymmetric layouts */
+  .responsive-sidebar-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Large devices: Desktops (1024px and up) */
+@media (min-width: 1024px) {
+  main {
+    padding: 0.5rem 2rem 2rem 2rem !important;
+  }
+}
+
+/* Extra large devices (1200px and up) */
+@media (min-width: 1200px) {
+  .responsive-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* =============================================
+   RESPONSIVE TEXT SIZING
+   ============================================= */
+
+/* Fluid typography for better readability */
+h1 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+h2 {
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+h3 {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+}
+
+p {
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  line-height: 1.5;
+}
+
+/* =============================================
+   ACCESSIBILITY & TOUCH FRIENDLY
+   ============================================= */
+
+/* Ensure interactive elements are touch-friendly */
+button, a[role="button"] {
+  padding: clamp(0.4rem, 2vw, 0.8rem) clamp(0.6rem, 2vw, 1.2rem);
+  border-radius: clamp(4px, 0.5vw, 8px);
+  transition: all 0.2s ease;
+}
+
+/* Focus states for keyboard navigation */
+button:focus, a:focus {
+  outline: 2px solid #8D88EA;
+  outline-offset: 2px;
+}
+
+/* Prevent font scaling on text input focus (iOS) */
+input, textarea, select {
+  font-size: 16px;
+}
+
+/* =============================================
+   SCROLLBAR STYLING FOR BETTER UX
+   ============================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8D88EA;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7D7CDA;
+}
+
+/* =============================================
+   RESPONSIVE IMAGES
+   ============================================= */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =============================================
+   CONTAINER QUERIES (Future-Ready)
+   ============================================= */
+
+@supports (container-type: inline-size) {
+  .responsive-container {
+    container-type: inline-size;
+  }
 }
 
 @tailwind base;

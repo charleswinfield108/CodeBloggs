@@ -5,6 +5,15 @@ import { useSession } from "../context/SessionContext";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp } from "react-icons/fi";
 
+/**
+ * Network Component - Community Members with Responsive Grid
+ * 
+ * MDN Responsive Design:
+ * - Mobile (<480px): Single column
+ * - Tablet (480px-768px): 2 columns
+ * - Desktop (≥768px): Auto-fill columns (min 320px)
+ * - Fluid grid using CSS Grid auto-fit/auto-fill
+ */
 const Network = () => {
   const { session } = useSession();
   const [users, setUsers] = useState([]);
@@ -12,6 +21,16 @@ const Network = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [likedPosts, setLikedPosts] = useState(new Set());
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchUsersAndPosts = async () => {
@@ -161,7 +180,12 @@ const Network = () => {
               flex: 1,
               minHeight: 0,
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+              gridTemplateColumns: 
+                window.innerWidth < 480 
+                  ? "1fr"
+                  : window.innerWidth < 768
+                  ? "repeat(2, 1fr)"
+                  : "repeat(auto-fill, minmax(320px, 1fr))",
               gap: "1.5rem",
               overflowY: "auto",
               paddingRight: "0.5rem",
