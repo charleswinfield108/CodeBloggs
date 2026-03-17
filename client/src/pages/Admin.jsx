@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
@@ -8,6 +8,15 @@ import { MdContentPaste } from "react-icons/md";
 const Admin = () => {
   const { session, loading } = useSession();
   const navigate = useNavigate();
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Check if user is admin
   useEffect(() => {
@@ -55,12 +64,14 @@ const Admin = () => {
             flex: 1,
             minHeight: 0,
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
+            gridTemplateColumns: isDesktop ? "repeat(auto-fit, minmax(400px, 1fr))" : "1fr",
             gap: "2rem",
             overflowY: "auto",
             paddingRight: "0.5rem",
             paddingTop: "1rem",
             marginTop: "15px",
+            marginLeft: "20px",
+            marginRight: "20px",
           }}
         >
           {/* User Manager Card */}

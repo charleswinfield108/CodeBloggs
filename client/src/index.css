@@ -48,16 +48,36 @@ body {
   main {
     padding: 0.5rem !important;
   }
+
+  /* Font size scaling for mobile - reduce by 20% for text only */
+  p, span:not(svg *), a, li, label, .text, .content {
+    font-size: 0.8em !important;
+  }
+
+  h1 { font-size: 1.28em !important; } /* 1.6em * 0.8 */
+  h2 { font-size: 1.12em !important; } /* 1.4em * 0.8 */
+  h3 { font-size: 0.96em !important; } /* 1.2em * 0.8 */
+  h4 { font-size: 0.8em !important; }  /* 1em * 0.8 */
 }
 
 /* Small devices: Phones in landscape (480px and up) */
-@media (min-width: 480px) {
+@media (min-width: 480px) and (max-width: 767px) {
   /* Two column layouts */
   .responsive-grid-2col {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
+
+  /* Font size scaling for mobile - reduce by 20% for text only */
+  p, span:not(svg *), a, li, label, .text, .content {
+    font-size: 0.8em !important;
+  }
+
+  h1 { font-size: 1.28em !important; } /* 1.6em * 0.8 */
+  h2 { font-size: 1.12em !important; } /* 1.4em * 0.8 */
+  h3 { font-size: 0.96em !important; } /* 1.2em * 0.8 */
+  h4 { font-size: 0.8em !important; }  /* 1em * 0.8 */
 }
 
 /* Medium devices: Tablets (768px and up) */

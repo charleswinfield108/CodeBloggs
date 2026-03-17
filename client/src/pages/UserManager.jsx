@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
@@ -26,9 +26,20 @@ const UserManager = () => {
   const [deletingUserId, setDeletingUserId] = useState(null);
   const [deletingUserName, setDeletingUserName] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  // Handle window resize for responsive layout
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Fetch users from backend
-  const fetchUsers = async (page = 1, fname = firstName, lname = lastName, pageSize = null) => {
+  const fetchUsers = useCallback(async (page = 1, fname = "", lname = "", pageSize = null) => {
     setLoading(true);
     setError(null);
     const startTime = Date.now(); // Track start time for minimum loading duration
@@ -75,7 +86,7 @@ const UserManager = () => {
         setLoading(false);
       }, remainingDelay);
     }
-  };
+  }, [itemsPerPage, sortBy, sortOrder, showToast]);
 
   // Handle sort
   const handleSort = (field) => {
@@ -148,7 +159,7 @@ const UserManager = () => {
       setCurrentPage(1);
       fetchUsers(1, firstName, lastName);
     }
-  }, [firstName, lastName, sortBy, sortOrder]);
+  }, [firstName, lastName, sortBy, sortOrder, session, fetchUsers]);
 
   // Handle clear filters
   const handleClear = () => {
@@ -162,12 +173,14 @@ const UserManager = () => {
     }, 300);
   };
 
-  // Fetch users on component mount
+  // Fetch users on component mount when session loads
   useEffect(() => {
-    if (session?.auth_level === "admin") {
+    if (!sessionLoading && session?.auth_level === "admin") {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchUsers(1, "", "");
     }
-  }, [session?.auth_level]);
+    // Only run when session finishes loading
+  }, [sessionLoading]);
 
   // Check admin access
   useEffect(() => {
@@ -178,7 +191,7 @@ const UserManager = () => {
 
   return (
     <Layout>
-      <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: isDesktop ? "100%" : "auto", overflow: isDesktop ? "hidden" : "visible" }}>
         {/* Sticky Header Section */}
         <div style={{
           display: "flex",
@@ -189,13 +202,13 @@ const UserManager = () => {
           flexShrink: 0,
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h1 style={{ color: "#8D88EA", marginBottom: 0, fontSize: "1.5rem", fontWeight: "700" }}>
+            <h1 style={{ color: "#8D88EA", marginBottom: 0, fontSize: isDesktop ? "1.5rem" : "1.25rem", fontWeight: "700" }}>
               User Manager
             </h1>
           </div>
 
         {/* Search Section */}
-        <div style={{ marginBottom: "0.75rem", display: "flex", gap: "0.75rem", alignItems: "flex-end" }}>
+        <div style={{ marginBottom: "0.75rem", display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "0.75rem", alignItems: isDesktop ? "flex-end" : "stretch" }}>
           {/* First Name Search */}
           <div style={{ flex: 1 }}>
             <label htmlFor="firstName" style={{ display: "block", color: "#1F2340", fontSize: "0.75rem", fontWeight: "600", marginBottom: "0.25rem" }}>
@@ -249,6 +262,7 @@ const UserManager = () => {
               fetchUsers(1, firstName, lastName);
             }}
             style={{
+              flex: isDesktop ? "0 0 auto" : "1",
               backgroundColor: "#8D88EA",
               color: "#FFFFFF",
               border: "none",
@@ -274,6 +288,7 @@ const UserManager = () => {
           <button
             onClick={handleClear}
             style={{
+              flex: isDesktop ? "0 0 auto" : "1",
               backgroundColor: "#F5F5F5",
               color: "#1F2340",
               border: "1px solid #E0E0E0",
@@ -316,12 +331,12 @@ const UserManager = () => {
 
         {/* Scrollable Content Area */}
         <div style={{
-          flex: 1,
+          flex: isDesktop ? 1 : "none",
           minHeight: 0,
           display: "flex",
           flexDirection: "column",
-          overflowY: "auto",
-          paddingRight: "0.5rem",
+          overflowY: isDesktop ? "auto" : "visible",
+          paddingRight: isDesktop ? "0.5rem" : "0",
         }}>
         {/* Loading State */}
         {loading && (
@@ -341,9 +356,9 @@ const UserManager = () => {
 
         {/* Sort Buttons & Results Per Page */}
         {!loading && users.length > 0 && (
-          <div style={{ marginBottom: "0.5rem", display: "flex", gap: "0.35rem", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", gap: "0.35rem", alignItems: "center" }}>
-              <span style={{ color: "#1F2340", fontSize: "0.7rem", fontWeight: "600", alignSelf: "center" }}>Sort:</span>
+          <div style={{ marginBottom: "0.5rem", display: "flex", flexDirection: isDesktop ? "row" : "column", gap: isDesktop ? "0.35rem" : "0.5rem", alignItems: isDesktop ? "center" : "stretch", justifyContent: isDesktop ? "space-between" : "flex-start" }}>
+            <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", gap: isDesktop ? "0.35rem" : "0.5rem", alignItems: isDesktop ? "center" : "stretch", flex: isDesktop ? "0 1 auto" : "1" }}>
+              <span style={{ color: "#1F2340", fontSize: "0.7rem", fontWeight: "600", alignSelf: isDesktop ? "center" : "flex-start" }}>Sort:</span>
               <button
                 onClick={() => handleSort("first_name")}
                 style={{
@@ -398,7 +413,7 @@ const UserManager = () => {
               </button>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+            <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", alignItems: isDesktop ? "center" : "stretch", gap: isDesktop ? "0.35rem" : "0.5rem", flex: isDesktop ? "0 1 auto" : "1" }}>
               <label htmlFor="pageSize" style={{ color: "#1F2340", fontSize: "0.7rem", fontWeight: "600" }}>
                 Show:
               </label>
@@ -416,6 +431,8 @@ const UserManager = () => {
                   fontWeight: "600",
                   cursor: "pointer",
                   boxSizing: "border-box",
+                  width: isDesktop ? "auto" : "100%",
+                  flex: isDesktop ? "0 0 auto" : "1",
                 }}
               >
                 <option value={10}>10</option>

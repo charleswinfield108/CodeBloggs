@@ -27,6 +27,17 @@ const ContentManager = () => {
   const [deletingPostId, setDeletingPostId] = useState(null);
   const [deletingPostContent, setDeletingPostContent] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  // Handle window resize for responsive layout
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Fetch all posts and users
   const fetchPosts = async (page = 1, pageSize = null) => {
@@ -172,14 +183,14 @@ const ContentManager = () => {
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0.25rem 2rem 1rem 2rem", display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
         {/* Sticky Header */}
         <div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#FBFCFD", paddingBottom: "0.75rem", marginBottom: "0.75rem" }}>
-          <h1 style={{ color: "#8D88EA", marginBottom: "0.75rem", fontSize: "1.5rem", fontWeight: "700" }}>
+          <h1 style={{ color: "#8D88EA", marginBottom: "0.75rem", fontSize: isDesktop ? "1.5rem" : "1.25rem", fontWeight: "700" }}>
             Content Manager
           </h1>
 
           {/* Date Range Search */}
-          <div style={{ marginBottom: "0.75rem", display: "flex", gap: "0.75rem", alignItems: "flex-end" }}>
+          <div style={{ marginBottom: "0.75rem", display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "0.75rem", alignItems: isDesktop ? "flex-end" : "stretch" }}>
             {/* Start Date */}
-            <div>
+            <div style={{ flex: isDesktop ? "0 1 auto" : "1" }}>
               <label htmlFor="startDate" style={{ display: "block", color: "#1F2340", fontSize: "0.75rem", fontWeight: "600", marginBottom: "0.25rem" }}>
                 Start Date
               </label>
@@ -189,6 +200,7 @@ const ContentManager = () => {
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 style={{
+                  width: "100%",
                   padding: "0.5rem 0.75rem",
                   border: "1px solid #E0E0E0",
                   borderRadius: "6px",
@@ -199,7 +211,7 @@ const ContentManager = () => {
             </div>
 
             {/* End Date */}
-            <div>
+            <div style={{ flex: isDesktop ? "0 1 auto" : "1" }}>
               <label htmlFor="endDate" style={{ display: "block", color: "#1F2340", fontSize: "0.75rem", fontWeight: "600", marginBottom: "0.25rem" }}>
                 End Date
               </label>
@@ -209,6 +221,7 @@ const ContentManager = () => {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 style={{
+                  width: "100%",
                   padding: "0.5rem 0.75rem",
                   border: "1px solid #E0E0E0",
                   borderRadius: "6px",
@@ -227,6 +240,7 @@ const ContentManager = () => {
                 fetchPosts(1);
               }}
               style={{
+                flex: isDesktop ? "0 0 auto" : "1",
                 backgroundColor: "#8D88EA",
                 color: "#FFFFFF",
                 border: "1px solid #8D88EA",
@@ -258,6 +272,7 @@ const ContentManager = () => {
                 setCurrentPage(1);
               }}
               style={{
+                flex: isDesktop ? "0 0 auto" : "1",
                 backgroundColor: "#F5F5F5",
                 color: "#1F2340",
                 border: "1px solid #E0E0E0",
@@ -331,11 +346,12 @@ const ContentManager = () => {
                   backgroundColor: "#FFFFFF",
                   border: "1px solid #8D88EA",
                   borderRadius: "12px",
-                  padding: "1.5rem",
+                  padding: isDesktop ? "1.5rem" : "1rem",
                   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
                   transition: "all 0.3s ease",
                   display: "flex",
-                  flexDirection: "row",
+                  flexDirection: isDesktop ? "row" : "column",
+                  gap: isDesktop ? "0" : "1rem",
                   marginBottom: "1rem",
                 }}
                 onMouseEnter={(e) => {
@@ -347,8 +363,8 @@ const ContentManager = () => {
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
-                {/* Left Side - Author Info (20%) */}
-                <div style={{ width: "20%", paddingRight: "1.5rem", borderRight: "1px solid #8D88EA", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                {/* Left Side - Author Info (20% desktop, 100% mobile) */}
+                <div style={{ width: isDesktop ? "20%" : "100%", paddingRight: isDesktop ? "1.5rem" : "0", borderRight: isDesktop ? "1px solid #8D88EA" : "none", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
                   {author && (
                     <>
                       <AvatarInitials
@@ -356,30 +372,30 @@ const ContentManager = () => {
                         lastName={author.last_name}
                         size={60}
                       />
-                      <p style={{ color: "#1F2340", fontSize: "0.9rem", margin: "0.75rem 0 0 0", fontWeight: "600" }}>
+                      <p style={{ color: "#1F2340", fontSize: isDesktop ? "0.9rem" : "0.72rem", margin: "0.75rem 0 0 0", fontWeight: "600" }}>
                         {author.first_name} {author.last_name}
                       </p>
-                      <p style={{ color: "#999", fontSize: "0.75rem", margin: "0.5rem 0 0 0" }}>
+                      <p style={{ color: "#999", fontSize: isDesktop ? "0.75rem" : "0.6rem", margin: "0.5rem 0 0 0" }}>
                         {new Date(post.createdAt).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
                           year: "numeric",
                         })}
                       </p>
-                      <p style={{ color: "#666", fontSize: "0.75rem", margin: "0.5rem 0 0 0" }}>
+                      <p style={{ color: "#666", fontSize: isDesktop ? "0.75rem" : "0.6rem", margin: "0.5rem 0 0 0" }}>
                         {author.isOnline ? "🟢" : "🔴"} {author.isOnline ? "Online" : "Offline"}
                       </p>
                     </>
                   )}
                 </div>
 
-                {/* Right Side - Post Content (80%) */}
-                <div style={{ width: "80%", paddingLeft: "1.5rem", display: "flex", flexDirection: "column" }}>
+                {/* Right Side - Post Content (80% desktop, 100% mobile) */}
+                <div style={{ width: isDesktop ? "80%" : "100%", paddingLeft: isDesktop ? "1.5rem" : "0", display: "flex", flexDirection: "column" }}>
                   {/* Post Content */}
                   <p
                     style={{
                       color: "#1F2340",
-                      fontSize: "14px",
+                      fontSize: isDesktop ? "14px" : "11.2px",
                       margin: "0 0 1.5rem 0",
                       lineHeight: "1.6",
                     }}
@@ -388,23 +404,25 @@ const ContentManager = () => {
                   </p>
 
                   {/* Like, Comment, and Delete Buttons */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "auto" }}>
+                  <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", alignItems: isDesktop ? "center" : "stretch", gap: "0.75rem", marginTop: "auto", flexWrap: "wrap" }}>
                     <button
                       style={{
                         display: "flex",
                         alignItems: "center",
+                        justifyContent: "center",
                         gap: "0.5rem",
+                        width: isDesktop ? "auto" : "100%",
                         backgroundColor: "#F0F0F5",
                         color: "#666",
                         border: "none",
                         borderRadius: "8px",
-                        padding: "0.6rem 1rem",
+                        padding: isDesktop ? "0.6rem 1rem" : "0.5rem 0.8rem",
                         cursor: "default",
-                        fontSize: "0.85rem",
+                        fontSize: isDesktop ? "0.85rem" : "0.68rem",
                         fontWeight: "600",
                       }}
                     >
-                      <FiThumbsUp size={16} />
+                      <FiThumbsUp size={isDesktop ? 16 : 12} />
                       <span>{post.likes || 0} {post.likes === 1 ? "like" : "likes"}</span>
                     </button>
 
@@ -412,18 +430,20 @@ const ContentManager = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
+                        justifyContent: "center",
                         gap: "0.5rem",
+                        width: isDesktop ? "auto" : "100%",
                         backgroundColor: "#F0F0F5",
                         color: "#666",
                         border: "none",
                         borderRadius: "8px",
-                        padding: "0.6rem 1rem",
+                        padding: isDesktop ? "0.6rem 1rem" : "0.5rem 0.8rem",
                         cursor: "default",
-                        fontSize: "0.85rem",
+                        fontSize: isDesktop ? "0.85rem" : "0.68rem",
                         fontWeight: "600",
                       }}
                     >
-                      <FiMessageCircle size={16} />
+                      <FiMessageCircle size={isDesktop ? 16 : 12} />
                       <span>{post.comments?.length || 0} {post.comments?.length === 1 ? "comment" : "comments"}</span>
                     </button>
 
@@ -434,12 +454,13 @@ const ContentManager = () => {
                         color: "#FFFFFF",
                         border: "none",
                         borderRadius: "8px",
-                        padding: "0.6rem 1rem",
-                        fontSize: "0.85rem",
+                        padding: isDesktop ? "0.6rem 1rem" : "0.5rem 0.8rem",
+                        fontSize: isDesktop ? "0.85rem" : "0.68rem",
                         fontWeight: "600",
                         cursor: "pointer",
                         transition: "all 0.2s",
-                        marginLeft: "auto",
+                        marginLeft: isDesktop ? "auto" : "0",
+                        width: isDesktop ? "auto" : "100%",
                       }}
                       onMouseEnter={(e) => {
                         e.target.style.backgroundColor = "#B71C1C";

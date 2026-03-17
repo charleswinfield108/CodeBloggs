@@ -152,12 +152,81 @@ const SkeletonLoader = ({ type = "post", count = 10 }) => {
           }
         }
       `}</style>
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={`skeleton-${index}`}>
-          {type === "post" && postSkeleton}
-          {type === "user" && userSkeleton}
-        </div>
-      ))}
+      {Array.from({ length: count }).map((_, index) => {
+        if (type === "user") {
+          // Return tr directly without div wrapper for table rows
+          return (
+            <tr key={`skeleton-${index}`} style={{
+              backgroundColor: "#F9F9FB",
+              borderBottom: "1px solid #E0E0E0",
+            }}>
+              <td style={{ padding: "0.75rem", color: "#1F2340", fontSize: "0.75rem" }}>
+                <div style={{
+                  ...skeletonStyle,
+                  width: "100px",
+                  height: "12px",
+                }}></div>
+              </td>
+              <td style={{ padding: "0.75rem", color: "#1F2340", fontSize: "0.75rem" }}>
+                <div style={{
+                  ...skeletonStyle,
+                  width: "100px",
+                  height: "12px",
+                }}></div>
+              </td>
+              <td style={{ padding: "0.75rem", color: "#1F2340", fontSize: "0.75rem" }}>
+                <div style={{
+                  ...skeletonStyle,
+                  width: "80px",
+                  height: "12px",
+                }}></div>
+              </td>
+              <td style={{ padding: "0.75rem", color: "#1F2340", fontSize: "0.75rem" }}>
+                <div style={{
+                  ...skeletonStyle,
+                  width: "60px",
+                  height: "12px",
+                }}></div>
+              </td>
+              <td style={{ padding: "0.75rem", textAlign: "center" }}>
+                <div style={{
+                  ...skeletonStyle,
+                  width: "40px",
+                  height: "12px",
+                  margin: "0 auto",
+                }}></div>
+              </td>
+              <td style={{ padding: "0.75rem", textAlign: "center" }}>
+                <div style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  justifyContent: "center",
+                }}>
+                  <div style={{
+                    ...skeletonStyle,
+                    width: "30px",
+                    height: "24px",
+                    borderRadius: "4px",
+                  }}></div>
+                  <div style={{
+                    ...skeletonStyle,
+                    width: "30px",
+                    height: "24px",
+                    borderRadius: "4px",
+                  }}></div>
+                </div>
+              </td>
+            </tr>
+          );
+        }
+        
+        // For post type, wrap in div
+        return (
+          <div key={`skeleton-${index}`}>
+            {type === "post" && postSkeleton}
+          </div>
+        );
+      })}
     </>
   );
 };

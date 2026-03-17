@@ -53,7 +53,6 @@ const Network = () => {
                 if (postsData.status === "ok" && Array.isArray(postsData.data) && postsData.data.length > 0) {
                   // Posts should already be sorted newest first from backend
                   latestPost = postsData.data[0];
-                  console.log(`User ${user._id} latest post:`, latestPost);
                 }
 
                 return {

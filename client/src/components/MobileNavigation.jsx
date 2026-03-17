@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import { usePostModal } from "../context/PostModalContext";
-import logo from "../assets/CodeBloggs_ logo.png";
+import { AiFillHome } from "react-icons/ai";
+import { MdArticle } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
+import { MdAdminPanelSettings } from "react-icons/md";
 
 /**
  * MobileNavigation Component
@@ -21,20 +24,21 @@ const MobileNavigation = () => {
   const isActive = (path) => location.pathname === path;
 
   const navItems = [
-    { name: "Home", path: "/home", icon: "🏠" },
-    { name: "Blogs", path: "/blogs", icon: "📝" },
-    { name: "Network", path: "/network", icon: "👥" },
+    { name: "Home", path: "/home", icon: AiFillHome },
+    { name: "Blogs", path: "/blogs", icon: MdArticle },
+    { name: "Network", path: "/network", icon: FaUsers },
     ...(session?.auth_level === "admin"
-      ? [
-          { name: "Admin", path: "/admin/posts", icon: "⚙️" },
-          { name: "Users", path: "/admin/users", icon: "👤" },
-        ]
+      ? [{ name: "Admin", path: "/admin", icon: MdAdminPanelSettings }]
       : []),
   ];
 
   return (
     <nav
       style={{
+        position: "fixed",
+        top: "95px",
+        left: "0",
+        right: "0",
         backgroundColor: "#8D88EA",
         padding: "0.75rem 1rem",
         display: "flex",
@@ -42,21 +46,9 @@ const MobileNavigation = () => {
         alignItems: "center",
         borderBottom: "1px solid #E0E0E0",
         gap: "1rem",
+        zIndex: 999,
       }}
     >
-      {/* Logo */}
-      <Link to="/home" style={{ textDecoration: "none" }}>
-        <img
-          src={logo}
-          alt="CodeBloggs Logo"
-          style={{
-            height: "40px",
-            width: "auto",
-            cursor: "pointer",
-          }}
-        />
-      </Link>
-
       {/* Create Post Button */}
       <button
         onClick={() => openModal()}
@@ -79,7 +71,7 @@ const MobileNavigation = () => {
           e.target.style.backgroundColor = "#FFFFFF";
         }}
       >
-        + Post
+        + Create Post
       </button>
 
       {/* Hamburger Menu Toggle */}
@@ -102,44 +94,51 @@ const MobileNavigation = () => {
         <div
           style={{
             position: "fixed",
-            top: "64px",
+            top: "159px",
             left: 0,
             right: 0,
             backgroundColor: "#FFFFFF",
             borderBottom: "1px solid #E0E0E0",
-            maxHeight: "calc(100vh - 64px)",
+            maxHeight: "calc(100vh - 159px)",
             overflowY: "auto",
-            zIndex: 100,
+            zIndex: 998,
             display: "flex",
             flexDirection: "column",
           }}
         >
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={() => setMenuOpen(false)}
-              style={{
-                padding: "1rem",
-                color: isActive(item.path) ? "#8D88EA" : "#1F2340",
-                borderBottom: "1px solid #E0E0E0",
-                textDecoration: "none",
-                fontWeight: isActive(item.path) ? "600" : "400",
-                backgroundColor: isActive(item.path) ? "#F6F7FF" : "#FFFFFF",
-                transition: "all 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "#F6F7FF";
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive(item.path)) {
-                  e.target.style.backgroundColor = "#FFFFFF";
-                }
-              }}
-            >
-              {item.icon} {item.name}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const IconComponent = item.icon;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  padding: "1rem",
+                  color: isActive(item.path) ? "#8D88EA" : "#1F2340",
+                  borderBottom: "1px solid #E0E0E0",
+                  textDecoration: "none",
+                  fontWeight: isActive(item.path) ? "600" : "400",
+                  backgroundColor: isActive(item.path) ? "#F6F7FF" : "#FFFFFF",
+                  transition: "all 0.2s",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = "#F6F7FF";
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive(item.path)) {
+                    e.target.style.backgroundColor = "#FFFFFF";
+                  }
+                }}
+              >
+                <IconComponent size={20} />
+                {item.name}
+              </Link>
+            );
+          })}
         </div>
       )}
 

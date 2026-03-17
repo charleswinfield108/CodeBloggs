@@ -177,7 +177,7 @@ const Blogs = () => {
     <Layout>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-          <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: 0 }}>
+          <h2 style={{ color: "#8D88EA", fontSize: isDesktop ? "1.25rem" : "1rem", margin: 0 }}>
             All Blogs
           </h2>
         </div>
@@ -248,17 +248,17 @@ const Blogs = () => {
                           lastName={author.last_name}
                           size={60}
                         />
-                        <p style={{ color: "#1F2340", fontSize: "0.9rem", margin: "0.75rem 0 0 0", fontWeight: "600" }}>
+                        <p style={{ color: "#1F2340", fontSize: isDesktop ? "0.9rem" : "0.72rem", margin: "0.75rem 0 0 0", fontWeight: "600" }}>
                           {author.first_name} {author.last_name}
                         </p>
-                        <p style={{ color: "#999", fontSize: "0.75rem", margin: "0.5rem 0 0 0" }}>
+                        <p style={{ color: "#999", fontSize: isDesktop ? "0.75rem" : "0.6rem", margin: "0.5rem 0 0 0" }}>
                           {new Date(post.createdAt).toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
                             year: "numeric",
                           })}
                         </p>
-                        <p style={{ color: "#666", fontSize: "0.75rem", margin: "0.5rem 0 0 0" }}>
+                        <p style={{ color: "#666", fontSize: isDesktop ? "0.75rem" : "0.6rem", margin: "0.5rem 0 0 0" }}>
                           {author.isOnline ? "🟢" : "🔴"} {author.isOnline ? "Online" : "Offline"}
                         </p>
                       </>
@@ -271,7 +271,7 @@ const Blogs = () => {
                     <p
                       style={{
                         color: "#1F2340",
-                        fontSize: "14px",
+                        fontSize: isDesktop ? "14px" : "11.2px",
                         margin: "0 0 1.5rem 0",
                         lineHeight: "1.6",
                       }}
@@ -280,23 +280,25 @@ const Blogs = () => {
                     </p>
 
                     {/* Like and Comment Buttons */}
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "auto", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", alignItems: isDesktop ? "center" : "stretch", gap: "0.75rem", marginTop: "auto", flexWrap: "wrap" }}>
                       <button
                         onClick={() => handleLikePost(post._id, post.likes)}
                         style={{
                           display: "flex",
                           alignItems: "center",
+                          justifyContent: "center",
                           gap: "0.5rem",
+                          width: isDesktop ? "auto" : "100%",
                           backgroundColor: likedPosts.has(post._id)
                             ? "#8D88EA"
                             : "#F0F0F5",
                           color: likedPosts.has(post._id) ? "#FFFFFF" : "#666",
                           border: "none",
                           borderRadius: "8px",
-                          padding: "0.6rem 1rem",
+                          padding: isDesktop ? "0.6rem 1rem" : "0.5rem 0.8rem",
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                          fontSize: "0.85rem",
+                          fontSize: isDesktop ? "0.85rem" : "0.68rem",
                           fontWeight: "600",
                         }}
                         onMouseEnter={(e) => {
@@ -319,15 +321,17 @@ const Blogs = () => {
                         style={{
                           display: "flex",
                           alignItems: "center",
+                          justifyContent: "center",
                           gap: "0.5rem",
+                          width: isDesktop ? "auto" : "100%",
                           backgroundColor: "#F0F0F5",
                           color: "#666",
                           border: "none",
                           borderRadius: "8px",
-                          padding: "0.6rem 1rem",
+                          padding: isDesktop ? "0.6rem 1rem" : "0.5rem 0.8rem",
                           cursor: "pointer",
                           transition: "all 0.2s ease",
-                          fontSize: "0.85rem",
+                          fontSize: isDesktop ? "0.85rem" : "0.68rem",
                           fontWeight: "600",
                         }}
                         onMouseEnter={(e) => {
@@ -337,7 +341,7 @@ const Blogs = () => {
                           e.currentTarget.style.backgroundColor = "#F0F0F5";
                         }}
                       >
-                        <FiMessageCircle size={16} />
+                        <FiMessageCircle size={isDesktop ? 16 : 12} />
                         <span>{post.comments?.length || 0} {post.comments?.length === 1 ? "comment" : "comments"}</span>
                       </button>
                     </div>

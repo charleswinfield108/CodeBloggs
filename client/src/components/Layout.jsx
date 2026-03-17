@@ -30,8 +30,9 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const headerHeight = "119px";
+  const headerHeight = "95px";
   const mobileNavHeight = "64px";
+  const totalMobileHeaderHeight = "159px"; // 95px header + 64px mobile nav
 
   return (
     <div
@@ -49,7 +50,7 @@ const Layout = ({ children }) => {
         style={{
           display: "flex",
           flex: 1,
-          marginTop: isDesktop ? headerHeight : `calc(${headerHeight} + ${mobileNavHeight})`,
+          marginTop: isDesktop ? headerHeight : totalMobileHeaderHeight,
         }}
       >
         {isDesktop && <Sidebar />}
@@ -60,10 +61,11 @@ const Layout = ({ children }) => {
             backgroundColor: "#FFFFFF",
             flex: 1,
             overflowY: "auto",
+            boxSizing: "border-box",
             // Responsive height calculation
             height: isDesktop
               ? `calc(100vh - ${headerHeight})`
-              : `calc(100vh - ${headerHeight} - ${mobileNavHeight})`,
+              : `calc(100vh - ${totalMobileHeaderHeight})`,
             // Mobile adjustments
             ...(window.innerWidth < 480 && {
               padding: "0.75rem",

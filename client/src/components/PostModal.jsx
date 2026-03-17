@@ -86,14 +86,14 @@ const PostModal = () => {
       <div
         style={{
           position: "fixed",
-          top: "50%",
+          top: "60%",
           left: "50%",
           transform: "translate(-50%, -50%)",
           backgroundColor: "white",
           borderRadius: "12px",
-          padding: "2rem",
+          padding: "1.25rem",
           width: "90%",
-          maxWidth: "500px",
+          maxWidth: "450px",
           zIndex: 2001,
           boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
         }}
@@ -104,13 +104,13 @@ const PostModal = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "1.5rem",
+            marginBottom: "1rem",
           }}
         >
           <h2
             style={{
               margin: 0,
-              fontSize: "1.5rem",
+              fontSize: "1.25rem",
               color: "#1F2340",
               fontWeight: "600",
             }}
@@ -122,7 +122,7 @@ const PostModal = () => {
             style={{
               background: "none",
               border: "none",
-              fontSize: "1.5rem",
+              fontSize: "1.25rem",
               cursor: "pointer",
               color: "#999",
             }}
@@ -138,15 +138,15 @@ const PostModal = () => {
           placeholder="What's on your mind?"
           style={{
             width: "100%",
-            height: "120px",
-            padding: "1rem",
+            height: "100px",
+            padding: "0.75rem",
             border: "1px solid #8D88EA",
             borderRadius: "8px",
-            fontSize: "1rem",
+            fontSize: "0.9rem",
             fontFamily: "inherit",
             resize: "none",
             boxSizing: "border-box",
-            marginBottom: "1rem",
+            marginBottom: "0.75rem",
           }}
         />
 
@@ -155,9 +155,9 @@ const PostModal = () => {
           <div
             style={{
               color: "#E74C3C",
-              fontSize: "0.9rem",
-              marginBottom: "1rem",
-              padding: "0.75rem",
+              fontSize: "0.8rem",
+              marginBottom: "0.75rem",
+              padding: "0.6rem",
               backgroundColor: "#FADBD8",
               borderRadius: "6px",
             }}
@@ -170,19 +170,19 @@ const PostModal = () => {
         <div
           style={{
             display: "flex",
-            gap: "1rem",
+            gap: "0.75rem",
             justifyContent: "flex-end",
           }}
         >
           <button
             onClick={handleClose}
             style={{
-              padding: "0.75rem 1.5rem",
+              padding: "0.6rem 1.2rem",
               backgroundColor: "#F0F0F5",
               color: "#1F2340",
               border: "none",
               borderRadius: "8px",
-              fontSize: "1rem",
+              fontSize: "0.9rem",
               fontWeight: "600",
               cursor: "pointer",
               transition: "background-color 0.3s ease",
@@ -200,12 +200,12 @@ const PostModal = () => {
             onClick={handleSubmit}
             disabled={loading}
             style={{
-              padding: "0.75rem 1.5rem",
+              padding: "0.6rem 1.2rem",
               backgroundColor: loading ? "#B8B3D9" : "#8D88EA",
               color: "white",
               border: "none",
               borderRadius: "8px",
-              fontSize: "1rem",
+              fontSize: "0.9rem",
               fontWeight: "600",
               cursor: loading ? "not-allowed" : "pointer",
               transition: "background-color 0.3s ease",

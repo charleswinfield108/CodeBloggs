@@ -66,12 +66,12 @@ const Header = () => {
     <header
       style={{
         position: "fixed",
-        top: "12px",
-        left: "12px",
-        right: "12px",
+        top: isDesktop ? "12px" : "0px",
+        left: isDesktop ? "12px" : "0px",
+        right: isDesktop ? "12px" : "0px",
         height: "95px",
         backgroundColor: "#FBFCFD",
-        zIndex: 1000,
+        zIndex: 9999,
         display: "flex",
         alignItems: "center",
         paddingLeft: isDesktop ? "2rem" : "1rem",
@@ -79,7 +79,7 @@ const Header = () => {
         boxShadow: "none",
         border: "0.5px solid #F8F8F8",
         gap: isDesktop ? "2rem" : "1rem",
-        borderRadius: "20px",
+        borderRadius: isDesktop ? "20px" : "0px",
       }}
     >
       {/* Logo - Left */}
