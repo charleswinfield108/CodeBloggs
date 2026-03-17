@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
-
+import SkeletonLoader from "../components/SkeletonLoader";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp } from "react-icons/fi";
 
@@ -171,6 +171,10 @@ const Network = () => {
           >
             {error}
           </div>
+        )}
+
+        {loading && (
+          <SkeletonLoader type="card" count={6} />
         )}
 
         {!loading && usersWithPosts.length > 0 && (

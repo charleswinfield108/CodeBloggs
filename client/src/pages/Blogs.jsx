@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
-
+import SkeletonLoader from "../components/SkeletonLoader";
 import AvatarInitials from "../components/AvatarInitials";
 import { FiThumbsUp, FiMessageCircle } from "react-icons/fi";
 
@@ -196,6 +196,10 @@ const Blogs = () => {
           >
             {error}
           </div>
+        )}
+
+        {loading && (
+          <SkeletonLoader type="post" count={5} />
         )}
 
         {!loading && allPosts.length > 0 && (
