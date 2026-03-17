@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
+import UpdateConfirmationModal from "../components/UpdateConfirmationModal";
 
 const UserUpdate = () => {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ const UserUpdate = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingUpdateData, setPendingUpdateData] = useState(null);
+  const [confirmChanges, setConfirmChanges] = useState({});
 
   // Form fields
   const [firstName, setFirstName] = useState("");
@@ -24,6 +28,10 @@ const UserUpdate = () => {
   const [location, setLocation] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [authLevel, setAuthLevel] = useState("basic");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   // Fetch user details
   useEffect(() => {
@@ -76,32 +84,71 @@ const UserUpdate = () => {
     }
   }, [session, sessionLoading, navigate]);
 
-  // Handle save
+  // Handle save - prepare changes and open confirmation modal
   const handleSave = async () => {
     if (!firstName.trim() || !lastName.trim() || !email.trim()) {
       showToast("First Name, Last Name, and Email are required", "error");
       return;
     }
 
+    // Validate passwords if provided
+    if (password || passwordConfirm) {
+      if (password !== passwordConfirm) {
+        showToast("Passwords do not match", "error");
+        return;
+      }
+      if (password.length < 6) {
+        showToast("Password must be at least 6 characters", "error");
+        return;
+      }
+    }
+
+    // Prepare update data
+    const updateData = {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      occupation,
+      location,
+      birthday: birthdate ? new Date(birthdate).toISOString() : undefined,
+      auth_level: authLevel,
+    };
+
+    // Only include password if provided
+    if (password) {
+      updateData.password = password;
+    }
+
+    // Prepare display changes
+    const changes = {
+      "First Name": firstName,
+      "Last Name": lastName,
+      "Email": email,
+      "Occupation": occupation || "(not set)",
+      "Location": location || "(not set)",
+      "Birthdate": birthdate || "(not set)",
+      "Auth Level": authLevel,
+      "Password Changed": password ? "Yes" : "No",
+    };
+
+    setPendingUpdateData(updateData);
+    setConfirmChanges(changes);
+    setShowConfirmModal(true);
+  };
+
+  // Handle confirm update - actually perform the update
+  const handleConfirmUpdate = async () => {
+    if (!pendingUpdateData) return;
+
     setSaving(true);
     try {
-      const updateData = {
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        occupation,
-        location,
-        birthday: birthdate ? new Date(birthdate).toISOString() : undefined,
-        auth_level: authLevel,
-      };
-
       const response = await fetch(`http://localhost:5050/user/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(updateData),
+        body: JSON.stringify(pendingUpdateData),
       });
 
       if (!response.ok) {
@@ -110,12 +157,20 @@ const UserUpdate = () => {
       }
 
       showToast("User updated successfully", "success");
+      setShowConfirmModal(false);
       navigate("/admin/users");
     } catch (err) {
       showToast(err.message || "Error updating user", "error");
     } finally {
       setSaving(false);
     }
+  };
+
+  // Handle cancel confirmation modal
+  const handleCancelConfirm = () => {
+    setShowConfirmModal(false);
+    setPendingUpdateData(null);
+    setConfirmChanges({});
   };
 
   // Handle cancel
@@ -136,24 +191,26 @@ const UserUpdate = () => {
   return (
     <Layout>
       <div style={{ maxWidth: "700px", margin: "0 auto", padding: "0.5rem 2rem 2rem 2rem" }}>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem", justifyContent: "space-between" }}>
+          <h1 style={{ color: "#8D88EA", margin: "0", fontSize: "1.5rem", fontWeight: "700" }}>
+            Edit User
+          </h1>
           <button
             onClick={handleCancel}
             style={{
-              backgroundColor: "transparent",
+              backgroundColor: "#8D88EA",
               border: "none",
-              color: "#8D88EA",
-              fontSize: "1rem",
+              color: "#FFFFFF",
+              fontSize: "0.9rem",
               cursor: "pointer",
-              padding: "0",
-              marginRight: "0.5rem",
+              padding: "0.75rem 1.5rem",
+              borderRadius: "6px",
+              marginLeft: "0.5rem",
+              fontWeight: "600",
             }}
           >
-            ← Back
+            Return to User Manager
           </button>
-          <h1 style={{ color: "#1F2340", margin: "0", fontSize: "1.5rem", fontWeight: "700" }}>
-            Edit User
-          </h1>
         </div>
 
         {/* Error Message */}
@@ -405,6 +462,115 @@ const UserUpdate = () => {
             </select>
           </div>
 
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="password"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              New Password (optional)
+            </label>
+            <div style={{ position: "relative" }}>
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Leave blank to keep current password"
+                style={{
+                  width: "100%",
+                  padding: "0.75rem 2.5rem 0.75rem 0.75rem",
+                  border: "1px solid #E0E0E0",
+                  borderRadius: "6px",
+                  fontSize: "0.9rem",
+                  boxSizing: "border-box",
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "0.75rem",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "#666",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  padding: "0",
+                }}
+              >
+                {showPassword ? "👁️" : "👁️‍🗨️"}
+              </button>
+            </div>
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label
+              htmlFor="passwordConfirm"
+              style={{
+                display: "block",
+                color: "#1F2340",
+                fontSize: "0.9rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Repeat Password
+            </label>
+            <div style={{ position: "relative" }}>
+              <input
+                id="passwordConfirm"
+                name="passwordConfirm"
+                type={showPasswordConfirm ? "text" : "password"}
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                placeholder="Repeat your new password"
+                style={{
+                  width: "100%",
+                  padding: "0.75rem 2.5rem 0.75rem 0.75rem",
+                  border: password && passwordConfirm && password !== passwordConfirm ? "1px solid #D32F2F" : "1px solid #E0E0E0",
+                  borderRadius: "6px",
+                  fontSize: "0.9rem",
+                  boxSizing: "border-box",
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                style={{
+                  position: "absolute",
+                  right: "0.75rem",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "#666",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  padding: "0",
+                }}
+              >
+                {showPasswordConfirm ? "👁️" : "👁️‍🗨️"}
+              </button>
+            </div>
+            {password && passwordConfirm && password !== passwordConfirm && (
+              <div style={{ color: "#D32F2F", fontSize: "0.75rem", marginTop: "0.25rem" }}>
+                Passwords do not match
+              </div>
+            )}
+          </div>
+
           {/* Buttons */}
           <div style={{ gridColumn: "1 / -1", display: "flex", gap: "1rem", marginTop: "1rem" }}>
             <button
@@ -466,6 +632,16 @@ const UserUpdate = () => {
             </button>
           </div>
         </form>
+
+        {/* Confirmation Modal */}
+        <UpdateConfirmationModal
+          isOpen={showConfirmModal}
+          userName={user ? `${user.first_name} ${user.last_name}` : "User"}
+          changes={confirmChanges}
+          onConfirm={handleConfirmUpdate}
+          onCancel={handleCancelConfirm}
+          isLoading={saving}
+        />
       </div>
     </Layout>
   );

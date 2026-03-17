@@ -25,16 +25,14 @@ const Blogs = () => {
         if (postsData.status === "ok" && Array.isArray(postsData.data)) {
           setAllPosts(postsData.data);
 
-          // Fetch all users for author information
-          const usersResponse = await fetch("http://localhost:5050/users");
+          // Fetch all users for author information (with high limit to get all users)
+          const usersResponse = await fetch("http://localhost:5050/users?limit=1000");
           const usersData = await usersResponse.json();
           
-          if (usersData.status === "ok" && Array.isArray(usersData.data)) {
+          if (Array.isArray(usersData.users)) {
             const usersMap = {};
-            usersData.data.forEach((user) => {
+            usersData.users.forEach((user) => {
               usersMap[user._id] = user;
-              // Log to verify status is included
-              console.log(`User ${user._id}: status = ${user.status}`);
             });
             setUsers(usersMap);
           }

@@ -15,16 +15,16 @@ const Network = () => {
   useEffect(() => {
     const fetchUsersAndPosts = async () => {
       try {
-        // Fetch all users
-        const usersResponse = await fetch("http://localhost:5050/users");
+        // Fetch all users (with high limit to get all users)
+        const usersResponse = await fetch("http://localhost:5050/users?limit=1000");
         const usersData = await usersResponse.json();
 
-        if (usersData.status === "ok" && Array.isArray(usersData.data)) {
-          setUsers(usersData.data);
+        if (Array.isArray(usersData.users)) {
+          setUsers(usersData.users);
 
           // Fetch latest post for each user
           const usersWithLatestPost = await Promise.all(
-            usersData.data.map(async (user) => {
+            usersData.users.map(async (user) => {
               try {
                 const postsResponse = await fetch(`http://localhost:5050/posts/user/${user._id}`);
                 const postsData = await postsResponse.json();
