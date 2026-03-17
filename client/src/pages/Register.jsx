@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import logo from "../assets/CodeBloggs_ logo.png";
 
 const Register = () => {
   const navigate = useNavigate();
-  const GEOAPIFY_API_KEY = "f51cd660f45142338e2f6976fe759438";
   
   const [formData, setFormData] = useState({
     first_name: "",
@@ -19,64 +19,14 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [locationSuggestions, setLocationSuggestions] = useState([]);
-  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Special handling for location field to fetch suggestions from Geoapify
-    if (name === "location") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-      
-      // Fetch suggestions from Geoapify API
-      if (value.trim().length > 2) {
-        const fetchLocationSuggestions = async () => {
-          try {
-            const response = await fetch(
-              `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(value)}&apiKey=${GEOAPIFY_API_KEY}`
-            );
-            const data = await response.json();
-            
-            if (data.features && data.features.length > 0) {
-              // Format suggestions to show city, state/country
-              const suggestions = data.features.map((feature) => {
-                const properties = feature.properties;
-                const city = properties.city || properties.state || properties.country || "";
-                const state = properties.state ? `, ${properties.state}` : "";
-                const country = properties.country && !properties.state ? `, ${properties.country}` : "";
-                return `${city}${state}${country}`;
-              });
-              
-              // Remove duplicates
-              const uniqueSuggestions = [...new Set(suggestions)];
-              setLocationSuggestions(uniqueSuggestions);
-              setShowLocationDropdown(uniqueSuggestions.length > 0);
-            } else {
-              setLocationSuggestions([]);
-              setShowLocationDropdown(false);
-            }
-          } catch (error) {
-            console.error("Error fetching location suggestions:", error);
-            setLocationSuggestions([]);
-            setShowLocationDropdown(false);
-          }
-        };
-        
-        fetchLocationSuggestions();
-      } else {
-        setLocationSuggestions([]);
-        setShowLocationDropdown(false);
-      }
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
     
     if (errors[name]) {
       setErrors((prev) => ({
@@ -87,13 +37,12 @@ const Register = () => {
     if (successMessage) setSuccessMessage("");
   };
 
-  const handleLocationSelect = (location) => {
+  const handleLocationSelect = (address) => {
     setFormData((prev) => ({
       ...prev,
-      location: location,
+      location: address,
     }));
-    setLocationSuggestions([]);
-    setShowLocationDropdown(false);
+    
     if (errors.location) {
       setErrors((prev) => ({
         ...prev,
@@ -731,106 +680,123 @@ const Register = () => {
                 >
                   Location
                 </label>
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
+                <PlacesAutocomplete
                   value={formData.location}
-                  onChange={handleChange}
-                  maxLength="50"
-                  placeholder="San Francisco, CA"
-                  onFocus={() => {
-                    if (formData.location.trim().length > 2) {
-                      const fetchLocationSuggestions = async () => {
-                        try {
-                          const response = await fetch(
-                            `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(formData.location)}&apiKey=${GEOAPIFY_API_KEY}`
-                          );
-                          const data = await response.json();
-                          
-                          if (data.features && data.features.length > 0) {
-                            const suggestions = data.features.map((feature) => {
-                              const properties = feature.properties;
-                              const city = properties.city || properties.state || properties.country || "";
-                              const state = properties.state ? `, ${properties.state}` : "";
-                              const country = properties.country && !properties.state ? `, ${properties.country}` : "";
-                              return `${city}${state}${country}`;
-                            });
-                            
-                            const uniqueSuggestions = [...new Set(suggestions)];
-                            setLocationSuggestions(uniqueSuggestions);
-                            setShowLocationDropdown(uniqueSuggestions.length > 0);
-                          }
-                        } catch (error) {
-                          console.error("Error fetching location suggestions:", error);
-                        }
-                      };
+                  onChange={(value) => setFormData((prev) => ({ ...prev, location: value }))}
+                  onSelect={handleLocationSelect}
+                  searchOptions={{
+                    componentRestrictions: { country: "us" },
+                  }}
+                >
+                  {({ getInputProps, suggestions, getSuggestionItemProps, loading: placesLoading }) => (
+                    <div style={{ position: "relative" }}>
+                      <input
+                        {...getInputProps({
+                          id: "location",
+                          name: "location",
+                          maxLength: "50",
+                          placeholder: "San Francisco, CA",
+                          style: {
+                            width: "100%",
+                            padding: "0.75rem 1rem",
+                            border: errors.location ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                            borderRadius: "8px",
+                            fontSize: "12px",
+                            outline: "none",
+                            fontFamily: "'Open Sans', sans-serif",
+                            fontWeight: "400",
+                            boxSizing: "border-box",
+                            color: "#1F2340",
+                            backgroundColor: errors.location ? "#FEF2F2" : "#F6F7FF",
+                            transition: "all 0.3s ease",
+                          },
+                        })}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = "#8D88EA";
+                          e.target.style.backgroundColor = "#FFFFFF";
+                          e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = errors.location ? "#FCA5A5" : "#E3E6F5";
+                          e.target.style.backgroundColor = errors.location ? "#FEF2F2" : "#F6F7FF";
+                          e.target.style.boxShadow = "none";
+                        }}
+                        disabled={loading}
+                      />
                       
-                      fetchLocationSuggestions();
-                    }
-                  }}
-                  onBlur={() => {
-                    setTimeout(() => setShowLocationDropdown(false), 200);
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem 1rem",
-                    border: errors.location ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
-                    borderRadius: "8px",
-                    fontSize: "12px",
-                    outline: "none",
-                    fontFamily: "'Open Sans', sans-serif",
-                    fontWeight: "400",
-                    boxSizing: "border-box",
-                    color: "#1F2340",
-                    backgroundColor: errors.location ? "#FEF2F2" : "#F6F7FF",
-                    transition: "all 0.3s ease",
-                  }}
-                  disabled={loading}
-                />
-
-                {/* Location Autocomplete Dropdown */}
-                {showLocationDropdown && locationSuggestions.length > 0 && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "100%",
-                      left: 0,
-                      right: 0,
-                      backgroundColor: "white",
-                      border: "1px solid #E3E6F5",
-                      borderRadius: "0.5rem",
-                      marginTop: "0.2rem",
-                      maxHeight: "200px",
-                      overflowY: "auto",
-                      zIndex: 10,
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    {locationSuggestions.map((location, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleLocationSelect(location)}
-                        style={{
-                          padding: "0.6rem 0.8rem",
-                          cursor: "pointer",
-                          borderBottom: index < locationSuggestions.length - 1 ? "1px solid #F0F0F0" : "none",
-                          color: "#1F2340",
-                          fontSize: "0.9rem",
-                          transition: "background-color 0.2s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = "#F6F7FF";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = "white";
-                        }}
-                      >
-                        {location}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      {/* Autocomplete Dropdown */}
+                      {suggestions.length > 0 && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "100%",
+                            left: 0,
+                            right: 0,
+                            backgroundColor: "white",
+                            border: "1px solid #E3E6F5",
+                            borderRadius: "0.5rem",
+                            marginTop: "0.2rem",
+                            maxHeight: "200px",
+                            overflowY: "auto",
+                            zIndex: 10,
+                            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                          }}
+                        >
+                          {suggestions.map((suggestion, index) => (
+                            <div
+                              {...getSuggestionItemProps(suggestion, {
+                                style: {
+                                  padding: "0.6rem 0.8rem",
+                                  cursor: "pointer",
+                                  borderBottom: index < suggestions.length - 1 ? "1px solid #F0F0F0" : "none",
+                                  color: "#1F2340",
+                                  fontSize: "0.9rem",
+                                  transition: "background-color 0.2s ease",
+                                  backgroundColor: suggestion.active ? "#F6F7FF" : "white",
+                                },
+                                onMouseEnter: (e) => {
+                                  e.currentTarget.style.backgroundColor = "#F6F7FF";
+                                },
+                                onMouseLeave: (e) => {
+                                  e.currentTarget.style.backgroundColor = "white";
+                                },
+                              })}
+                              key={index}
+                            >
+                              <strong>{suggestion.mainText}</strong>
+                              <span style={{ color: "#999", fontSize: "0.85rem" }}>
+                                {" "}
+                                {suggestion.secondaryText}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {placesLoading && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "100%",
+                            left: 0,
+                            right: 0,
+                            backgroundColor: "white",
+                            border: "1px solid #E3E6F5",
+                            borderRadius: "0.5rem",
+                            marginTop: "0.2rem",
+                            padding: "0.6rem 0.8rem",
+                            fontSize: "0.9rem",
+                            color: "#999",
+                            zIndex: 10,
+                            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                          }}
+                        >
+                          Loading suggestions...
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </PlacesAutocomplete>
                 
                 {errors.location && (
                   <p
