@@ -9,13 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodeBloggs</title>
     <!-- Google Places API for Location Autocomplete -->
-    <script>
-      window.initGoogleMapsAPI = function() {
-        window.googleMapsReady = true;
-        console.log('Google Maps API loaded and ready');
-      };
-    </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_z4CfKTbNakmXMHJfLVQgh0W-ia7Gjo0&libraries=places&callback=initGoogleMapsAPI"></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_z4CfKTbNakmXMHJfLVQgh0W-ia7Gjo0&libraries=places&loading=async"></script>
   </head>
   <body>
     <div id="root"></div>

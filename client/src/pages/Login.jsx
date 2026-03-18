@@ -49,6 +49,30 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   /**
+   * Clear autofilled credentials on component mount
+   * This prevents the browser from auto-populating saved credentials
+   */
+  useEffect(() => {
+    // Clear input fields to prevent autofill
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    
+    if (emailInput) emailInput.value = "";
+    if (passwordInput) passwordInput.value = "";
+    
+    // Update React state
+    setFormData({ email: "", password: "" });
+    
+    // Re-clear after a short delay (browser may refill after React renders)
+    const timer = setTimeout(() => {
+      if (emailInput) emailInput.value = "";
+      if (passwordInput) passwordInput.value = "";
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  /**
    * Handle input field changes
    * Updates form data and clears error message on user input
    */
@@ -220,7 +244,11 @@ const Login = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} autoComplete="off">
+            {/* Hidden inputs to confuse browser autofill */}
+            <input type="email" style={{ display: "none" }} />
+            <input type="password" style={{ display: "none" }} />
+            
             {/* Email */}
             <div style={{ marginBottom: "0.55rem" }}>
               <label
@@ -239,6 +267,7 @@ const Login = () => {
                 type="email"
                 id="email"
                 name="email"
+                autoComplete="off"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="your@email.com"
@@ -288,6 +317,7 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
+                  autoComplete="current-password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Enter your password"

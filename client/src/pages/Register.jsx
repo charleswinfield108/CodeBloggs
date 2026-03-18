@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAutocompletePredictions, getPlaceDetails, isGoogleMapsLoaded } from "../utils/placesAutoComplete";
+import { initializeAutocomplete, getSelectedPlace, clearAutocomplete } from "../utils/placesAutoComplete";
 import logo from "../assets/CodeBloggs_ logo.png";
 
 const Register = () => {
@@ -29,119 +29,98 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [placeSuggestions, setPlaceSuggestions] = useState([]);
-  const [placesLoading, setPlacesLoading] = useState(false);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const [debounceTimer, setDebounceTimer] = useState(null);
+
+  /**
+   * Clear autofilled credentials on component mount
+   * This prevents the browser from auto-populating saved credentials
+   */
+  useEffect(() => {
+    // Clear input fields to prevent autofill
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    
+    if (emailInput) emailInput.value = "";
+    if (passwordInput) passwordInput.value = "";
+    
+    // Update React state
+    setFormData((prev) => ({
+      ...prev,
+      email: "",
+      password: "",
+    }));
+    
+    // Re-clear after a short delay (browser may refill after React renders)
+    const timer = setTimeout(() => {
+      if (emailInput) emailInput.value = "";
+      if (passwordInput) passwordInput.value = "";
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Initialize Google Places Autocomplete when location input mounts
+  useEffect(() => {
+    const locationInput = document.getElementById("location");
+    if (locationInput) {
+      // Initialize the autocomplete
+      initializeAutocomplete(locationInput);
+      
+      // Listen for place selection
+      const handlePlaceChanged = () => {
+        const place = getSelectedPlace();
+        if (place) {
+          setFormData((prev) => ({
+            ...prev,
+            location: place.name,
+          }));
+          // Clear any location validation errors
+          if (errors.location) {
+            setErrors((prev) => ({
+              ...prev,
+              location: "",
+            }));
+          }
+          console.log('📍 Location updated:', place.name);
+        }
+      };
+      
+      locationInput.addEventListener('placeChanged', handlePlaceChanged);
+      locationInput.addEventListener('change', handlePlaceChanged);
+      
+      return () => {
+        locationInput.removeEventListener('placeChanged', handlePlaceChanged);
+        locationInput.removeEventListener('change', handlePlaceChanged);
+        clearAutocomplete();
+      };
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    
-    if (errors[name]) {
-      setErrors((prev) => ({
+    // For non-location fields, update normally
+    if (name !== "location") {
+      setFormData((prev) => ({
         ...prev,
-        [name]: "",
+        [name]: value,
+      }));
+      
+      if (errors[name]) {
+        setErrors((prev) => ({
+          ...prev,
+          [name]: "",
+        }));
+      }
+    } else {
+      // For location field, just update the form data
+      // The autocomplete dropdown is handled by Google's API
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
       }));
     }
+    
     if (successMessage) setSuccessMessage("");
-
-    // Handle location input for autocomplete with debouncing
-    if (name === "location") {
-      setHighlightedIndex(-1);
-      
-      // Clear previous timer
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
-      }
-
-      if (value.length < 2) {
-        setPlaceSuggestions([]);
-        setPlacesLoading(false);
-        return;
-      }
-
-      // Set new timer for debounced search
-      const newTimer = setTimeout(() => {
-        fetchLocationSuggestions(value);
-      }, 300); // 300ms debounce
-      
-      setDebounceTimer(newTimer);
-    }
-  };
-
-  const fetchLocationSuggestions = async (input) => {
-    if (!input || input.length < 2) {
-      setPlaceSuggestions([]);
-      setPlacesLoading(false);
-      return;
-    }
-
-    setPlacesLoading(true);
-    
-    // Timeout fallback - if API doesn't respond in 6 seconds, show error
-    const fallbackTimeout = setTimeout(() => {
-      console.error('Location autocomplete timeout - API not responding');
-      setPlaceSuggestions([]);
-      setPlacesLoading(false);
-    }, 6000);
-
-    try {
-      const predictions = await getAutocompletePredictions(input, {
-        componentRestrictions: { country: "us" },
-      });
-      
-      clearTimeout(fallbackTimeout);
-      
-      if (Array.isArray(predictions)) {
-        setPlaceSuggestions(predictions);
-      } else {
-        setPlaceSuggestions([]);
-      }
-    } catch (error) {
-      clearTimeout(fallbackTimeout);
-      console.error("Error fetching suggestions:", error);
-      setPlaceSuggestions([]);
-    } finally {
-      setPlacesLoading(false);
-    }
-  };
-
-  // Cleanup debounce timer on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
-      }
-    };
-  }, []);
-
-  const handleLocationSelect = async (suggestion) => {
-    setFormData((prev) => ({
-      ...prev,
-      location: suggestion.description || suggestion.mainText,
-    }));
-
-    setPlaceSuggestions([]);
-    setHighlightedIndex(-1);
-    
-    if (errors.location) {
-      setErrors((prev) => ({
-        ...prev,
-        location: "",
-      }));
-    }
-
-    // Fetch place details for coordinates (if needed for future use)
-    try {
-      await getPlaceDetails(suggestion.placeId);
-    } catch (error) {
-      console.error("Error fetching place details:", error);
-    }
   };
 
   const validateForm = () => {
@@ -285,7 +264,7 @@ const Register = () => {
           {/* Sign Up Form Card - Styled like User Manager Card */}
           <div style={{
             width: "100%",
-            maxWidth: "540px",
+            maxWidth: "600px",
             backgroundColor: "#FFFFFF",
             border: "1px solid #8D88EA",
             borderRadius: "12px",
@@ -321,7 +300,11 @@ const Register = () => {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} autoComplete="off">
+              {/* Hidden inputs to confuse browser autofill */}
+              <input type="email" style={{ display: "none" }} />
+              <input type="password" style={{ display: "none" }} />
+              
               {errors.general && (
                 <div
                   style={{
@@ -562,6 +545,7 @@ const Register = () => {
                     type="email"
                     id="email"
                     name="email"
+                    autoComplete="off"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="your@email.com"
@@ -623,6 +607,7 @@ const Register = () => {
                       type={showPassword ? "text" : "password"}
                       id="password"
                       name="password"
+                      autoComplete="new-password"
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="Enter your password"
@@ -773,111 +758,40 @@ const Register = () => {
                 >
                   Location
                 </label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    id="location"
-                    name="location"
-                    type="text"
-                    maxLength="50"
-                    placeholder="San Francisco, CA"
-                    value={formData.location}
-                    onChange={handleChange}
-                    onBlur={() => {
-                      setTimeout(() => setPlaceSuggestions([]), 200);
-                    }}
-                    style={{
-                      width: "100%",
-                      padding: "0.75rem 1rem",
-                      border: errors.location ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
-                      borderRadius: "8px",
-                      fontSize: "12px",
-                      outline: "none",
-                      fontFamily: "'Open Sans', sans-serif",
-                      fontWeight: "400",
-                      boxSizing: "border-box",
-                      color: "#1F2340",
-                      backgroundColor: errors.location ? "#FEF2F2" : "#F6F7FF",
-                      transition: "all 0.3s ease",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "#8D88EA";
-                      e.target.style.backgroundColor = "#FFFFFF";
-                      e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
-                    }}
-                    onBlurCapture={(e) => {
-                      e.target.style.borderColor = errors.location ? "#FCA5A5" : "#E3E6F5";
-                      e.target.style.backgroundColor = errors.location ? "#FEF2F2" : "#F6F7FF";
-                      e.target.style.boxShadow = "none";
-                    }}
-                    disabled={loading}
-                  />
-                  
-                  {/* Autocomplete Dropdown */}
-                  {placeSuggestions.length > 0 && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "100%",
-                        left: 0,
-                        right: 0,
-                        backgroundColor: "white",
-                        border: "1px solid #E3E6F5",
-                        borderRadius: "0.5rem",
-                        marginTop: "0.2rem",
-                        maxHeight: "200px",
-                        overflowY: "auto",
-                        zIndex: 10,
-                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                      }}
-                    >
-                      {placeSuggestions.map((suggestion, index) => (
-                        <div
-                          key={suggestion.placeId || index}
-                          onClick={() => handleLocationSelect(suggestion)}
-                          onMouseEnter={() => setHighlightedIndex(index)}
-                          style={{
-                            padding: "0.6rem 0.8rem",
-                            cursor: "pointer",
-                            borderBottom: index < placeSuggestions.length - 1 ? "1px solid #F0F0F0" : "none",
-                            color: "#1F2340",
-                            fontSize: "0.9rem",
-                            transition: "background-color 0.2s ease",
-                            backgroundColor: highlightedIndex === index ? "#F6F7FF" : "white",
-                          }}
-                        >
-                          <strong>{suggestion.mainText}</strong>
-                          {suggestion.secondaryText && (
-                            <span style={{ color: "#999", fontSize: "0.85rem" }}>
-                              {" "}{suggestion.secondaryText}
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  
-                  {placesLoading && formData.location.length > 1 && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "100%",
-                        left: 0,
-                        right: 0,
-                        backgroundColor: "white",
-                        border: "1px solid #E3E6F5",
-                        borderRadius: "0.5rem",
-                        marginTop: "0.2rem",
-                        padding: "0.6rem 0.8rem",
-                        fontSize: "0.9rem",
-                        color: "#999",
-                        zIndex: 10,
-                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                      }}
-                    >
-                      Searching suggestions...
-                    </div>
-                  )}
-                </div>
+                <input
+                  id="location"
+                  name="location"
+                  type="text"
+                  maxLength="50"
+                  placeholder="San Francisco, CA"
+                  value={formData.location}
+                  onChange={handleChange}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem 1rem",
+                    border: errors.location ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                    borderRadius: "8px",
+                    fontSize: "12px",
+                    outline: "none",
+                    fontFamily: "'Open Sans', sans-serif",
+                    fontWeight: "400",
+                    boxSizing: "border-box",
+                    color: "#1F2340",
+                    backgroundColor: errors.location ? "#FEF2F2" : "#F6F7FF",
+                    transition: "all 0.3s ease",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#8D88EA";
+                    e.target.style.backgroundColor = "#FFFFFF";
+                    e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = errors.location ? "#FCA5A5" : "#E3E6F5";
+                    e.target.style.backgroundColor = errors.location ? "#FEF2F2" : "#F6F7FF";
+                    e.target.style.boxShadow = "none";
+                  }}
+                  disabled={loading}
+                />
                 
                 {errors.location && (
                   <p
