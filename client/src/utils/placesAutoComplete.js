@@ -1,10 +1,11 @@
 /**
  * Places Autocomplete Utility
- * Uses the new google.maps.places.AutocompleteSuggestion API
- * Migration from deprecated AutocompleteService
+ * Uses the google.maps.places API with proper error handling
+ * Works with both AutocompleteService and newer methods
  */
 
 let autocompleteService = null;
+let placesService = null;
 let sessionToken = null;
 
 /**
@@ -17,12 +18,13 @@ const initializeAutocompleteService = () => {
   }
 
   try {
-    // Create a new session token for each user session
+    // Create a new session token for billing optimization
     sessionToken = new window.google.maps.places.AutocompleteSessionToken();
     
-    // Initialize the service - the new API uses getPlacePredictions
-    // which is part of the PlacesService
-    autocompleteService = new window.google.maps.places.AutocompleteService();
+    // Initialize the AutocompleteService
+    if (!autocompleteService) {
+      autocompleteService = new window.google.maps.places.AutocompleteService();
+    }
     return true;
   } catch (error) {
     console.error('Error initializing autocomplete service:', error);
@@ -31,7 +33,7 @@ const initializeAutocompleteService = () => {
 };
 
 /**
- * Get autocomplete predictions using the newer API
+ * Get autocomplete predictions
  * @param {string} input - User input text
  * @param {Object} options - Configuration options
  * @returns {Promise<Array>} Array of predictions
@@ -42,12 +44,11 @@ export const getAutocompletePredictions = async (input, options = {}) => {
   }
 
   if (!autocompleteService) {
-    initializeAutocompleteService();
-  }
-
-  if (!autocompleteService) {
-    console.error('Autocomplete service not available');
-    return [];
+    const initialized = initializeAutocompleteService();
+    if (!initialized) {
+      console.error('Failed to initialize autocomplete service');
+      return [];
+    }
   }
 
   try {
@@ -55,26 +56,31 @@ export const getAutocompletePredictions = async (input, options = {}) => {
       input: input,
       componentRestrictions: options.componentRestrictions || { country: 'us' },
       sessionToken: sessionToken,
-      types: options.types || ['geocode'],
     };
 
-    // Use getPlacePredictions which is the newer method
-    const response = await new Promise((resolve, reject) => {
+    // Use getPlacePredictions - proper method name
+    return new Promise((resolve) => {
       autocompleteService.getPlacePredictions(request, (predictions, status) => {
-        if (status !== window.google.maps.places.PlacesServiceStatus.OK && status !== window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-          reject(new Error(`Autocomplete error: ${status}`));
+        // Handle both OK and ZERO_RESULTS as valid responses
+        if (status === window.google.maps.places.PlacesServiceStatus.OK || 
+            status === window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+          const results = predictions || [];
+          resolve(results.map(prediction => ({
+            placeId: prediction.place_id,
+            mainText: prediction.main_text,
+            secondaryText: prediction.secondary_text,
+            description: prediction.description,
+            active: false,
+          })));
+        } else if (status === window.google.maps.places.PlacesServiceStatus.INVALID_REQUEST) {
+          console.warn('Invalid request for autocomplete');
+          resolve([]);
+        } else {
+          console.warn('Autocomplete status:', status);
+          resolve([]);
         }
-        resolve(predictions || []);
       });
     });
-
-    return response.map(prediction => ({
-      placeId: prediction.place_id,
-      mainText: prediction.main_text,
-      secondaryText: prediction.secondary_text,
-      description: prediction.description,
-      active: false,
-    }));
   } catch (error) {
     console.error('Error fetching autocomplete predictions:', error);
     return [];
@@ -93,11 +99,19 @@ export const getPlaceDetails = async (placeId) => {
   }
 
   try {
-    const service = new window.google.maps.places.PlacesService(
-      document.createElement('div')
-    );
+    // Create a hidden map element for the PlacesService
+    const mapDiv = document.createElement('div');
+    mapDiv.style.display = 'none';
+    document.body.appendChild(mapDiv);
+    
+    const map = new window.google.maps.Map(mapDiv, {
+      center: { lat: 0, lng: 0 },
+      zoom: 1,
+    });
 
-    return new Promise((resolve, reject) => {
+    const service = new window.google.maps.places.PlacesService(map);
+
+    return new Promise((resolve) => {
       service.getDetails(
         {
           placeId: placeId,
@@ -105,16 +119,20 @@ export const getPlaceDetails = async (placeId) => {
           fields: ['formatted_address', 'geometry'],
         },
         (place, status) => {
-          if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          // Clean up map element
+          document.body.removeChild(mapDiv);
+
+          if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
             resolve({
               address: place.formatted_address,
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng(),
+              lat: place.geometry?.location?.lat?.() || 0,
+              lng: place.geometry?.location?.lng?.() || 0,
             });
             // Create new session token after prediction selection
             sessionToken = new window.google.maps.places.AutocompleteSessionToken();
           } else {
-            reject(new Error(`Place details error: ${status}`));
+            console.warn('Place details error:', status);
+            resolve(null);
           }
         }
       );
@@ -129,7 +147,7 @@ export const getPlaceDetails = async (placeId) => {
  * Reset session token
  */
 export const resetSessionToken = () => {
-  if (window.google?.maps?.places) {
+  if (window.google?.maps?.places?.AutocompleteSessionToken) {
     sessionToken = new window.google.maps.places.AutocompleteSessionToken();
   }
 };

@@ -32,6 +32,7 @@ const Register = () => {
   const [placeSuggestions, setPlaceSuggestions] = useState([]);
   const [placesLoading, setPlacesLoading] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [debounceTimer, setDebounceTimer] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,24 +50,48 @@ const Register = () => {
     }
     if (successMessage) setSuccessMessage("");
 
-    // Handle location input for autocomplete
+    // Handle location input for autocomplete with debouncing
     if (name === "location") {
       setHighlightedIndex(-1);
-      if (value.length > 0) {
-        fetchLocationSuggestions(value);
-      } else {
-        setPlaceSuggestions([]);
+      
+      // Clear previous timer
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
       }
+
+      if (value.length < 2) {
+        setPlaceSuggestions([]);
+        setPlacesLoading(false);
+        return;
+      }
+
+      // Set new timer for debounced search
+      const newTimer = setTimeout(() => {
+        fetchLocationSuggestions(value);
+      }, 300); // 300ms debounce
+      
+      setDebounceTimer(newTimer);
     }
   };
 
   const fetchLocationSuggestions = async (input) => {
+    if (!input || input.length < 2) {
+      setPlaceSuggestions([]);
+      setPlacesLoading(false);
+      return;
+    }
+
     setPlacesLoading(true);
     try {
       const predictions = await getAutocompletePredictions(input, {
         componentRestrictions: { country: "us" },
       });
-      setPlaceSuggestions(predictions);
+      
+      if (Array.isArray(predictions)) {
+        setPlaceSuggestions(predictions);
+      } else {
+        setPlaceSuggestions([]);
+      }
     } catch (error) {
       console.error("Error fetching suggestions:", error);
       setPlaceSuggestions([]);
@@ -74,6 +99,15 @@ const Register = () => {
       setPlacesLoading(false);
     }
   };
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+    };
+  }, []);
 
   const handleLocationSelect = async (suggestion) => {
     setFormData((prev) => ({
