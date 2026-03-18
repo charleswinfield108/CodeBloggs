@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
+import SkeletonLoader from "../components/SkeletonLoader";
 import { useSession } from "../context/SessionContext";
 import { useToast } from "../context/ToastContext";
 import UpdateConfirmationModal from "../components/UpdateConfirmationModal";
@@ -192,8 +193,8 @@ const UserUpdate = () => {
   if (loading) {
     return (
       <Layout>
-        <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
-          Loading user details...
+        <div style={{ padding: "1rem 2rem" }}>
+          <SkeletonLoader type="post" count={1} />
         </div>
       </Layout>
     );

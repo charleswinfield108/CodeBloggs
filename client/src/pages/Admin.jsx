@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import SkeletonLoader from "../components/SkeletonLoader";
 import { useSession } from "../context/SessionContext";
 import { MdPeople } from "react-icons/md";
 import { MdContentPaste } from "react-icons/md";
@@ -29,15 +30,8 @@ const Admin = () => {
   if (loading) {
     return (
       <Layout>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: "60vh",
-          }}
-        >
-          <p style={{ color: "#8D88EA", fontSize: "0.875rem" }}>Loading...</p>
+        <div style={{ padding: "1rem 2rem" }}>
+          <SkeletonLoader type="card" count={2} />
         </div>
       </Layout>
     );
