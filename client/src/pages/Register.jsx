@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { getAutocompletePredictions, getPlaceDetails, isGoogleMapsLoaded } from "../utils/placesAutoComplete";
 import logo from "../assets/CodeBloggs_ logo.png";
 
 const Register = () => {
   const navigate = useNavigate();
+  // State for responsive design
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   
   const [formData, setFormData] = useState({
     first_name: "",
@@ -19,6 +29,9 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [placeSuggestions, setPlaceSuggestions] = useState([]);
+  const [placesLoading, setPlacesLoading] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,19 +48,54 @@ const Register = () => {
       }));
     }
     if (successMessage) setSuccessMessage("");
+
+    // Handle location input for autocomplete
+    if (name === "location") {
+      setHighlightedIndex(-1);
+      if (value.length > 0) {
+        fetchLocationSuggestions(value);
+      } else {
+        setPlaceSuggestions([]);
+      }
+    }
   };
 
-  const handleLocationSelect = (address) => {
+  const fetchLocationSuggestions = async (input) => {
+    setPlacesLoading(true);
+    try {
+      const predictions = await getAutocompletePredictions(input, {
+        componentRestrictions: { country: "us" },
+      });
+      setPlaceSuggestions(predictions);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+      setPlaceSuggestions([]);
+    } finally {
+      setPlacesLoading(false);
+    }
+  };
+
+  const handleLocationSelect = async (suggestion) => {
     setFormData((prev) => ({
       ...prev,
-      location: address,
+      location: suggestion.description || suggestion.mainText,
     }));
+
+    setPlaceSuggestions([]);
+    setHighlightedIndex(-1);
     
     if (errors.location) {
       setErrors((prev) => ({
         ...prev,
         location: "",
       }));
+    }
+
+    // Fetch place details for coordinates (if needed for future use)
+    try {
+      await getPlaceDetails(suggestion.placeId);
+    } catch (error) {
+      console.error("Error fetching place details:", error);
     }
   };
 
@@ -168,15 +216,15 @@ const Register = () => {
       }}>
         {/* Logo Section */}
         <div style={{
-          marginBottom: "0.75rem",
+          marginBottom: isDesktop ? "0.75rem" : "0.5rem",
           position: "relative",
-          top: "-20px",
+          top: isDesktop ? "-20px" : "-5px",
         }}>
           <img
             src={logo}
             alt="CodeBloggs Logo"
             style={{
-              height: "40px",
+              height: isDesktop ? "40px" : "30px",
               objectFit: "contain",
             }}
           />
@@ -680,123 +728,111 @@ const Register = () => {
                 >
                   Location
                 </label>
-                <PlacesAutocomplete
-                  value={formData.location}
-                  onChange={(value) => setFormData((prev) => ({ ...prev, location: value }))}
-                  onSelect={handleLocationSelect}
-                  searchOptions={{
-                    componentRestrictions: { country: "us" },
-                  }}
-                >
-                  {({ getInputProps, suggestions, getSuggestionItemProps, loading: placesLoading }) => (
-                    <div style={{ position: "relative" }}>
-                      <input
-                        {...getInputProps({
-                          id: "location",
-                          name: "location",
-                          maxLength: "50",
-                          placeholder: "San Francisco, CA",
-                          style: {
-                            width: "100%",
-                            padding: "0.75rem 1rem",
-                            border: errors.location ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
-                            borderRadius: "8px",
-                            fontSize: "12px",
-                            outline: "none",
-                            fontFamily: "'Open Sans', sans-serif",
-                            fontWeight: "400",
-                            boxSizing: "border-box",
-                            color: "#1F2340",
-                            backgroundColor: errors.location ? "#FEF2F2" : "#F6F7FF",
-                            transition: "all 0.3s ease",
-                          },
-                        })}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = "#8D88EA";
-                          e.target.style.backgroundColor = "#FFFFFF";
-                          e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = errors.location ? "#FCA5A5" : "#E3E6F5";
-                          e.target.style.backgroundColor = errors.location ? "#FEF2F2" : "#F6F7FF";
-                          e.target.style.boxShadow = "none";
-                        }}
-                        disabled={loading}
-                      />
-                      
-                      {/* Autocomplete Dropdown */}
-                      {suggestions.length > 0 && (
+                <div style={{ position: "relative" }}>
+                  <input
+                    id="location"
+                    name="location"
+                    type="text"
+                    maxLength="50"
+                    placeholder="San Francisco, CA"
+                    value={formData.location}
+                    onChange={handleChange}
+                    onBlur={() => {
+                      setTimeout(() => setPlaceSuggestions([]), 200);
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem 1rem",
+                      border: errors.location ? "1px solid #FCA5A5" : "1px solid #E3E6F5",
+                      borderRadius: "8px",
+                      fontSize: "12px",
+                      outline: "none",
+                      fontFamily: "'Open Sans', sans-serif",
+                      fontWeight: "400",
+                      boxSizing: "border-box",
+                      color: "#1F2340",
+                      backgroundColor: errors.location ? "#FEF2F2" : "#F6F7FF",
+                      transition: "all 0.3s ease",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#8D88EA";
+                      e.target.style.backgroundColor = "#FFFFFF";
+                      e.target.style.boxShadow = "0 0 0 3px rgba(141, 136, 234, 0.1)";
+                    }}
+                    onBlurCapture={(e) => {
+                      e.target.style.borderColor = errors.location ? "#FCA5A5" : "#E3E6F5";
+                      e.target.style.backgroundColor = errors.location ? "#FEF2F2" : "#F6F7FF";
+                      e.target.style.boxShadow = "none";
+                    }}
+                    disabled={loading}
+                  />
+                  
+                  {/* Autocomplete Dropdown */}
+                  {placeSuggestions.length > 0 && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: 0,
+                        right: 0,
+                        backgroundColor: "white",
+                        border: "1px solid #E3E6F5",
+                        borderRadius: "0.5rem",
+                        marginTop: "0.2rem",
+                        maxHeight: "200px",
+                        overflowY: "auto",
+                        zIndex: 10,
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                      }}
+                    >
+                      {placeSuggestions.map((suggestion, index) => (
                         <div
+                          key={suggestion.placeId || index}
+                          onClick={() => handleLocationSelect(suggestion)}
+                          onMouseEnter={() => setHighlightedIndex(index)}
                           style={{
-                            position: "absolute",
-                            top: "100%",
-                            left: 0,
-                            right: 0,
-                            backgroundColor: "white",
-                            border: "1px solid #E3E6F5",
-                            borderRadius: "0.5rem",
-                            marginTop: "0.2rem",
-                            maxHeight: "200px",
-                            overflowY: "auto",
-                            zIndex: 10,
-                            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                          }}
-                        >
-                          {suggestions.map((suggestion, index) => (
-                            <div
-                              {...getSuggestionItemProps(suggestion, {
-                                style: {
-                                  padding: "0.6rem 0.8rem",
-                                  cursor: "pointer",
-                                  borderBottom: index < suggestions.length - 1 ? "1px solid #F0F0F0" : "none",
-                                  color: "#1F2340",
-                                  fontSize: "0.9rem",
-                                  transition: "background-color 0.2s ease",
-                                  backgroundColor: suggestion.active ? "#F6F7FF" : "white",
-                                },
-                                onMouseEnter: (e) => {
-                                  e.currentTarget.style.backgroundColor = "#F6F7FF";
-                                },
-                                onMouseLeave: (e) => {
-                                  e.currentTarget.style.backgroundColor = "white";
-                                },
-                              })}
-                              key={index}
-                            >
-                              <strong>{suggestion.mainText}</strong>
-                              <span style={{ color: "#999", fontSize: "0.85rem" }}>
-                                {" "}
-                                {suggestion.secondaryText}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      
-                      {placesLoading && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "100%",
-                            left: 0,
-                            right: 0,
-                            backgroundColor: "white",
-                            border: "1px solid #E3E6F5",
-                            borderRadius: "0.5rem",
-                            marginTop: "0.2rem",
                             padding: "0.6rem 0.8rem",
+                            cursor: "pointer",
+                            borderBottom: index < placeSuggestions.length - 1 ? "1px solid #F0F0F0" : "none",
+                            color: "#1F2340",
                             fontSize: "0.9rem",
-                            color: "#999",
-                            zIndex: 10,
-                            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                            transition: "background-color 0.2s ease",
+                            backgroundColor: highlightedIndex === index ? "#F6F7FF" : "white",
                           }}
                         >
-                          Loading suggestions...
+                          <strong>{suggestion.mainText}</strong>
+                          {suggestion.secondaryText && (
+                            <span style={{ color: "#999", fontSize: "0.85rem" }}>
+                              {" "}{suggestion.secondaryText}
+                            </span>
+                          )}
                         </div>
-                      )}
+                      ))}
                     </div>
                   )}
-                </PlacesAutocomplete>
+                  
+                  {placesLoading && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: 0,
+                        right: 0,
+                        backgroundColor: "white",
+                        border: "1px solid #E3E6F5",
+                        borderRadius: "0.5rem",
+                        marginTop: "0.2rem",
+                        padding: "0.6rem 0.8rem",
+                        fontSize: "0.9rem",
+                        color: "#999",
+                        zIndex: 10,
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                      }}
+                    >
+                      Loading suggestions...
+                    </div>
+                  )}
+                </div>
                 
                 {errors.location && (
                   <p

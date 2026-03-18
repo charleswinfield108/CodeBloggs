@@ -267,7 +267,7 @@ const Home = () => {
     <Layout>
       <div style={{ display: "flex", flexDirection: isDesktop ? "row" : "column", gap: "1.5rem", height: isDesktop ? "100%" : "auto", overflow: isDesktop ? "hidden" : "visible", marginLeft: isDesktop ? 0 : "10px" }}>
         {/* Left Column - User Info (240px on desktop, full width on mobile) */}
-        <div style={{ flex: isDesktop ? "0 0 240px" : "0 0 auto", display: "flex", flexDirection: "column", gap: "0.75rem", overflowY: isDesktop ? "auto" : "visible", maxHeight: isDesktop ? "100%" : "auto", minHeight: 0 }}>
+        <div style={{ flex: isDesktop ? "0 0 240px" : "0 0 auto", display: "flex", flexDirection: "column", gap: "0.75rem", overflowY: isDesktop ? "auto" : "visible", maxHeight: isDesktop ? "100%" : "auto", minHeight: 0, marginTop: isDesktop ? 0 : "1.5rem" }}>
           {/* Avatar Section */}
           <div
             style={{

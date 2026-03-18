@@ -31,8 +31,9 @@ const Layout = ({ children }) => {
   }, []);
 
   const headerHeight = "95px";
+  const mobileHeaderHeight = "70px";
   const mobileNavHeight = "64px";
-  const totalMobileHeaderHeight = "159px"; // 95px header + 64px mobile nav
+  const totalMobileHeaderHeight = "134px"; // 70px header + 64px mobile nav
 
   return (
     <div
@@ -65,7 +66,7 @@ const Layout = ({ children }) => {
             // Responsive height calculation
             height: isDesktop
               ? `calc(100vh - ${headerHeight})`
-              : `calc(100vh - ${totalMobileHeaderHeight})`,
+              : `calc(100vh - 134px)`,
             // Mobile adjustments
             ...(window.innerWidth < 480 && {
               padding: "0.75rem",

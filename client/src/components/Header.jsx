@@ -71,7 +71,7 @@ const Header = () => {
         top: isDesktop ? "12px" : "0px",
         left: isDesktop ? "12px" : "0px",
         right: isDesktop ? "12px" : "0px",
-        height: "95px",
+        height: isDesktop ? "95px" : "70px",
         backgroundColor: "#FBFCFD",
         zIndex: 9999,
         display: "flex",
@@ -103,7 +103,7 @@ const Header = () => {
           alt="CodeBloggs Logo"
           style={{
             width: isDesktop ? "85%" : "100%",
-            maxWidth: isDesktop ? "200px" : "120px",
+            maxWidth: isDesktop ? "200px" : "90px",
             height: "auto",
             marginLeft: isDesktop ? "-20px" : "0",
           }}

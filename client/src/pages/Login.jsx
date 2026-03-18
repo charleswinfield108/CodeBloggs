@@ -14,6 +14,16 @@ const Login = () => {
   const navigate = useNavigate();
   // Session management: login function, session data, and loading state
   const { login, session, loading } = useSession();
+  // State for responsive design
+  const [isDesktop, setIsDesktop] = React.useState(window.innerWidth >= 768);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   /**
    * Auto-redirect effect
@@ -150,15 +160,15 @@ const Login = () => {
       }}>
         {/* Logo Section */}
         <div style={{
-          marginBottom: "0.75rem",
+          marginBottom: isDesktop ? "0.75rem" : "0.5rem",
           position: "relative",
-          top: "-50px",
+          top: isDesktop ? "-50px" : "-5px",
         }}>
           <img
             src={logo}
             alt="CodeBloggs Logo"
             style={{
-              height: "40px",
+              height: isDesktop ? "40px" : "30px",
               objectFit: "contain",
             }}
           />
