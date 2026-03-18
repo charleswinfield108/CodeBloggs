@@ -82,10 +82,20 @@ const Register = () => {
     }
 
     setPlacesLoading(true);
+    
+    // Timeout fallback - if API doesn't respond in 6 seconds, show error
+    const fallbackTimeout = setTimeout(() => {
+      console.error('Location autocomplete timeout - API not responding');
+      setPlaceSuggestions([]);
+      setPlacesLoading(false);
+    }, 6000);
+
     try {
       const predictions = await getAutocompletePredictions(input, {
         componentRestrictions: { country: "us" },
       });
+      
+      clearTimeout(fallbackTimeout);
       
       if (Array.isArray(predictions)) {
         setPlaceSuggestions(predictions);
@@ -93,6 +103,7 @@ const Register = () => {
         setPlaceSuggestions([]);
       }
     } catch (error) {
+      clearTimeout(fallbackTimeout);
       console.error("Error fetching suggestions:", error);
       setPlaceSuggestions([]);
     } finally {
@@ -845,7 +856,7 @@ const Register = () => {
                     </div>
                   )}
                   
-                  {placesLoading && (
+                  {placesLoading && formData.location.length > 1 && (
                     <div
                       style={{
                         position: "absolute",
@@ -863,7 +874,7 @@ const Register = () => {
                         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                       }}
                     >
-                      Loading suggestions...
+                      Searching suggestions...
                     </div>
                   )}
                 </div>

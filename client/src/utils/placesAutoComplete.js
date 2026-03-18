@@ -1,29 +1,38 @@
 /**
  * Places Autocomplete Utility
- * Uses the google.maps.places API with proper error handling
- * Works with both AutocompleteService and newer methods
+ * Uses the google.maps.places.AutocompleteService API
  */
 
 let autocompleteService = null;
-let placesService = null;
 let sessionToken = null;
+let apiLoadAttempts = 0;
+const MAX_API_ATTEMPTS = 3;
 
 /**
  * Initialize autocomplete service with session token
  */
 const initializeAutocompleteService = () => {
-  if (!window.google?.maps?.places) {
-    console.error('Google Maps Places API not loaded');
+  // Check if Google Maps API is available
+  if (!window.google?.maps?.places?.AutocompleteService) {
+    if (apiLoadAttempts < MAX_API_ATTEMPTS) {
+      apiLoadAttempts++;
+      console.warn(`Google Maps Places API not fully loaded. Attempt ${apiLoadAttempts}/${MAX_API_ATTEMPTS}`);
+    } else {
+      console.error('Google Maps Places API failed to load after multiple attempts');
+    }
     return false;
   }
 
   try {
     // Create a new session token for billing optimization
-    sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+    if (!sessionToken && window.google?.maps?.places?.AutocompleteSessionToken) {
+      sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+    }
     
     // Initialize the AutocompleteService
     if (!autocompleteService) {
       autocompleteService = new window.google.maps.places.AutocompleteService();
+      console.log('AutocompleteService initialized successfully');
     }
     return true;
   } catch (error) {
@@ -39,52 +48,63 @@ const initializeAutocompleteService = () => {
  * @returns {Promise<Array>} Array of predictions
  */
 export const getAutocompletePredictions = async (input, options = {}) => {
-  if (!input || input.length < 1) {
+  if (!input || input.length < 2) {
     return [];
   }
 
-  if (!autocompleteService) {
-    const initialized = initializeAutocompleteService();
-    if (!initialized) {
-      console.error('Failed to initialize autocomplete service');
-      return [];
-    }
+  // Ensure service is initialized
+  const initialized = initializeAutocompleteService();
+  if (!initialized || !autocompleteService) {
+    console.error('Autocomplete service not available');
+    return [];
   }
 
-  try {
-    const request = {
-      input: input,
-      componentRestrictions: options.componentRestrictions || { country: 'us' },
-      sessionToken: sessionToken,
-    };
+  return new Promise((resolve) => {
+    try {
+      const request = {
+        input: input,
+        componentRestrictions: { country: 'us' },
+        sessionToken: sessionToken,
+      };
 
-    // Use getPlacePredictions - proper method name
-    return new Promise((resolve) => {
+      // Set a timeout in case the callback never fires
+      const timeout = setTimeout(() => {
+        console.warn('Autocomplete API call timed out');
+        resolve([]);
+      }, 5000); // 5 second timeout
+
       autocompleteService.getPlacePredictions(request, (predictions, status) => {
-        // Handle both OK and ZERO_RESULTS as valid responses
-        if (status === window.google.maps.places.PlacesServiceStatus.OK || 
-            status === window.google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-          const results = predictions || [];
-          resolve(results.map(prediction => ({
+        clearTimeout(timeout);
+        
+        console.log('Autocomplete status:', status, 'Predictions:', predictions?.length || 0);
+
+        // Handle all possible status responses
+        const OK = window.google?.maps?.places?.PlacesServiceStatus?.OK;
+        const ZERO_RESULTS = window.google?.maps?.places?.PlacesServiceStatus?.ZERO_RESULTS;
+
+        if (status === OK) {
+          const formatted = (predictions || []).map(prediction => ({
             placeId: prediction.place_id,
-            mainText: prediction.main_text,
-            secondaryText: prediction.secondary_text,
-            description: prediction.description,
+            mainText: prediction.main_text || prediction.description || '',
+            secondaryText: prediction.secondary_text || '',
+            description: prediction.description || '',
             active: false,
-          })));
-        } else if (status === window.google.maps.places.PlacesServiceStatus.INVALID_REQUEST) {
-          console.warn('Invalid request for autocomplete');
+          }));
+          console.log('Returning predictions:', formatted.length);
+          resolve(formatted);
+        } else if (status === ZERO_RESULTS) {
+          console.log('No results found for input:', input);
           resolve([]);
         } else {
-          console.warn('Autocomplete status:', status);
+          console.warn('Autocomplete API returned status:', status);
           resolve([]);
         }
       });
-    });
-  } catch (error) {
-    console.error('Error fetching autocomplete predictions:', error);
-    return [];
-  }
+    } catch (error) {
+      console.error('Error in getAutocompletePredictions:', error);
+      resolve([]);
+    }
+  });
 };
 
 /**
@@ -93,8 +113,8 @@ export const getAutocompletePredictions = async (input, options = {}) => {
  * @returns {Promise<Object>} Place details with latitude and longitude
  */
 export const getPlaceDetails = async (placeId) => {
-  if (!window.google?.maps?.places) {
-    console.error('Google Maps Places API not loaded');
+  if (!window.google?.maps?.places?.PlacesService || !placeId) {
+    console.error('Places API or placeId not available');
     return null;
   }
 
@@ -112,6 +132,14 @@ export const getPlaceDetails = async (placeId) => {
     const service = new window.google.maps.places.PlacesService(map);
 
     return new Promise((resolve) => {
+      const timeout = setTimeout(() => {
+        console.warn('Place details API call timed out');
+        if (mapDiv.parentNode) {
+          document.body.removeChild(mapDiv);
+        }
+        resolve(null);
+      }, 5000);
+
       service.getDetails(
         {
           placeId: placeId,
@@ -119,19 +147,30 @@ export const getPlaceDetails = async (placeId) => {
           fields: ['formatted_address', 'geometry'],
         },
         (place, status) => {
-          // Clean up map element
-          document.body.removeChild(mapDiv);
+          clearTimeout(timeout);
 
-          if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
-            resolve({
-              address: place.formatted_address,
+          // Clean up map element
+          if (mapDiv.parentNode) {
+            document.body.removeChild(mapDiv);
+          }
+
+          const OK = window.google?.maps?.places?.PlacesServiceStatus?.OK;
+          
+          if (status === OK && place) {
+            const result = {
+              address: place.formatted_address || '',
               lat: place.geometry?.location?.lat?.() || 0,
               lng: place.geometry?.location?.lng?.() || 0,
-            });
-            // Create new session token after prediction selection
-            sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+            };
+            console.log('Place details retrieved:', result.address);
+            resolve(result);
+            
+            // Create new session token after prediction selection for better billing
+            if (window.google?.maps?.places?.AutocompleteSessionToken) {
+              sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+            }
           } else {
-            console.warn('Place details error:', status);
+            console.warn('Place details error. Status:', status);
             resolve(null);
           }
         }
@@ -147,8 +186,12 @@ export const getPlaceDetails = async (placeId) => {
  * Reset session token
  */
 export const resetSessionToken = () => {
-  if (window.google?.maps?.places?.AutocompleteSessionToken) {
-    sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+  try {
+    if (window.google?.maps?.places?.AutocompleteSessionToken) {
+      sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+    }
+  } catch (error) {
+    console.error('Error resetting session token:', error);
   }
 };
 
@@ -156,5 +199,7 @@ export const resetSessionToken = () => {
  * Check if Google Maps API is loaded
  */
 export const isGoogleMapsLoaded = () => {
-  return !!window.google?.maps?.places;
+  const isLoaded = !!(window.google?.maps?.places?.AutocompleteService);
+  console.log('Google Maps API loaded:', isLoaded);
+  return isLoaded;
 };
