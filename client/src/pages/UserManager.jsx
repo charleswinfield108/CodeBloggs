@@ -191,7 +191,7 @@ const UserManager = () => {
 
   return (
     <Layout>
-      <div style={{ display: "flex", flexDirection: "column", height: isDesktop ? "100%" : "auto", overflow: isDesktop ? "hidden" : "visible" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: isDesktop ? "100%" : "auto", overflow: isDesktop ? "hidden" : "visible", paddingTop: isDesktop ? "0.5rem" : "0.75rem" }}>
         {/* Sticky Header Section */}
         <div style={{
           display: "flex",

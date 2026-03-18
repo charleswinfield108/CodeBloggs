@@ -50,7 +50,7 @@ const Admin = () => {
 
   return (
     <Layout>
-      <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden", paddingTop: "0.5rem" }}>
         <h2 style={{ color: "#8D88EA", fontSize: "1.25rem", margin: "0 0 0.5rem 0" }}>
           Admin Dashboard
         </h2>

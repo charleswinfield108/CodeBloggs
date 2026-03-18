@@ -180,7 +180,7 @@ const ContentManager = () => {
 
   return (
     <Layout>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0.25rem 2rem 1rem 2rem", display: "flex", flexDirection: "column", height: isDesktop ? "100%" : "auto", overflow: isDesktop ? "hidden" : "auto" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: `${isDesktop ? "0.5rem" : "0.75rem"} 2rem 1rem 2rem`, display: "flex", flexDirection: "column", height: isDesktop ? "100%" : "auto", overflow: isDesktop ? "hidden" : "auto" }}>
         {/* Sticky Header */}
         <div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#FBFCFD", paddingBottom: "0.75rem", marginBottom: "0.75rem" }}>
           <h1 style={{ color: "#8D88EA", marginBottom: "0.75rem", fontSize: isDesktop ? "1.5rem" : "1.25rem", fontWeight: "700" }}>
