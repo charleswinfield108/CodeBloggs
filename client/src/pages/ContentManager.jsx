@@ -481,70 +481,129 @@ const ContentManager = () => {
         {!loading && posts.length > 0 && (
           <div style={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             alignItems: "center",
+            gap: "0.25rem",
             marginTop: "1rem",
             paddingTop: "1rem",
             borderTop: "1px solid #E0E0E0",
-            fontSize: "0.75rem",
-            marginBottom: "1rem"
+            marginBottom: "1rem",
+            flexWrap: "wrap"
           }}>
-            {/* Numbers */}
-            <div style={{ display: "flex", gap: "0.25rem" }}>
-              {Array.from({ length: Math.ceil(totalPosts / itemsPerPage) }, (_, i) => i + 1).map((pageNum) => (
-                <button
-                  key={pageNum}
-                  onClick={() => fetchPosts(pageNum)}
-                  style={{
-                    backgroundColor: currentPage === pageNum ? "#8D88EA" : "#F5F5F5",
-                    color: currentPage === pageNum ? "#FFFFFF" : "#1F2340",
-                    border: "1px solid #E0E0E0",
-                    borderRadius: "4px",
-                    padding: "0.25rem 0.5rem",
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (currentPage !== pageNum) {
-                      e.target.style.backgroundColor = "#E8E8E8";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (currentPage !== pageNum) {
-                      e.target.style.backgroundColor = "#F5F5F5";
-                    }
-                  }}
-                >
-                  {pageNum}
-                </button>
-              ))}
-            </div>
+            {/* Previous Button */}
+            <button
+              onClick={() => fetchPosts(currentPage - 1)}
+              disabled={currentPage === 1}
+              style={{
+                backgroundColor: currentPage === 1 ? "#E8E8E8" : "#8D88EA",
+                color: currentPage === 1 ? "#999" : "#FFFFFF",
+                border: "none",
+                borderRadius: "4px",
+                padding: "0.25rem 0.5rem",
+                fontSize: "0.65rem",
+                fontWeight: "600",
+                cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                transition: "background-color 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                if (currentPage > 1) e.target.style.backgroundColor = "#6F6AC0";
+              }}
+              onMouseLeave={(e) => {
+                if (currentPage > 1) e.target.style.backgroundColor = "#8D88EA";
+              }}
+            >
+              ← Prev
+            </button>
 
-            {/* Page Size Dropdown & Info */}
-            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-              <label htmlFor="pageSize" style={{ color: "#1F2340" }}>Posts per page:</label>
+            {/* Page Numbers */}
+            {Array.from({ length: Math.ceil(totalPosts / itemsPerPage) }, (_, i) => i + 1).map((pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => fetchPosts(pageNum)}
+                style={{
+                  backgroundColor: currentPage === pageNum ? "#8D88EA" : "#F5F5F5",
+                  color: currentPage === pageNum ? "#FFFFFF" : "#1F2340",
+                  border: "1px solid #E0E0E0",
+                  borderRadius: "4px",
+                  padding: "0.25rem 0.4rem",
+                  fontSize: "0.65rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                  minWidth: "1.5rem",
+                }}
+                onMouseEnter={(e) => {
+                  if (currentPage !== pageNum) e.target.style.backgroundColor = "#E8E8E8";
+                }}
+                onMouseLeave={(e) => {
+                  if (currentPage !== pageNum) e.target.style.backgroundColor = "#F5F5F5";
+                }}
+              >
+                {pageNum}
+              </button>
+            ))}
+
+            {/* Next Button */}
+            <button
+              onClick={() => fetchPosts(currentPage + 1)}
+              disabled={currentPage === Math.ceil(totalPosts / itemsPerPage)}
+              style={{
+                backgroundColor: currentPage === Math.ceil(totalPosts / itemsPerPage) ? "#E8E8E8" : "#8D88EA",
+                color: currentPage === Math.ceil(totalPosts / itemsPerPage) ? "#999" : "#FFFFFF",
+                border: "none",
+                borderRadius: "4px",
+                padding: "0.25rem 0.5rem",
+                fontSize: "0.65rem",
+                fontWeight: "600",
+                cursor: currentPage === Math.ceil(totalPosts / itemsPerPage) ? "not-allowed" : "pointer",
+                transition: "background-color 0.2s",
+                marginRight: "0.5rem",
+              }}
+              onMouseEnter={(e) => {
+                if (currentPage < Math.ceil(totalPosts / itemsPerPage)) e.target.style.backgroundColor = "#6F6AC0";
+              }}
+              onMouseLeave={(e) => {
+                if (currentPage < Math.ceil(totalPosts / itemsPerPage)) e.target.style.backgroundColor = "#8D88EA";
+              }}
+            >
+              Next →
+            </button>
+
+            {/* Show Section */}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", marginLeft: "auto" }}>
+              <label htmlFor="pageSize" style={{ color: "#1F2340", fontSize: "0.65rem", fontWeight: "600" }}>
+                Show:
+              </label>
               <select
                 id="pageSize"
                 value={itemsPerPage}
                 onChange={handlePageSizeChange}
                 style={{
-                  padding: "0.25rem 0.5rem",
-                  borderRadius: "4px",
-                  border: "1px solid #E0E0E0",
-                  backgroundColor: "#FFFFFF",
+                  backgroundColor: "#F5F5F5",
                   color: "#1F2340",
+                  border: "1px solid #E0E0E0",
+                  borderRadius: "4px",
+                  padding: "0.25rem 0.5rem",
+                  fontSize: "0.65rem",
+                  fontWeight: "600",
                   cursor: "pointer",
-                  fontSize: "0.75rem",
                 }}
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>
                 <option value={30}>30</option>
               </select>
-              <span style={{ color: "#666" }}>
-                Page {currentPage} of {Math.ceil(totalPosts / itemsPerPage)}
-              </span>
+              <span style={{ color: "#1F2340", fontSize: "0.65rem", fontWeight: "600" }}>posts</span>
             </div>
+          </div>
+        )}
+
+        {/* Pagination Info */}
+        {!loading && posts.length > 0 && (
+          <div style={{ color: "#666", fontSize: "0.65rem", textAlign: "center", marginBottom: "0.5rem" }}>
+            <p style={{ margin: "0" }}>
+              Page {currentPage} of {Math.ceil(totalPosts / itemsPerPage)} • {posts.length} of {totalPosts} posts
+            </p>
           </div>
         )}
         </div>
