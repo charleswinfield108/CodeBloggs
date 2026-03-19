@@ -70,10 +70,18 @@ const UserUpdate = () => {
         setLocation(userData.location || "");
         setAuthLevel(userData.auth_level || "basic");
 
-        // Format date for input (YYYY-MM-DD) - using "birthday" field from schema
-        if (userData.birthday) {
-          const date = new Date(userData.birthday);
-          const formatted = date.toISOString().split("T")[0];
+        // Format date for input (YYYY-MM-DD) - check both "birthday" and "birthdate" fields
+        const dateValue = userData.birthday || userData.birthdate;
+        if (dateValue) {
+          let formatted;
+          if (typeof dateValue === 'string' && dateValue.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            // Already in YYYY-MM-DD format
+            formatted = dateValue;
+          } else {
+            // Parse as Date and format
+            const date = new Date(dateValue);
+            formatted = date.toISOString().split("T")[0];
+          }
           setBirthdate(formatted);
         }
       } catch (err) {
@@ -122,7 +130,7 @@ const UserUpdate = () => {
       email,
       occupation,
       location,
-      birthday: birthdate ? new Date(birthdate).toISOString() : undefined,
+      birthdate: birthdate || undefined,  // Send as YYYY-MM-DD string to match database field
       auth_level: authLevel,
     };
 
