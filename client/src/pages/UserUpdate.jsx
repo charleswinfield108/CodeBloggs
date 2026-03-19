@@ -512,6 +512,7 @@ const UserUpdate = () => {
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Leave blank to keep current password"
@@ -564,6 +565,7 @@ const UserUpdate = () => {
                 id="passwordConfirm"
                 name="passwordConfirm"
                 type={showPasswordConfirm ? "text" : "password"}
+                autoComplete="new-password"
                 value={passwordConfirm}
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 placeholder="Repeat your new password"
