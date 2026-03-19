@@ -53,6 +53,8 @@ Whether you're looking to share your development journey or stay connected with 
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## ✨ Key Features & Functionality
 
 ### User Features
@@ -86,6 +88,8 @@ Whether you're looking to share your development journey or stay connected with 
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 🛠️ Tech Stack
 
 ### Frontend
@@ -110,6 +114,8 @@ Whether you're looking to share your development journey or stay connected with 
 - **Cookie Parser** 1.4.6 - Cookie parsing middleware
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 🚀 Installation & Setup Instructions
 
@@ -166,6 +172,8 @@ Open your browser and navigate to `http://localhost:5173` to view the applicatio
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 🔐 Environment Variables
 
 The application requires the following environment variables to be configured in the `server/.env` file:
@@ -180,6 +188,8 @@ The application requires the following environment variables to be configured in
 **⚠️ Important:** Never commit the `.env` file to version control. The `.env` file contains sensitive information and should be kept private.
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 🎯 Getting Started Guide
 
@@ -631,6 +641,8 @@ db.posts.createIndex({ user_id: 1, createdAt: -1 })
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 📱 Frontend Routing
 
 | Route | Page | Access | Purpose |
@@ -647,6 +659,8 @@ db.posts.createIndex({ user_id: 1, createdAt: -1 })
 | `/admin/posts` | Content Manager | Admin Only | Manage blog posts |
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 📁 Project Structure
 
@@ -726,6 +740,8 @@ CodeBloggs/
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 🔗 API Endpoints Summary
 
 ### User Endpoints
@@ -759,6 +775,8 @@ CodeBloggs/
 **Response Format:** All API responses follow the standard format with `status`, `data`, and `message` fields.
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 📡 API Documentation
 
@@ -1030,6 +1048,8 @@ Sample Response:
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 🔐 Authentication & Security
 
 ### How Authentication Works
@@ -1234,6 +1254,8 @@ User is redirected to /login
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 📖 Code Architecture Highlights
 
 ### State Management (Zustand Stores)
@@ -1265,6 +1287,8 @@ Layout (responsive container)
 - **Fluid typography** - Uses CSS `clamp()` for scalable text
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 📱 Responsive Threshold Justification
 
@@ -1302,6 +1326,8 @@ This progressive enhancement approach ensures CodeBloggs provides an optimal exp
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 🔬 Reactive vs. Responsive
 
 A Reactive Website is a site designed to be dynamic relying on user input and user interactivity. It contains elements that interact with the user such as a chat application or social media feed that updates instantly. This reactive design creates a fluid and seamless flow of information, enhancing user engagement and providing an enjoyable user experience.
@@ -1311,6 +1337,8 @@ A Responsive Website is designed for adaptability based on device. Responsive we
 This is the most common approach to modern web design and is the standard for building mobile-friendly websites.
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 🗄️ SQL and Relational Basics
 
@@ -1497,6 +1525,8 @@ MongoDB stores these relationships differently (using document embedding and ref
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 📊 Database Collections (MongoDB)
 
 ### Users Collection
@@ -1512,6 +1542,8 @@ Stores comments on posts, with content, timestamps, and references to both post 
 Stores active user sessions with TTL (Time-To-Live) index set to 24 hours for automatic expiration and cleanup.
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 🔄 Development Workflow
 
@@ -1545,6 +1577,8 @@ npm run dev
 ```
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 🐛 Troubleshooting
 
@@ -1587,6 +1621,8 @@ npm run dev
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 🎨 Color Palette
 
 The application uses the following color scheme:
@@ -1602,6 +1638,8 @@ The application uses the following color scheme:
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 📚 Additional Resources
 
 - **Authentication Guide:** Comprehensive guide on authentication flow, token management, and protected routes - See [docs/AUTHENTICATION_GUIDE.md](docs/AUTHENTICATION_GUIDE.md)
@@ -1614,6 +1652,8 @@ The application uses the following color scheme:
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 👤 Author
 **Creator:** Charles Winfield
 **Project:** CodeBloggs  
@@ -1622,6 +1662,8 @@ The application uses the following color scheme:
 **Last Updated:** March 2026
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 📝 Notes
 
