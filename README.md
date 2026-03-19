@@ -4,7 +4,42 @@ A modern social media platform designed for programmers and developers to share 
 
 ---
 
-## 📋 Project Description
+## � Table of Contents
+
+### Getting Started
+- [📋 Project Description](#-project-description)
+- [✨ Key Features & Functionality](#-key-features--functionality)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [🚀 Installation & Setup Instructions](#-installation--setup-instructions)
+- [🔐 Environment Variables](#-environment-variables)
+- [🎯 Getting Started Guide](#-getting-started-guide)
+
+### Documentation & Reference
+- [🎨 Visual Preview](#-visual-preview)
+- [🐛 Troubleshooting & Common Issues](#-troubleshooting--common-issues)
+- [📱 Frontend Routing](#-frontend-routing)
+- [📁 Project Structure](#-project-structure)
+- [🔗 API Endpoints Summary](#-api-endpoints-summary)
+- [📡 API Documentation](#-api-documentation)
+
+### Architecture & Engineering
+- [🔐 Authentication & Security](#-authentication--security)
+- [📖 Code Architecture Highlights](#-code-architecture-highlights)
+- [📱 Responsive Threshold Justification](#-responsive-threshold-justification)
+- [🔬 Reactive vs. Responsive](#-reactive-vs-responsive)
+- [🗄️ SQL and Relational Basics](#️-sql-and-relational-basics)
+- [📊 Database Collections (MongoDB)](#-database-collections-mongodb)
+- [🔄 Development Workflow](#-development-workflow)
+
+### Quick Reference
+- [🎨 Color Palette](#-color-palette)
+- [📚 Additional Resources](#-additional-resources)
+- [👤 Author](#-author)
+- [📝 Notes](#-notes)
+
+---
+
+## �📋 Project Description
 
 **CodeBloggs** is a full-stack web application built with the MERN stack that enables developers to:
 - Create and manage their own blog posts
