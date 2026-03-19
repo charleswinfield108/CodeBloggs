@@ -197,14 +197,6 @@ Posts:
 
 ## Tech Stack and Tools
 
-> This section tells the AI **which technologies are allowed and expected**.
->
-> It prevents the AI from:
->
-> - Using the wrong framework
-> - Introducing advanced or unknown tools
-> - Mixing incompatible technologies
-
 ### Frontend
 React (JavaScript)
 

@@ -178,6 +178,424 @@ The application requires the following environment variables to be configured in
 
 ---
 
+## 🎨 Visual Preview
+
+### Key Pages & Features
+
+**Login & Registration**
+- Clean authentication flow with email/password validation
+- Google Places integration for location autocomplete
+- Responsive design optimized for all devices
+
+<details>
+  <summary><strong>View Screenshots</strong></summary>
+
+The `/Wireframe assets/` folder contains visual wireframes and screenshots:
+
+- **Main Layouts:**
+  - `CodeBloggs.png` — Logo and branding
+  - `CodeBloggs graphic.png` — Marketing graphic
+  - `codebloggs1.png` — Home feed interface
+  
+- **Page Flows:**
+  - `codebloggs2.png` - `codebloggs4.png` — User profiles and navigation
+  - `codebloggs5-new.png` — Updated blog/feed view
+  - `codebloggs11-newnew.png` — Latest design iteration
+  
+- **Admin Features:**
+  - `codebloggs12.png` — Admin dashboard
+  - `codebloggs13.png` — Admin management tools
+
+To view all wireframes locally:
+```bash
+# Open wireframe assets folder
+open "Wireframe assets/"  # macOS
+explorer "Wireframe assets"  # Windows
+xdg-open "Wireframe assets"  # Linux
+```
+
+</details>
+
+### Feature Highlights
+
+| Feature | Screenshot Reference | Purpose |
+|---------|---------------------|---------|
+| **Home Feed** | codebloggs1-3.png | View posts from community members |
+| **User Profiles** | codebloggs2-4.png | View user profiles and their posts |
+| **Blog/Posts** | codebloggs5-9.png | Create, read, update, delete posts |
+| **Admin Dashboard** | codebloggs12-13.png | Manage users and content |
+| **Responsive Design** | All images | Optimized for mobile, tablet, desktop |
+
+---
+
+## 🐛 Troubleshooting & Common Issues
+
+### Installation & Setup
+
+#### ❌ `npm install` fails with permission errors
+**Error:** `EACCES: permission denied`
+```bash
+# Solution 1: Use sudo (not recommended for security)
+sudo npm install
+
+# Solution 2: Fix npm permissions (recommended)
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+export PATH=~/.npm-global/bin:$PATH
+npm install  # Now without sudo
+```
+
+#### ❌ MongoDB connection fails
+**Error:** `connect ECONNREFUSED 127.0.0.1:27017`
+```bash
+# Check if MongoDB is running
+mongod --version  # Check if installed
+
+# macOS - Start MongoDB
+brew services start mongodb-community
+
+# Linux - Start MongoDB
+sudo systemctl start mongod
+
+# Windows - MongoDB should run as service
+# Check Services app or run: net start MongoDB
+
+# Alternative: Use MongoDB Atlas (cloud)
+# MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/codebloggs
+```
+
+#### ❌ Port already in use (Port 5050 or 5173)
+**Error:** `EADDRINUSE: address already in use :::5050`
+```bash
+# Find process using port
+lsof -i :5050          # macOS/Linux
+netstat -ano | findstr :5050  # Windows
+
+# Kill the process
+kill -9 <PID>          # macOS/Linux
+taskkill /PID <PID> /F # Windows
+
+# Or use different port
+# In server/.env: PORT=5051
+# In client vite.config.js: adjust port
+```
+
+#### ❌ `.env` file not found or variables not loading
+**Error:** `MONGODB_URI is undefined`
+```bash
+# Check .env file exists in server directory
+ls -la server/.env
+
+# Ensure correct format (no quotes needed)
+PORT=5050
+JWT_SECRET=your-super-secret-key-here
+MONGODB_URI=mongodb://localhost:27017/codebloggs
+NODE_ENV=development
+
+# Save and restart backend
+npm start
+```
+
+#### ❌ Dependencies not installing - `node_modules` issues
+**Solution:**
+```bash
+# Clear npm cache
+npm cache clean --force
+
+# Delete node_modules and package-lock.json
+rm -rf node_modules package-lock.json
+
+# Reinstall fresh
+npm install
+
+# For stubborn issues
+npm install --legacy-peer-deps
+```
+
+---
+
+### Frontend Issues
+
+#### ❌ `localhost:5173` shows blank page or "Cannot GET /"
+**Cause:** Backend not running or frontend can't reach backend
+```bash
+# Verify backend is running
+curl http://localhost:5050/validate_token?token=test
+
+# Check vite.config.js has correct backend proxy
+# Or check API calls use correct base URL: http://localhost:5050
+
+# Restart frontend dev server
+# Stop with Ctrl+C and run:
+npm run dev
+```
+
+#### ❌ Login fails with "Invalid email or password"
+**Causes:**
+1. No users in database yet - register a new user first
+2. MongoDB not running - check connection
+3. Password mismatch - double-check password typed correctly
+
+**Solution:**
+```bash
+# 1. Ensure MongoDB is running with data
+mongosh
+use codebloggs
+db.users.find()  # Should show users
+
+# 2. If empty, register a new user via the app
+# 3. Check MySQL logs for actual errors
+```
+
+#### ❌ Images/Assets not loading (404 errors)
+**Cause:** `public/` folder not copied or assets path incorrect
+```bash
+# Ensure public folder exists
+ls client/public/
+
+# Check asset paths in code use relative paths:
+// ✅ Correct
+<img src="/logo.png" />
+
+// ❌ Wrong
+<img src="./logo.png" />
+```
+
+#### ❌ Tailwind CSS not applied (no styling)
+**Cause:** Tailwind build not running or config incorrect
+```bash
+# Ensure Tailwind is watching for changes
+# Stop dev server and restart:
+npm run dev
+
+# Check tailwind.config.js includes all templates:
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  ...
+}
+
+# Clear cache if needed
+rm -rf .tailwind-cache
+npm run dev
+```
+
+#### ❌ States/Context not updating (data stale)
+**Cause:** Context provider not wrapping components or deps missing
+```javascript
+// Ensure SessionProvider wraps entire app in main.jsx
+// Ensure useSession() is called in component that needs data
+// Check dependency arrays in useEffect hooks
+```
+
+---
+
+### Backend Issues
+
+#### ❌ `Cannot find module 'express'` or other packages
+**Cause:** Dependencies not installed in server directory
+```bash
+cd server
+npm install
+npm start
+```
+
+#### ❌ `ReferenceError: DB is not defined`
+**Cause:** MongoDB connection failed during startup
+```bash
+# Check MongoDB is running
+mongod --version
+# Start MongoDB service (see MongoDB section above)
+
+# Check MONGODB_URI in .env is correct
+cat server/.env | grep MONGODB_URI
+
+# Verify MongoDB connection string
+mongosh "mongodb://localhost:27017/codebloggs"
+```
+
+#### ❌ Nodemon not restarting on file changes
+**Cause:** Nodemon not installed or incorrect path
+```bash
+# Ensure nodemon is installed
+npm list nodemon
+
+# If not:
+npm install --save-dev nodemon
+
+# Check package.json has nodemon script:
+"scripts": {
+  "start": "nodemon server.js"
+}
+```
+
+#### ❌ CORS errors (blocked requests from frontend)
+**Error:** `Access to XMLHttpRequest blocked by CORS policy`
+```javascript
+// In server.js, ensure CORS is configured:
+const cors = require('cors');
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+```
+
+#### ❌ Routes returning 404 - endpoints not found
+**Cause:** Routes not imported or registered
+```javascript
+// In server.js, ensure all routes are imported:
+import { userRoutesEndpoint } from './routes/user.routes.js';
+import { sessionRoutesEndpoint } from './routes/session.routes.js';
+
+// And registered:
+userRoutesEndpoint(app);
+sessionRoutesEndpoint(app);
+
+// Verify endpoints in browser:
+// http://localhost:5050/validate_token?token=test
+```
+
+---
+
+### Database Issues
+
+#### ❌ Database not initialized or empty
+**Symptoms:** App works but no users/posts appear
+```bash
+# Check if data exists
+mongosh
+use codebloggs
+db.users.find()
+db.posts.find()
+
+# If empty, create seed data:
+db.users.insertOne({
+  email: "test@example.com",
+  password: "hashedPassword",
+  first_name: "Test",
+  last_name: "User",
+  auth_level: "basic"
+})
+
+# Or register through the app frontend
+```
+
+#### ❌ MongoDB won't start or crashes
+**Solution:**
+```bash
+# Check MongoDB logs
+# macOS: brew services log mongodb-community
+# Linux: sudo journalctl -u mongod
+
+# On Linux, if permission denied:
+sudo chown -R mongodb:mongodb /var/lib/mongodb
+sudo systemctl restart mongod
+
+# If corrupted, remove and reinstall:
+# (Warning: removes all data)
+brew uninstall mongodb-community
+brew install mongodb-community
+```
+
+---
+
+### Performance Issues
+
+#### ⚠️ App runs slowly or UI feels laggy
+**Diagnostics:**
+1. Open DevTools: `F12` → **Network** tab
+   - Check response times (should be < 200ms)
+   - Look for large payloads
+
+2. **Performance** tab
+   - Check where time is spent
+   - React DevTools to profile components
+
+3. **Solutions:**
+   - Add pagination to large lists
+   - Lazy load components with React.lazy()
+   - Optimize images
+   - Enable caching headers
+
+#### ⚠️ Database queries slow
+```bash
+# Check indexes
+mongosh
+use codebloggs
+db.users.getIndexes()
+db.posts.getIndexes()
+
+# Add indexes if needed
+db.users.createIndex({ email: 1 })
+db.posts.createIndex({ user_id: 1, createdAt: -1 })
+```
+
+---
+
+### Environment-Specific Issues
+
+#### Windows-Specific Issues
+- **Long path errors:** Enable long path support in Windows
+  ```
+  Registry: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem
+  Set LongPathsEnabled = 1
+  ```
+- **Git line endings:** Configure `git config core.autocrlf true`
+- **Terminal colors:** Use Windows Terminal instead of cmd.exe
+
+#### macOS-Specific Issues
+- **M1/M2 Chip:** Some npm packages may need `arch` prefix
+  ```bash
+  arch -arm64 npm install
+  ```
+- **Port already in use:** Common with previous dev sessions
+  ```bash
+  lsof -i :5050 | grep LISTEN | awk '{print $2}' | xargs kill -9
+  ```
+
+#### Linux-Specific Issues
+- **Permissions:** File permissions may differ from other OS
+  ```bash
+  chmod +x node_modules/.bin/*
+  ```
+- **MongoDB service:** Enable at startup
+  ```bash
+  sudo systemctl enable mongod
+  sudo systemctl start mongod
+  ```
+
+---
+
+### Still Having Issues?
+
+**Debugging Steps:**
+1. **Check browser console:** F12 → Console tab for JavaScript errors
+2. **Check server logs:** Look for error messages in terminal
+3. **Enable verbose logging:**
+   ```bash
+   # Frontend
+   npm run dev -- --debug
+   
+   # Backend
+   NODE_DEBUG=* npm start
+   ```
+4. **Check git status:** Ensure no accidental changes to config
+   ```bash
+   git status
+   git diff
+   ```
+5. **Create fresh clone:** If stuck, clone the repo fresh and retry
+
+**Get Help:**
+- Check project documentation in `/docs/` folder
+- Review API documentation: [docs/WIREFRAME_ANALYSIS.md](docs/WIREFRAME_ANALYSIS.md)
+- Review authentication guide: [docs/AUTHENTICATION_GUIDE.md](docs/AUTHENTICATION_GUIDE.md)
+- Check feature documentation: [docs/ai/features/](docs/ai/features/)
+
+---
+
 ## 📱 Frontend Routing
 
 | Route | Page | Access | Purpose |
@@ -580,22 +998,204 @@ Sample Response:
 ## 🔐 Authentication & Security
 
 ### How Authentication Works
-1. User registers or logs in with email and password
-2. Backend validates credentials and creates a secure session
-3. Session token (JWT-like) is returned and stored in HTTP-only cookies
-4. Token is validated on every protected route navigation
-5. If token is invalid or expired, user is redirected to login
+
+#### 1. Login Flow
+```
+User Login Request
+    ↓
+Backend validates email & password
+    ↓
+Backend creates session (stores session_token in database)
+    ↓
+Backend returns: { session_token, id, first_name, last_name, auth_level, isOnline }
+    ↓
+Frontend stores session_token in browser cookie: "session_token"
+Frontend stores session data in localStorage: "session"
+    ↓
+User is redirected to /home
+```
+
+**Login Request:**
+```bash
+POST http://localhost:5050/session/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+**Login Response (200 Success):**
+```json
+{
+  "session_token": "a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6",
+  "id": "64a1b2c3d4e5f6g7h8i9j0k1",
+  "first_name": "John",
+  "last_name": "Doe",
+  "auth_level": "basic",
+  "isOnline": true
+}
+```
+
+#### 2. Session Token Storage & Format
+- **Format:** UUID v4 (e.g., `a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6`)
+- **Storage:** Stored in browser cookie named `session_token`
+- **Cookie Settings:**
+  - HTTPOnly: No (accessible via JavaScript for frontend validation)
+  - Secure: Yes (only sent over HTTPS in production)
+  - Path: `/` (accessible across all routes)
+  - Expires: 24 hours from login
+
+**Accessing Token in Frontend:**
+```javascript
+// Get token from cookie
+const getCookie = (name) => {
+  const nameEQ = `${name}=`;
+  const cookies = document.cookie.split(";");
+  for (let cookie of cookies) {
+    cookie = cookie.trim();
+    if (cookie.startsWith(nameEQ)) {
+      return decodeURIComponent(cookie.substring(nameEQ.length));
+    }
+  }
+  return null;
+};
+
+const token = getCookie("session_token");
+```
+
+#### 3. Protected Request Format
+For authenticated API requests, pass the token as a **query parameter**:
+
+```javascript
+// Example: Validate token
+const token = getCookie("session_token");
+const response = await fetch(
+  `http://localhost:5050/validate_token?token=${encodeURIComponent(token)}`,
+  {
+    method: "GET",
+    credentials: "include"  // Include cookies in request
+  }
+);
+```
+
+**Supported Query Parameter Approaches:**
+- ✅ **Query Parameter** (Primary): `/validate_token?token=YOUR_TOKEN`
+- ✅ **Browser Cookie** (Automatic): Cookie is automatically sent via `credentials: "include"`
+
+**Note:** This implementation does NOT use:
+- ❌ Authorization headers (`Authorization: Bearer`)
+- ❌ Custom HTTP headers
+- ❌ Request body for token passing
+
+#### 4. Protected Route Validation
+
+**On Navigation:**
+```
+User navigates to protected route (e.g., /home, /blogs, /admin)
+    ↓
+ProtectedRoute component extracts token from cookie
+    ↓
+ProtectedRoute validates token with backend: GET /validate_token?token=TOKEN
+    ↓
+Backend checks if token exists in sessions collection
+    ↓
+If valid → Render protected component
+If invalid → Redirect to /login
+```
+
+**Backend Validation (session.controller.js):**
+```javascript
+const sessionValidateToken = async (req, res) => {
+  const TOKEN = req.query.token;  // Token from query parameter
+  
+  if (!TOKEN) {
+    return res.status(400).json({ 
+      status: 'error', 
+      message: 'Session token is required' 
+    });
+  }
+
+  // Look up session in database
+  const SESSION = await DB.collection("sessions").findOne({ 
+    session_token: TOKEN 
+  });
+
+  if (!SESSION) {
+    return res.status(401).json({ 
+      status: 'error', 
+      message: 'Invalid session token' 
+    });
+  }
+
+  // Get associated user
+  const USER = await DB.collection("users").findOne({ 
+    _id: new ObjectId(SESSION.user_id) 
+  });
+
+  return res.status(200).json({
+    status: 'ok',
+    data: { valid: true, user: { ...user data } }
+  });
+};
+```
+
+#### 5. Session Management
+- **Session Storage:** MongoDB `sessions` collection
+  - Fields: `session_token`, `session_date`, `user_id`
+  - Created on successful login
+  - Deleted on logout
+- **Session Duration:** 24 hours (TTL index on MongoDB)
+- **Concurrent Sessions:** Multiple sessions can exist per user (separate tokens)
+- **Activity Tracking:** User's `lastSeen` timestamp updated every 30 seconds via `/user/ping`
+
+#### 6. Token Validation Cycle
+- **On App Load:** SessionContext checks cookie and validates with backend
+- **On Route Change:** ProtectedRoute validates token before rendering component
+- **Periodic Validation:** Every 5 minutes, token is re-validated to catch expiration
+- **Activity Ping:** Every 30 seconds, user activity is recorded (for online status)
+
+#### 7. Logout Flow
+```
+User clicks logout
+    ↓
+Frontend sends: GET /session/logout?token=TOKEN
+    ↓
+Backend deletes session document from database
+    ↓
+Backend marks user as offline
+    ↓
+Frontend clears session_token cookie
+Frontend clears session from localStorage
+    ↓
+User is redirected to /login
+```
 
 ### Session Management
-- Sessions expire after **24 hours** using MongoDB TTL indexes
-- Passwords are securely hashed using **bcrypt** before storage
-- HTTP-only cookies prevent JavaScript from accessing session tokens
+- Sessions are stored in MongoDB `sessions` collection with **24-hour expiration**
+- Passwords are securely hashed using **bcrypt** (SALT_ROUNDS = 10)
+- Session tokens are **UUID v4** format, generated server-side
 - `ProtectedRoute` component validates session on every route change
+- Token is automatically validated every 5 minutes to catch expiration
+- User activity is pinged every 30 seconds to maintain "online" status
 
 ### Admin Access
-- Admin status is determined by user `auth_level` in the database
-- Admin-only pages (`/admin`, `/admin/users`, `/admin/posts`) automatically redirect non-admins
+- Admin status is determined by user `auth_level` in the database (`"admin"` vs `"basic"`)
+- Admin-only pages (`/admin`, `/admin/users`, `/admin/posts`) automatically redirect non-admins to `/home`
+- Admin endpoints include additional permission checks before returning data
 - Contact project administrator to gain admin privileges
+
+### Common Authentication Errors
+
+| Status Code | Error | Cause | Solution |
+|-------------|-------|-------|----------|
+| **400** | "Email and password are required" | Missing login credentials | Provide both email and password |
+| **401** | "Invalid email or password" | Wrong credentials or user not found | Verify email and password are correct |
+| **400** | "Session token is required" | Token not provided to validate endpoint | Ensure token is passed as query parameter |
+| **401** | "Invalid session token" | Token doesn't exist in database | Token may have expired; re-login |
+| **401** | "Invalid user session" | User was deleted but session still exists | User account no longer exists |
+| **403** | "Access denied" (on admin routes) | User auth_level is not "admin" | Only admins can access this resource |
 
 ---
 
@@ -969,6 +1569,10 @@ The application uses the following color scheme:
 
 ## 📚 Additional Resources
 
+- **Authentication Guide:** Comprehensive guide on authentication flow, token management, and protected routes - See [docs/AUTHENTICATION_GUIDE.md](docs/AUTHENTICATION_GUIDE.md)
+- **API Documentation:** Complete API endpoints with request/response examples - See [docs/WIREFRAME_ANALYSIS.md](docs/WIREFRAME_ANALYSIS.md)
+- **Session Token Validation:** Detailed session and token validation flow - See [docs/SESSION_TOKEN_VALIDATION.md](docs/SESSION_TOKEN_VALIDATION.md)
+- **Responsive Design:** Mobile-first design approach and breakpoints - See [docs/RESPONSIVE_DESIGN.md](docs/RESPONSIVE_DESIGN.md)
 - **Project Specification:** See [docs/AI_SPEC — Project Specification (Main).md](docs/AI_SPEC%20—%20Project%20Specification%20(Main).md)
 - **Feature Documentation:** Detailed documentation for each feature is available in the `docs/` folder with `🤖 AI_FEATURE_*.md` files
 - **Wireframes:** UI/UX wireframes are available in the `Wireframe assets/` folder
