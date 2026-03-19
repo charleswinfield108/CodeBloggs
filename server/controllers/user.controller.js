@@ -180,8 +180,6 @@ const usersGetAll = async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
         const firstName = req.query.firstName || "";
         const lastName = req.query.lastName || "";
-        const startDate = req.query.startDate || "";
-        const endDate = req.query.endDate || "";
 
         // Build filter query (using first_name and last_name from schema)
         const filter = {};
@@ -190,19 +188,6 @@ const usersGetAll = async (req, res) => {
         }
         if (lastName) {
             filter.last_name = { $regex: lastName, $options: "i" };
-        }
-
-        // Add date range filter if provided
-        if (startDate || endDate) {
-            filter.createdAt = {};
-            if (startDate) {
-                filter.createdAt.$gte = new Date(startDate);
-            }
-            if (endDate) {
-                const endOfDay = new Date(endDate);
-                endOfDay.setHours(23, 59, 59, 999);
-                filter.createdAt.$lte = endOfDay;
-            }
         }
 
         // Get total count for pagination

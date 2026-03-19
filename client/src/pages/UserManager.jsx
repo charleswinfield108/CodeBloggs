@@ -20,8 +20,6 @@ const UserManager = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [sortBy, setSortBy] = useState(null); // 'first_name' or 'last_name'
   const [sortOrder, setSortOrder] = useState("asc"); // 'asc' or 'desc'
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -41,7 +39,7 @@ const UserManager = () => {
   }, []);
 
   // Fetch users from backend
-  const fetchUsers = useCallback(async (page = 1, fname = "", lname = "", sDate = "", eDate = "", pageSize = null) => {
+  const fetchUsers = useCallback(async (page = 1, fname = "", lname = "", pageSize = null) => {
     setLoading(true);
     setError(null);
     const startTime = Date.now(); // Track start time for minimum loading duration
@@ -51,8 +49,6 @@ const UserManager = () => {
       params.append("limit", pageSize || itemsPerPage);
       if (fname) params.append("firstName", fname);
       if (lname) params.append("lastName", lname);
-      if (sDate) params.append("startDate", sDate);
-      if (eDate) params.append("endDate", eDate);
 
       const response = await fetch(`http://localhost:5050/users?${params.toString()}`, {
         credentials: "include",
@@ -135,7 +131,7 @@ const UserManager = () => {
       setIsDeleteModalOpen(false);
       setDeletingUserId(null);
       setDeletingUserName("");
-      fetchUsers(currentPage, firstName, lastName, startDate, endDate);
+      fetchUsers(currentPage, firstName, lastName);
     } catch (err) {
       showToast(err.message || "Error deleting user", "error");
     } finally {
@@ -147,7 +143,7 @@ const UserManager = () => {
   const handlePageSizeChange = (newSize) => {
     setItemsPerPage(newSize);
     setCurrentPage(1); // Reset to page 1
-    fetchUsers(1, firstName, lastName, startDate, endDate, newSize);
+    fetchUsers(1, firstName, lastName, newSize);
   };
 
   // Update fetchUsers to accept itemsPerPage parameter
@@ -157,25 +153,23 @@ const UserManager = () => {
     setDeletingUserName("");
   };
 
-  // Auto-filter as user types or dates change
+  // Auto-filter as user types
   useEffect(() => {
     if (session?.auth_level === "admin") {
       setCurrentPage(1);
-      fetchUsers(1, firstName, lastName, startDate, endDate);
+      fetchUsers(1, firstName, lastName);
     }
-  }, [firstName, lastName, startDate, endDate, sortBy, sortOrder, session, fetchUsers]);
+  }, [firstName, lastName, sortBy, sortOrder, session, fetchUsers]);
 
   // Handle clear filters
   const handleClear = () => {
     setFirstName("");
     setLastName("");
-    setStartDate("");
-    setEndDate("");
     setCurrentPage(1);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      fetchUsers(1, "", "", "", "");
+      fetchUsers(1, "", "");
     }, 300);
   };
 
@@ -261,53 +255,11 @@ const UserManager = () => {
             />
           </div>
 
-          {/* Start Date */}
-          <div style={{ flex: 1 }}>
-            <label htmlFor="startDate" style={{ display: "block", color: "#1F2340", fontSize: "0.75rem", fontWeight: "600", marginBottom: "0.25rem" }}>
-              Start Date
-            </label>
-            <input
-              id="startDate"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "0.5rem",
-                border: "1px solid #E0E0E0",
-                borderRadius: "6px",
-                fontSize: "0.8rem",
-                boxSizing: "border-box",
-              }}
-            />
-          </div>
-
-          {/* End Date */}
-          <div style={{ flex: 1 }}>
-            <label htmlFor="endDate" style={{ display: "block", color: "#1F2340", fontSize: "0.75rem", fontWeight: "600", marginBottom: "0.25rem" }}>
-              End Date
-            </label>
-            <input
-              id="endDate"
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "0.5rem",
-                border: "1px solid #E0E0E0",
-                borderRadius: "6px",
-                fontSize: "0.8rem",
-                boxSizing: "border-box",
-              }}
-            />
-          </div>
-
           {/* Search Button */}
           <button
             onClick={() => {
               setCurrentPage(1);
-              fetchUsers(1, firstName, lastName, startDate, endDate);
+              fetchUsers(1, firstName, lastName);
             }}
             style={{
               flex: isDesktop ? "0 0 auto" : "1",
