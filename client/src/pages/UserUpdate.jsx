@@ -69,6 +69,9 @@ const UserUpdate = () => {
         setOccupation(userData.occupation || "");
         setLocation(userData.location || "");
         setAuthLevel(userData.auth_level || "basic");
+        // Password fields are always left empty - users must enter new password explicitly
+        setPassword("");
+        setPasswordConfirm("");
 
         // Format date for input (YYYY-MM-DD) - check both "birthday" and "birthdate" fields
         const dateValue = userData.birthday || userData.birthdate;
