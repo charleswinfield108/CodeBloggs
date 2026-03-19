@@ -237,19 +237,31 @@ The application requires the following environment variables to be configured in
 
 The `/Wireframe assets/` folder contains visual wireframes and screenshots:
 
-- **Main Layouts:**
-  - `CodeBloggs.png` — Logo and branding
+- **Branding & Graphics:**
+  - `CodeBloggs.png` — Primary logo
+  - `CodeBloggs logo.png` — Logo variant
+  - `CodeBloggs logo2.png` — Secondary logo
   - `CodeBloggs graphic.png` — Marketing graphic
-  - `codebloggs1.png` — Home feed interface
   
-- **Page Flows:**
-  - `codebloggs2.png` - `codebloggs4.png` — User profiles and navigation
-  - `codebloggs5-new.png` — Updated blog/feed view
-  - `codebloggs11-newnew.png` — Latest design iteration
+- **Page Wireframes:**
+  - `home page wireframe.png` — Home feed interface
+  - `login wireframe.png` — Login page
+  - `registration wireframe.png` — User registration page
+  - `user view wrieframe.png` — User profile view
+  - `network wireframe.png` — Network/community members view
   
-- **Admin Features:**
-  - `codebloggs12.png` — Admin dashboard
-  - `codebloggs13.png` — Admin management tools
+- **Feature Wireframes:**
+  - `post modal wireframe.png` — Post creation modal
+  - `dropdown wireframe.png` — Dropdown menu component
+  
+- **Admin Management:**
+  - `admin wireframe.png` — Admin dashboard overview
+  - `admin view wireframe.png` — Admin management interface
+  - `content manger wireframe.png` — Content management dashboard
+  - `user manager wireframe.png` — User management dashboard
+
+- **Database & Schema:**
+  - `mongo db schema.png` — MongoDB schema diagram
 
 To view all wireframes locally:
 ```bash
@@ -265,10 +277,12 @@ xdg-open "Wireframe assets"  # Linux
 
 | Feature | Screenshot Reference | Purpose |
 |---------|---------------------|---------|
-| **Home Feed** | codebloggs1-3.png | View posts from community members |
-| **User Profiles** | codebloggs2-4.png | View user profiles and their posts |
-| **Blog/Posts** | codebloggs5-9.png | Create, read, update, delete posts |
-| **Admin Dashboard** | codebloggs12-13.png | Manage users and content |
+| **Home Feed** | home page wireframe.png | View posts from community members |
+| **User Profiles** | user view wrieframe.png | View user profiles and their posts |
+| **Blog/Posts** | post modal wireframe.png | Create, read, update, delete posts |
+| **Admin Dashboard** | admin wireframe.png | Manage users and content |
+| **User Management** | user manager wireframe.png | Search, filter, and manage users |
+| **Content Management** | content manger wireframe.png | Search and manage blog posts |
 | **Responsive Design** | All images | Optimized for mobile, tablet, desktop |
 
 ---
