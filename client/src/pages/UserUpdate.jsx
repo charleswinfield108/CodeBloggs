@@ -47,6 +47,10 @@ const UserUpdate = () => {
 
   // Fetch user details
   useEffect(() => {
+    // Clear password fields immediately when component mounts or ID changes
+    setPassword("");
+    setPasswordConfirm("");
+    
     const fetchUser = async () => {
       setLoading(true);
       setError(null);
@@ -61,6 +65,9 @@ const UserUpdate = () => {
 
         const result = await response.json();
         const userData = result.data || result;
+        
+        // Explicitly remove password if it somehow made it into the response
+        delete userData.password;
 
         setUser(userData);
         setFirstName(userData.first_name || "");
@@ -69,7 +76,7 @@ const UserUpdate = () => {
         setOccupation(userData.occupation || "");
         setLocation(userData.location || "");
         setAuthLevel(userData.auth_level || "basic");
-        // Password fields are always left empty - users must enter new password explicitly
+        // Ensure password fields are always empty - users must enter new password explicitly
         setPassword("");
         setPasswordConfirm("");
 
