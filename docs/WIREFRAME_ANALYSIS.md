@@ -5,6 +5,70 @@
 
 ---
 
+## Standard Error Response Formats
+
+### HTTP Status Codes
+- **200 OK** — Request succeeded
+- **201 Created** — Resource created successfully
+- **400 Bad Request** — Invalid request data or missing required fields
+- **404 Not Found** — Resource not found
+- **500 Internal Server Error** — Server error
+
+### Common Error Response Formats
+
+#### 400 Bad Request (Invalid Data)
+```json
+{
+  "error": "Invalid user data"
+}
+```
+
+#### 400 Bad Request (Missing Required Fields)
+```json
+{
+  "error": "Missing required fields: content, user_id, or post_id"
+}
+```
+
+#### 400 Bad Request (Invalid ID Format)
+```json
+{
+  "error": "Invalid post ID"
+}
+```
+
+#### 404 Not Found
+```json
+{
+  "error": "User not found"
+}
+```
+
+#### 404 Not Found (Alternative Format)
+```json
+{
+  "status": "error",
+  "data": null,
+  "message": "Comment not found"
+}
+```
+
+#### 500 Internal Server Error
+```json
+{
+  "error": "Internal server error"
+}
+```
+
+#### 500 Internal Server Error (Specific)
+```json
+{
+  "error": "Failed to delete comments"
+}
+```
+
+---
+
 ## LOGIN PAGE
 
 | Method | Endpoint | Description |
@@ -29,6 +93,7 @@
 | GET | /posts | Display all posts on home feed |
 | POST | /post | Create new post from modal |
 | POST | /session/logout | Logout user |
+| POST | /user/ping | Record user activity/last seen time |
 | GET | /user/:id | Get current user profile |
 
 ---
@@ -56,6 +121,8 @@
 | GET | /user/:id | View user profile |
 | GET | /info/:id | Get user info/details |
 | GET | /infos | Get all users info |
+| GET | /posts/user/:userId | Get all posts by a specific user |
+| POST | /user/ping | Record user activity/last seen time |
 
 ---
 
@@ -66,6 +133,7 @@
 | GET | /users | List all users |
 | GET | /user/:id | View user details |
 | PATCH | /user/:id | Edit user information |
+| PATCH | /user/:id/status | Update user status |
 | DELETE | /user/:id | Delete user account |
 | GET | /posts | View all posts |
 | GET | /post/:id | View post details |
@@ -839,3 +907,330 @@
   }
 }
 ```
+
+---
+
+## ADDITIONAL ENDPOINTS
+
+### USER MANAGEMENT
+
+#### POST /user/ping
+**Request:**
+```json
+{
+  "userId": "64a1b2c3d4e5f6g7h8i9j0k1"
+}
+```
+
+**Response (Success - 200):**
+```json
+{
+  "status": "ok",
+  "message": "Activity recorded"
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "error": "User not found"
+}
+```
+
+#### PATCH /user/:id
+**Request:**
+```json
+{
+  "firstName": "Jonathan",
+  "lastName": "Smith",
+  "bio": "Updated bio text",
+  "profileImage": "https://api.example.com/uploads/profile-new.jpg"
+}
+```
+
+**Response (Success - 200):**
+```json
+{
+  "status": "ok",
+  "message": "User updated successfully"
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "error": "User not found"
+}
+```
+
+#### PATCH /user/:id/status
+**Request:**
+```json
+{
+  "status": "active"
+}
+```
+
+**Response (Success - 200):**
+```json
+{
+  "status": "ok",
+  "message": "User status updated successfully"
+}
+```
+
+#### DELETE /user/:id
+**Response (Success - 200):**
+```json
+{
+  "status": "ok",
+  "message": "User deleted successfully. Deleted 5 posts associated with the user and 12 comments associated with those posts."
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "error": "User not found"
+}
+```
+
+### POST MANAGEMENT
+
+#### GET /posts/user/:userId
+**Response (200):**
+```json
+{
+  "success": true,
+  "count": 3,
+  "posts": [
+    {
+      "_id": "65d2e4f5a6b7c8d9e0f1g2h3",
+      "author": {
+        "_id": "64a1b2c3d4e5f6g7h8i9j0k1",
+        "username": "johndoe",
+        "firstName": "John",
+        "lastName": "Doe",
+        "profileImage": "https://api.example.com/uploads/profile-64a1b2c3d4e5f6g7h8i9j0k1.jpg"
+      },
+      "title": "Advanced JavaScript Concepts",
+      "content": "Understanding closures, hoisting, and async/await...",
+      "image": "https://api.example.com/uploads/post-65d2e4f5a6b7c8d9e0f1g2h3.jpg",
+      "likes": 67,
+      "commentCount": 12,
+      "createdAt": "2024-01-18T09:15:00Z",
+      "updatedAt": "2024-01-18T09:15:00Z"
+    }
+  ]
+}
+```
+
+#### PATCH /post/:id
+**Request:**
+```json
+{
+  "content": "Updated post content with more details",
+  "likes": 70
+}
+```
+
+**Response (Success - 200):**
+```json
+{
+  "status": "ok",
+  "data": {
+    "_id": "65d2e4f5a6b7c8d9e0f1g2h3",
+    "content": "Updated post content with more details",
+    "user_id": "64a1b2c3d4e5f6g7h8i9j0k1",
+    "likes": 70,
+    "createdAt": "2024-01-18T09:15:00Z",
+    "comments": [
+      {
+        "_id": "65d2f6g7h8i9j0k1l2m3n4o5",
+        "postId": "65d2e4f5a6b7c8d9e0f1g2h3",
+        "content": "Great update!",
+        "likes": 3
+      }
+    ]
+  },
+  "message": "Post updated successfully"
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "error": "Post not found"
+}
+```
+
+#### DELETE /post/:id
+**Response (Success - 200):**
+```json
+{
+  "status": "ok",
+  "message": "Post deleted successfully along with 5 associated comments"
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "error": "Post not found"
+}
+```
+
+### COMMENT MANAGEMENT
+
+#### GET /comment/:id
+**Response (200):**
+```json
+{
+  "status": "ok",
+  "data": {
+    "_id": "65d2f6g7h8i9j0k1l2m3n4o5",
+    "postId": "65d2e4f5a6b7c8d9e0f1g2h3",
+    "author": {
+      "_id": "64a1b2c3d4e5f6g7h8i9j0k2",
+      "username": "janedoe",
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "profileImage": "https://api.example.com/uploads/profile-64a1b2c3d4e5f6g7h8i9j0k2.jpg"
+    },
+    "content": "Great post! This really helped me understand closures better.",
+    "likes": 3,
+    "createdAt": "2024-01-20T12:10:00Z",
+    "updatedAt": "2024-01-20T12:10:00Z"
+  },
+  "message": "Comment retrieved successfully"
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "status": "error",
+  "data": null,
+  "message": "Comment not found"
+}
+```
+
+#### PATCH /comment/:id
+**Request:**
+```json
+{
+  "content": "Updated comment with more details. This really helped me understand closures better!",
+  "likes": 5
+}
+```
+
+**Response (Success - 200):**
+```json
+{
+  "status": "ok",
+  "result": {
+    "acknowledged": true,
+    "modifiedCount": 1,
+    "upsertedId": null,
+    "upsertedCount": 0,
+    "matchedCount": 1
+  },
+  "data": {
+    "_id": "65d2f6g7h8i9j0k1l2m3n4o5",
+    "postId": "65d2e4f5a6b7c8d9e0f1g2h3",
+    "author": "64a1b2c3d4e5f6g7h8i9j0k2",
+    "content": "Updated comment with more details. This really helped me understand closures better!",
+    "likes": 5,
+    "createdAt": "2024-01-20T12:10:00Z",
+    "updatedAt": "2024-01-20T13:30:00Z"
+  },
+  "message": "Comment updated successfully"
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "error": "Comment not found"
+}
+```
+
+#### DELETE /comment/:id
+**Response (Success - 200):**
+```json
+{
+  "status": "ok",
+  "message": "Comment deleted successfully"
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "status": "error",
+  "message": "Comment not found"
+}
+```
+
+---
+
+## Error Response Reference Guide
+
+### By Endpoint and Error Code
+
+| Endpoint | Method | 400 Bad Request | 404 Not Found | 500 Error |
+|----------|--------|-----------------|---------------|-----------|
+| /session/login | POST | ✓ Invalid credentials | — | ✓ |
+| /user/register | POST | ✓ ValidationError | — | ✓ |
+| /user/ping | POST | ✓ Invalid ID format | ✓ User not found | ✓ |
+| /user/:id | GET | ✓ Invalid ID format | ✓ User not found | ✓ |
+| /user/:id | PATCH | ✓ Invalid data | ✓ User not found | ✓ |
+| /user/:id/status | PATCH | ✓ Invalid status | ✓ User not found | ✓ |
+| /user/:id | DELETE | ✓ Invalid ID format | ✓ User not found | ✓ |
+| /post | POST | ✓ Missing fields | — | ✓ |
+| /post/:id | GET | ✓ Invalid ID format | ✓ Post not found | ✓ |
+| /post/:id | PATCH | ✓ Invalid data | ✓ Post not found | ✓ |
+| /post/:id | DELETE | ✓ Invalid ID format | ✓ Post not found | ✓ |
+| /posts/user/:userId | GET | ✓ Invalid ID format | — | ✓ |
+| /comment | POST | ✓ Missing fields | — | ✓ |
+| /comment/:id | GET | ✓ Invalid ID format | ✓ Comment not found | ✓ |
+| /comment/:id | PATCH | ✓ Invalid data | ✓ Comment not found | ✓ |
+| /comment/:id | DELETE | ✓ Invalid ID format | ✓ Comment not found | ✓ |
+| /validate_token | GET | — | — | ✓ |
+
+### Error Code Meanings
+
+#### 400 Bad Request
+- **Cause:** Invalid request data, missing required fields, or malformed ID
+- **Common Scenarios:**
+  - Sending invalid JSON
+  - Missing required fields (e.g., `content`, `user_id`, `post_id`)
+  - Invalid MongoDB ObjectId format
+  - Empty or null values where specific formats required
+  - Attempting to update with no fields
+
+#### 404 Not Found
+- **Cause:** Requested resource does not exist in database
+- **Common Scenarios:**
+  - User ID doesn't match any user
+  - Post ID doesn't match any post
+  - Comment ID doesn't match any comment
+  - Session ID is invalid or expired
+
+#### 500 Internal Server Error
+- **Cause:** Unexpected server error or database operation failure
+- **Common Scenarios:**
+  - Database connection issues
+  - Failed cascading delete operations
+  - Hashing algorithm failure
+  - Unhandled exceptions in processing
+
+### Best Practices for Error Handling
+
+1. **Always check status codes** — Don't assume success (2xx) by default
+2. **Parse error messages** — Use the `error` or `message` field for user-friendly messages
+3. **Log failures** — Keep records of failed requests for debugging
+4. **Retry strategy** — Retry 500 errors; don't retry 400 or 404 errors
+5. **Data validation** — Validate all required fields client-side before making requests
+6. **Cascade operations** — Understand that deleting a user/post may cascade to comments
+7. **ID validation** — Ensure MongoDB ObjectIds are properly formatted before API calls

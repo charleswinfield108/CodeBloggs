@@ -4,7 +4,42 @@ A modern social media platform designed for programmers and developers to share 
 
 ---
 
-## 📋 Project Description
+## � Table of Contents
+
+### Getting Started
+- [📋 Project Description](#-project-description)
+- [✨ Key Features & Functionality](#-key-features--functionality)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [🚀 Installation & Setup Instructions](#-installation--setup-instructions)
+- [🔐 Environment Variables](#-environment-variables)
+- [🎯 Getting Started Guide](#-getting-started-guide)
+
+### Documentation & Reference
+- [🎨 Visual Preview](#-visual-preview)
+- [🐛 Troubleshooting & Common Issues](#-troubleshooting--common-issues)
+- [📱 Frontend Routing](#-frontend-routing)
+- [📁 Project Structure](#-project-structure)
+- [🔗 API Endpoints Summary](#-api-endpoints-summary)
+- [📡 API Documentation](#-api-documentation)
+
+### Architecture & Engineering
+- [🔐 Authentication & Security](#-authentication--security)
+- [📖 Code Architecture Highlights](#-code-architecture-highlights)
+- [📱 Responsive Threshold Justification](#-responsive-threshold-justification)
+- [🔬 Reactive vs. Responsive](#-reactive-vs-responsive)
+- [🗄️ SQL and Relational Basics](#️-sql-and-relational-basics)
+- [📊 Database Collections (MongoDB)](#-database-collections-mongodb)
+- [🔄 Development Workflow](#-development-workflow)
+
+### Quick Reference
+- [🎨 Color Palette](#-color-palette)
+- [📚 Additional Resources](#-additional-resources)
+- [👤 Author](#-author)
+- [📝 Notes](#-notes)
+
+---
+
+## �📋 Project Description
 
 **CodeBloggs** is a full-stack web application built with the MERN stack that enables developers to:
 - Create and manage their own blog posts
@@ -17,6 +52,43 @@ A modern social media platform designed for programmers and developers to share 
 Whether you're looking to share your development journey or stay connected with fellow programmers, CodeBloggs provides a dedicated space for the developer community.
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## ✨ Key Features & Functionality
+
+### User Features
+- **User Authentication** - Secure login and registration with email validation
+- **Personal Dashboard** - View your profile, posts, and user information
+- **Blog Posts** - Create, read, update, and delete blog posts
+- **Social Interactions** - Like posts and comment on content from other developers
+- **Community Feed** - Browse all blog posts from the developer community
+- **Network/Directory** - Discover and connect with other community members
+- **User Profiles** - View other users' profiles and post history with permission checks
+- **Session Management** - Secure HTTP-only cookies and JWT-based authentication
+
+### Admin Features
+- **User Management Dashboard** - Search, filter, paginate, and manage user accounts
+  - Edit user details (name, email, occupation, location)
+  - Delete user accounts with confirmation
+  - Bulk delete operations
+- **Content Management Dashboard** - Manage all blog posts in the community
+  - Search and filter posts by date
+  - Delete inappropriate or spam posts
+  - Pagination for large datasets
+- **Admin Dashboard** - Central control panel for all administrative operations
+
+### UX/Design Features
+- **Toast Notifications** - Real-time feedback with success, error, warning, and info messages
+- **Confirmation Modals** - Safety confirmations for critical operations (delete, update)
+- **Skeleton Loaders** - Loading placeholders for better perceived performance
+- **User Avatars** - Consistent circular avatars with user initials
+- **Responsive Design** - Mobile-first approach optimized for all devices
+- **Google Places Integration** - Autocomplete suggestions for location during registration
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 🛠️ Tech Stack
 
@@ -43,40 +115,7 @@ Whether you're looking to share your development journey or stay connected with 
 
 ---
 
-## 📁 Project Structure
-
-```
-CodeBloggs/
-├── client/                          # Frontend React application
-│   ├── src/
-│   │   ├── components/             # Reusable React components
-│   │   ├── context/                # React Context for state management
-│   │   ├── layouts/                # Layout components
-│   │   ├── pages/                  # Page components (Login, Register, Home, etc.)
-│   │   ├── utils/                  # Utility functions
-│   │   ├── App.jsx                 # Main application component
-│   │   ├── main.jsx                # Application entry point
-│   │   └── index.css               # Global styles
-│   ├── public/                     # Static assets
-│   ├── package.json                # Frontend dependencies
-│   ├── vite.config.js              # Vite configuration
-│   ├── tailwind.config.js          # Tailwind CSS configuration
-│   └── eslint.config.js            # ESLint configuration
-├── server/                          # Backend Express application
-│   ├── controllers/                # Route controllers (user, post, comment, session)
-│   ├── routes/                     # API route definitions
-│   ├── db/                         # Database connection and schemas
-│   ├── server.js                   # Express server entry point
-│   ├── loadEnvironment.js          # Environment variables loader
-│   └── package.json                # Server dependencies
-├── docs/                           # Project documentation
-│   ├── AI_SPEC — Project Specification (Main).md
-│   └── 🤖 AI_FEATURE_*.md         # Feature documentation
-├── Wireframe assets/               # UI/UX wireframe images
-└── README.md                       # This file
-```
-
----
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 🚀 Installation & Setup Instructions
 
@@ -133,6 +172,8 @@ Open your browser and navigate to `http://localhost:5173` to view the applicatio
 
 ---
 
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
 ## 🔐 Environment Variables
 
 The application requires the following environment variables to be configured in the `server/.env` file:
@@ -147,6 +188,609 @@ The application requires the following environment variables to be configured in
 **⚠️ Important:** Never commit the `.env` file to version control. The `.env` file contains sensitive information and should be kept private.
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 🎯 Getting Started Guide
+
+### For New Users
+1. **Create Account** - Visit the Registration page and fill in your details
+   - Your location will autocomplete using Google Places
+   - Username = First Name + Last Name (auto-generated from registration data)
+2. **Explore the Community** - Browse the Blogs section to see what others are posting
+3. **Network** - Visit the Network page to discover other developers
+4. **Create Posts** - Click the "+ Post" button to share your thoughts with the community
+5. **Engage** - Like posts and comment to participate in discussions
+
+### For Administrators (Admin Account Required)
+1. **User Management** (`/admin/users`)
+   - Search and filter users by first/last name
+   - Edit user profiles (name, email, occupation, location)
+   - Delete user accounts with confirmation
+   - Pagination for managing large user databases
+2. **Content Management** (`/admin/posts`)
+   - Search posts by content
+   - Filter posts by date range
+   - Delete inappropriate or spam posts
+   - Pagination for browsing all community posts
+
+### For Developers
+1. **Frontend** - See `client/src/` for React components and pages
+2. **Backend** - See `server/` for Express routes and controllers
+3. **State Management** - Check `stores/` folder for Zustand store setup
+4. **Styling** - Tailwind CSS is configured with custom brand colors in `tailwind.config.js`
+5. **API Documentation** - All endpoints documented in the [API Endpoints Summary](#-api-endpoints-summary) section
+
+---
+
+## 🎨 Visual Preview
+
+### Key Pages & Features
+
+**Login & Registration**
+- Clean authentication flow with email/password validation
+- Google Places integration for location autocomplete
+- Responsive design optimized for all devices
+
+<details>
+  <summary><strong>View Screenshots</strong></summary>
+
+The `/Wireframe assets/` folder contains visual wireframes and screenshots:
+
+- **Branding & Graphics:**
+  - `CodeBloggs.png` — Primary logo
+  - `CodeBloggs logo.png` — Logo variant
+  - `CodeBloggs logo2.png` — Secondary logo
+  - `CodeBloggs graphic.png` — Marketing graphic
+  
+- **Page Wireframes:**
+  - `home page wireframe.png` — Home feed interface
+  - `login wireframe.png` — Login page
+  - `registration wireframe.png` — User registration page
+  - `user view wrieframe.png` — User profile view
+  - `network wireframe.png` — Network/community members view
+  
+- **Feature Wireframes:**
+  - `post modal wireframe.png` — Post creation modal
+  - `dropdown wireframe.png` — Dropdown menu component
+  
+- **Admin Management:**
+  - `admin wireframe.png` — Admin dashboard overview
+  - `admin view wireframe.png` — Admin management interface
+  - `content manger wireframe.png` — Content management dashboard
+  - `user manager wireframe.png` — User management dashboard
+
+- **Database & Schema:**
+  - `mongo db schema.png` — MongoDB schema diagram
+
+To view all wireframes locally:
+```bash
+# Open wireframe assets folder
+open "Wireframe assets/"  # macOS
+explorer "Wireframe assets"  # Windows
+xdg-open "Wireframe assets"  # Linux
+```
+
+</details>
+
+### Feature Highlights
+
+| Feature | Screenshot Reference | Purpose |
+|---------|---------------------|---------|
+| **Home Feed** | home page wireframe.png | View posts from community members |
+| **User Profiles** | user view wrieframe.png | View user profiles and their posts |
+| **Blog/Posts** | post modal wireframe.png | Create, read, update, delete posts |
+| **Admin Dashboard** | admin wireframe.png | Manage users and content |
+| **User Management** | user manager wireframe.png | Search, filter, and manage users |
+| **Content Management** | content manger wireframe.png | Search and manage blog posts |
+| **Responsive Design** | All images | Optimized for mobile, tablet, desktop |
+
+---
+
+## 🐛 Troubleshooting & Common Issues
+
+### Installation & Setup
+
+#### ❌ `npm install` fails with permission errors
+**Error:** `EACCES: permission denied`
+```bash
+# Solution 1: Use sudo (not recommended for security)
+sudo npm install
+
+# Solution 2: Fix npm permissions (recommended)
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+export PATH=~/.npm-global/bin:$PATH
+npm install  # Now without sudo
+```
+
+#### ❌ MongoDB connection fails
+**Error:** `connect ECONNREFUSED 127.0.0.1:27017`
+```bash
+# Check if MongoDB is running
+mongod --version  # Check if installed
+
+# macOS - Start MongoDB
+brew services start mongodb-community
+
+# Linux - Start MongoDB
+sudo systemctl start mongod
+
+# Windows - MongoDB should run as service
+# Check Services app or run: net start MongoDB
+
+# Alternative: Use MongoDB Atlas (cloud)
+# MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/codebloggs
+```
+
+#### ❌ Port already in use (Port 5050 or 5173)
+**Error:** `EADDRINUSE: address already in use :::5050`
+```bash
+# Find process using port
+lsof -i :5050          # macOS/Linux
+netstat -ano | findstr :5050  # Windows
+
+# Kill the process
+kill -9 <PID>          # macOS/Linux
+taskkill /PID <PID> /F # Windows
+
+# Or use different port
+# In server/.env: PORT=5051
+# In client vite.config.js: adjust port
+```
+
+#### ❌ `.env` file not found or variables not loading
+**Error:** `MONGODB_URI is undefined`
+```bash
+# Check .env file exists in server directory
+ls -la server/.env
+
+# Ensure correct format (no quotes needed)
+PORT=5050
+JWT_SECRET=your-super-secret-key-here
+MONGODB_URI=mongodb://localhost:27017/codebloggs
+NODE_ENV=development
+
+# Save and restart backend
+npm start
+```
+
+#### ❌ Dependencies not installing - `node_modules` issues
+**Solution:**
+```bash
+# Clear npm cache
+npm cache clean --force
+
+# Delete node_modules and package-lock.json
+rm -rf node_modules package-lock.json
+
+# Reinstall fresh
+npm install
+
+# For stubborn issues
+npm install --legacy-peer-deps
+```
+
+---
+
+### Frontend Issues
+
+#### ❌ `localhost:5173` shows blank page or "Cannot GET /"
+**Cause:** Backend not running or frontend can't reach backend
+```bash
+# Verify backend is running
+curl http://localhost:5050/validate_token?token=test
+
+# Check vite.config.js has correct backend proxy
+# Or check API calls use correct base URL: http://localhost:5050
+
+# Restart frontend dev server
+# Stop with Ctrl+C and run:
+npm run dev
+```
+
+#### ❌ Login fails with "Invalid email or password"
+**Causes:**
+1. No users in database yet - register a new user first
+2. MongoDB not running - check connection
+3. Password mismatch - double-check password typed correctly
+
+**Solution:**
+```bash
+# 1. Ensure MongoDB is running with data
+mongosh
+use codebloggs
+db.users.find()  # Should show users
+
+# 2. If empty, register a new user via the app
+# 3. Check MySQL logs for actual errors
+```
+
+#### ❌ Images/Assets not loading (404 errors)
+**Cause:** `public/` folder not copied or assets path incorrect
+```bash
+# Ensure public folder exists
+ls client/public/
+
+# Check asset paths in code use relative paths:
+// ✅ Correct
+<img src="/logo.png" />
+
+// ❌ Wrong
+<img src="./logo.png" />
+```
+
+#### ❌ Tailwind CSS not applied (no styling)
+**Cause:** Tailwind build not running or config incorrect
+```bash
+# Ensure Tailwind is watching for changes
+# Stop dev server and restart:
+npm run dev
+
+# Check tailwind.config.js includes all templates:
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  ...
+}
+
+# Clear cache if needed
+rm -rf .tailwind-cache
+npm run dev
+```
+
+#### ❌ States/Context not updating (data stale)
+**Cause:** Context provider not wrapping components or deps missing
+```javascript
+// Ensure SessionProvider wraps entire app in main.jsx
+// Ensure useSession() is called in component that needs data
+// Check dependency arrays in useEffect hooks
+```
+
+---
+
+### Backend Issues
+
+#### ❌ `Cannot find module 'express'` or other packages
+**Cause:** Dependencies not installed in server directory
+```bash
+cd server
+npm install
+npm start
+```
+
+#### ❌ `ReferenceError: DB is not defined`
+**Cause:** MongoDB connection failed during startup
+```bash
+# Check MongoDB is running
+mongod --version
+# Start MongoDB service (see MongoDB section above)
+
+# Check MONGODB_URI in .env is correct
+cat server/.env | grep MONGODB_URI
+
+# Verify MongoDB connection string
+mongosh "mongodb://localhost:27017/codebloggs"
+```
+
+#### ❌ Nodemon not restarting on file changes
+**Cause:** Nodemon not installed or incorrect path
+```bash
+# Ensure nodemon is installed
+npm list nodemon
+
+# If not:
+npm install --save-dev nodemon
+
+# Check package.json has nodemon script:
+"scripts": {
+  "start": "nodemon server.js"
+}
+```
+
+#### ❌ CORS errors (blocked requests from frontend)
+**Error:** `Access to XMLHttpRequest blocked by CORS policy`
+```javascript
+// In server.js, ensure CORS is configured:
+const cors = require('cors');
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+```
+
+#### ❌ Routes returning 404 - endpoints not found
+**Cause:** Routes not imported or registered
+```javascript
+// In server.js, ensure all routes are imported:
+import { userRoutesEndpoint } from './routes/user.routes.js';
+import { sessionRoutesEndpoint } from './routes/session.routes.js';
+
+// And registered:
+userRoutesEndpoint(app);
+sessionRoutesEndpoint(app);
+
+// Verify endpoints in browser:
+// http://localhost:5050/validate_token?token=test
+```
+
+---
+
+### Database Issues
+
+#### ❌ Database not initialized or empty
+**Symptoms:** App works but no users/posts appear
+```bash
+# Check if data exists
+mongosh
+use codebloggs
+db.users.find()
+db.posts.find()
+
+# If empty, create seed data:
+db.users.insertOne({
+  email: "test@example.com",
+  password: "hashedPassword",
+  first_name: "Test",
+  last_name: "User",
+  auth_level: "basic"
+})
+
+# Or register through the app frontend
+```
+
+#### ❌ MongoDB won't start or crashes
+**Solution:**
+```bash
+# Check MongoDB logs
+# macOS: brew services log mongodb-community
+# Linux: sudo journalctl -u mongod
+
+# On Linux, if permission denied:
+sudo chown -R mongodb:mongodb /var/lib/mongodb
+sudo systemctl restart mongod
+
+# If corrupted, remove and reinstall:
+# (Warning: removes all data)
+brew uninstall mongodb-community
+brew install mongodb-community
+```
+
+---
+
+### Performance Issues
+
+#### ⚠️ App runs slowly or UI feels laggy
+**Diagnostics:**
+1. Open DevTools: `F12` → **Network** tab
+   - Check response times (should be < 200ms)
+   - Look for large payloads
+
+2. **Performance** tab
+   - Check where time is spent
+   - React DevTools to profile components
+
+3. **Solutions:**
+   - Add pagination to large lists
+   - Lazy load components with React.lazy()
+   - Optimize images
+   - Enable caching headers
+
+#### ⚠️ Database queries slow
+```bash
+# Check indexes
+mongosh
+use codebloggs
+db.users.getIndexes()
+db.posts.getIndexes()
+
+# Add indexes if needed
+db.users.createIndex({ email: 1 })
+db.posts.createIndex({ user_id: 1, createdAt: -1 })
+```
+
+---
+
+### Environment-Specific Issues
+
+#### Windows-Specific Issues
+- **Long path errors:** Enable long path support in Windows
+  ```
+  Registry: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem
+  Set LongPathsEnabled = 1
+  ```
+- **Git line endings:** Configure `git config core.autocrlf true`
+- **Terminal colors:** Use Windows Terminal instead of cmd.exe
+
+#### macOS-Specific Issues
+- **M1/M2 Chip:** Some npm packages may need `arch` prefix
+  ```bash
+  arch -arm64 npm install
+  ```
+- **Port already in use:** Common with previous dev sessions
+  ```bash
+  lsof -i :5050 | grep LISTEN | awk '{print $2}' | xargs kill -9
+  ```
+
+#### Linux-Specific Issues
+- **Permissions:** File permissions may differ from other OS
+  ```bash
+  chmod +x node_modules/.bin/*
+  ```
+- **MongoDB service:** Enable at startup
+  ```bash
+  sudo systemctl enable mongod
+  sudo systemctl start mongod
+  ```
+
+---
+
+### Still Having Issues?
+
+**Debugging Steps:**
+1. **Check browser console:** F12 → Console tab for JavaScript errors
+2. **Check server logs:** Look for error messages in terminal
+3. **Enable verbose logging:**
+   ```bash
+   # Frontend
+   npm run dev -- --debug
+   
+   # Backend
+   NODE_DEBUG=* npm start
+   ```
+4. **Check git status:** Ensure no accidental changes to config
+   ```bash
+   git status
+   git diff
+   ```
+5. **Create fresh clone:** If stuck, clone the repo fresh and retry
+
+**Get Help:**
+- Check project documentation in `/docs/` folder
+- Review API documentation: [docs/WIREFRAME_ANALYSIS.md](docs/WIREFRAME_ANALYSIS.md)
+- Review authentication guide: [docs/AUTHENTICATION_GUIDE.md](docs/AUTHENTICATION_GUIDE.md)
+- Check feature documentation: [docs/ai/features/](docs/ai/features/)
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 📱 Frontend Routing
+
+| Route | Page | Access | Purpose |
+|-------|------|--------|---------|
+| `/login` | Login | Public | User authentication |
+| `/register` | Register | Public | New user account creation |
+| `/home` | Home (Own Profile) | Authenticated | View personal dashboard and posts |
+| `/home/:userId` | Home (User Profile) | Authenticated | View other users' profiles and posts |
+| `/blogs` | Blogs Feed | Authenticated | Browse all community blog posts |
+| `/network` | Network Directory | Authenticated | Discover community members |
+| `/admin` | Admin Dashboard | Admin Only | Access admin control panel |
+| `/admin/users` | User Manager | Admin Only | Manage user accounts |
+| `/admin/users/:id` | User Update | Admin Only | Edit individual user details |
+| `/admin/posts` | Content Manager | Admin Only | Manage blog posts |
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 📁 Project Structure
+
+```
+CodeBloggs/
+├── client/                          # Frontend React application
+│   ├── src/
+│   │   ├── pages/                  # Page components (views)
+│   │   │   ├── Home.jsx            # User dashboard and profile (own or other users)
+│   │   │   ├── Blogs.jsx           # Community feed - all blog posts
+│   │   │   ├── Network.jsx         # Community directory - discover members
+│   │   │   ├── Login.jsx           # User authentication page
+│   │   │   ├── Register.jsx        # User registration (with Google Places)
+│   │   │   ├── Admin.jsx           # Admin dashboard (admin-only)
+│   │   │   ├── UserManager.jsx     # Admin: user management tool
+│   │   │   ├── UserUpdate.jsx      # Admin: update user details
+│   │   │   └── ContentManager.jsx  # Admin: manage blog posts
+│   │   ├── components/             # Reusable React components
+│   │   │   ├── Layout.jsx          # Master responsive container (768px breakpoint)
+│   │   │   ├── Header.jsx          # Top navigation bar with user menu
+│   │   │   ├── Sidebar.jsx         # Desktop navigation (≥768px)
+│   │   │   ├── MobileNavigation.jsx # Mobile/tablet nav (<768px)
+│   │   │   ├── PostModal.jsx       # Modal for creating new posts
+│   │   │   ├── Record.jsx          # Individual blog post display
+│   │   │   ├── Toast.jsx           # Notification system
+│   │   │   ├── AvatarInitials.jsx  # User avatar with initials
+│   │   │   ├── ProtectedRoute.jsx  # Authentication HOC for routes
+│   │   │   ├── SkeletonLoader.jsx  # Loading placeholder
+│   │   │   ├── UpdateConfirmationModal.jsx
+│   │   │   ├── DeleteConfirmationModal.jsx
+│   │   │   └── UserManager/        # Admin user components
+│   │   ├── context/                # React Context for state management
+│   │   │   ├── SessionContext.jsx  # User session & auth state
+│   │   │   ├── PostModalContext.jsx # Post modal state
+│   │   │   └── ToastContext.jsx    # Notifications state
+│   │   ├── stores/                 # Zustand state management
+│   │   │   ├── sessionStore.js
+│   │   │   ├── postStore.js
+│   │   │   ├── userStore.js
+│   │   │   └── toastStore.js
+│   │   ├── layouts/                # Layout components
+│   │   ├── utils/                  # Utility functions
+│   │   ├── App.jsx                 # Main application component with routing
+│   │   ├── main.jsx                # Application entry point
+│   │   ├── App.css                 # Application styles
+│   │   └── index.css               # Global styles with responsive breakpoints
+│   ├── public/                     # Static assets
+│   ├── package.json                # Frontend dependencies
+│   ├── vite.config.js              # Vite configuration
+│   ├── tailwind.config.js          # Tailwind CSS with custom brand colors
+│   └── eslint.config.js            # ESLint configuration
+├── server/                          # Backend Express application
+│   ├── routes/                     # API route definitions
+│   │   ├── user.routes.js          # User registration & management
+│   │   ├── session.routes.js       # Authentication & sessions
+│   │   ├── post.routes.js          # Blog posts CRUD
+│   │   └── comment.routes.js       # Comments CRUD
+│   ├── controllers/                # Business logic handlers
+│   │   ├── user.controller.js
+│   │   ├── session.controller.js
+│   │   ├── post.controller.js
+│   │   └── comment.controller.js
+│   ├── db/                         # Database configuration
+│   │   ├── connection.js           # MongoDB connection
+│   │   └── schemas/                # Mongoose data models
+│   ├── server.js                   # Express server & middleware setup
+│   ├── loadEnvironment.js          # Environment variables config
+│   └── package.json                # Backend dependencies
+├── docs/                           # Project documentation
+│   ├── RESPONSIVE_DESIGN.md        # Responsive design details
+│   ├── SESSION_TOKEN_VALIDATION.md # Auth documentation
+│   ├── AI_SPEC — Project Specification (Main).md # Full spec
+│   └── ai/features/                # Feature documentation
+├── Wireframe assets/               # UI/UX designs
+└── README.md                       # This file
+```
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 🔗 API Endpoints Summary
+
+### User Endpoints
+- `POST /user/register` — Register new user
+- `GET /users` — Get all users (with pagination)
+- `GET /user/:id` — Get user by ID
+- `PATCH /user/:id` — Update user profile
+- `DELETE /user/:id` — Delete user account
+
+### Session/Authentication Endpoints
+- `POST /session/login` — Authenticate user and create session
+- `POST /session/logout` — End user session
+- `GET /session/validate_token` — Validate JWT token and get user info
+- `GET /sessions` — Get all active sessions (admin only)
+
+### Post Endpoints
+- `POST /post` — Create new blog post
+- `GET /posts` — Get all posts (with pagination)
+- `GET /posts/user/:userId` — Get posts by specific user
+- `GET /post/:id` — Get single post
+- `PATCH /post/:id` — Update post
+- `DELETE /post/:id` — Delete post
+
+### Comment Endpoints
+- `POST /comment` — Create comment on post
+- `GET /comments` — Get all comments
+- `GET /comment/:id` — Get single comment
+- `PATCH /comment/:id` — Update comment
+- `DELETE /comment/:id` — Delete comment
+
+**Response Format:** All API responses follow the standard format with `status`, `data`, and `message` fields.
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 📡 API Documentation
 
@@ -418,46 +1062,502 @@ Sample Response:
 
 ---
 
-## 🎨 Color Palette
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
-The application uses the following color scheme:
+## 🔐 Authentication & Security
 
-| Color | Hex Code | Name |
-|-------|----------|------|
-| Primary | `#403E6B` | Delft Blue |
-| Light | `#D3D1EE` | Lavender (web) |
-| Secondary | `#8D88EA` | Tropical Indigo |
-| Accent | `#B1ADFF` | Periwinkle |
-| Dark | `#5F5E6B` | Dim Gray |
-| Alternative | `#6E6AB8` | Slate Blue |
+### How Authentication Works
+
+#### 1. Login Flow
+```
+User Login Request
+    ↓
+Backend validates email & password
+    ↓
+Backend creates session (stores session_token in database)
+    ↓
+Backend returns: { session_token, id, first_name, last_name, auth_level, isOnline }
+    ↓
+Frontend stores session_token in browser cookie: "session_token"
+Frontend stores session data in localStorage: "session"
+    ↓
+User is redirected to /home
+```
+
+**Login Request:**
+```bash
+POST http://localhost:5050/session/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+**Login Response (200 Success):**
+```json
+{
+  "session_token": "a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6",
+  "id": "64a1b2c3d4e5f6g7h8i9j0k1",
+  "first_name": "John",
+  "last_name": "Doe",
+  "auth_level": "basic",
+  "isOnline": true
+}
+```
+
+#### 2. Session Token Storage & Format
+- **Format:** UUID v4 (e.g., `a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6`)
+- **Storage:** Stored in browser cookie named `session_token`
+- **Cookie Settings:**
+  - HTTPOnly: No (accessible via JavaScript for frontend validation)
+  - Secure: Yes (only sent over HTTPS in production)
+  - Path: `/` (accessible across all routes)
+  - Expires: 24 hours from login
+
+**Accessing Token in Frontend:**
+```javascript
+// Get token from cookie
+const getCookie = (name) => {
+  const nameEQ = `${name}=`;
+  const cookies = document.cookie.split(";");
+  for (let cookie of cookies) {
+    cookie = cookie.trim();
+    if (cookie.startsWith(nameEQ)) {
+      return decodeURIComponent(cookie.substring(nameEQ.length));
+    }
+  }
+  return null;
+};
+
+const token = getCookie("session_token");
+```
+
+#### 3. Protected Request Format
+For authenticated API requests, pass the token as a **query parameter**:
+
+```javascript
+// Example: Validate token
+const token = getCookie("session_token");
+const response = await fetch(
+  `http://localhost:5050/validate_token?token=${encodeURIComponent(token)}`,
+  {
+    method: "GET",
+    credentials: "include"  // Include cookies in request
+  }
+);
+```
+
+**Supported Query Parameter Approaches:**
+- ✅ **Query Parameter** (Primary): `/validate_token?token=YOUR_TOKEN`
+- ✅ **Browser Cookie** (Automatic): Cookie is automatically sent via `credentials: "include"`
+
+**Note:** This implementation does NOT use:
+- ❌ Authorization headers (`Authorization: Bearer`)
+- ❌ Custom HTTP headers
+- ❌ Request body for token passing
+
+#### 4. Protected Route Validation
+
+**On Navigation:**
+```
+User navigates to protected route (e.g., /home, /blogs, /admin)
+    ↓
+ProtectedRoute component extracts token from cookie
+    ↓
+ProtectedRoute validates token with backend: GET /validate_token?token=TOKEN
+    ↓
+Backend checks if token exists in sessions collection
+    ↓
+If valid → Render protected component
+If invalid → Redirect to /login
+```
+
+**Backend Validation (session.controller.js):**
+```javascript
+const sessionValidateToken = async (req, res) => {
+  const TOKEN = req.query.token;  // Token from query parameter
+  
+  if (!TOKEN) {
+    return res.status(400).json({ 
+      status: 'error', 
+      message: 'Session token is required' 
+    });
+  }
+
+  // Look up session in database
+  const SESSION = await DB.collection("sessions").findOne({ 
+    session_token: TOKEN 
+  });
+
+  if (!SESSION) {
+    return res.status(401).json({ 
+      status: 'error', 
+      message: 'Invalid session token' 
+    });
+  }
+
+  // Get associated user
+  const USER = await DB.collection("users").findOne({ 
+    _id: new ObjectId(SESSION.user_id) 
+  });
+
+  return res.status(200).json({
+    status: 'ok',
+    data: { valid: true, user: { ...user data } }
+  });
+};
+```
+
+#### 5. Session Management
+- **Session Storage:** MongoDB `sessions` collection
+  - Fields: `session_token`, `session_date`, `user_id`
+  - Created on successful login
+  - Deleted on logout
+- **Session Duration:** 24 hours (TTL index on MongoDB)
+- **Concurrent Sessions:** Multiple sessions can exist per user (separate tokens)
+- **Activity Tracking:** User's `lastSeen` timestamp updated every 30 seconds via `/user/ping`
+
+#### 6. Token Validation Cycle
+- **On App Load:** SessionContext checks cookie and validates with backend
+- **On Route Change:** ProtectedRoute validates token before rendering component
+- **Periodic Validation:** Every 5 minutes, token is re-validated to catch expiration
+- **Activity Ping:** Every 30 seconds, user activity is recorded (for online status)
+
+#### 7. Logout Flow
+```
+User clicks logout
+    ↓
+Frontend sends: GET /session/logout?token=TOKEN
+    ↓
+Backend deletes session document from database
+    ↓
+Backend marks user as offline
+    ↓
+Frontend clears session_token cookie
+Frontend clears session from localStorage
+    ↓
+User is redirected to /login
+```
+
+### Session Management
+- Sessions are stored in MongoDB `sessions` collection with **24-hour expiration**
+- Passwords are securely hashed using **bcrypt** (SALT_ROUNDS = 10)
+- Session tokens are **UUID v4** format, generated server-side
+- `ProtectedRoute` component validates session on every route change
+- Token is automatically validated every 5 minutes to catch expiration
+- User activity is pinged every 30 seconds to maintain "online" status
+
+### Admin Access
+- Admin status is determined by user `auth_level` in the database (`"admin"` vs `"basic"`)
+- Admin-only pages (`/admin`, `/admin/users`, `/admin/posts`) automatically redirect non-admins to `/home`
+- Admin endpoints include additional permission checks before returning data
+- Contact project administrator to gain admin privileges
+
+### Common Authentication Errors
+
+| Status Code | Error | Cause | Solution |
+|-------------|-------|-------|----------|
+| **400** | "Email and password are required" | Missing login credentials | Provide both email and password |
+| **401** | "Invalid email or password" | Wrong credentials or user not found | Verify email and password are correct |
+| **400** | "Session token is required" | Token not provided to validate endpoint | Ensure token is passed as query parameter |
+| **401** | "Invalid session token" | Token doesn't exist in database | Token may have expired; re-login |
+| **401** | "Invalid user session" | User was deleted but session still exists | User account no longer exists |
+| **403** | "Access denied" (on admin routes) | User auth_level is not "admin" | Only admins can access this resource |
 
 ---
 
-## 👤 Author
-**Creator:** Charles Winfield
-**Project:** CodeBloggs  
-**Organization:** CodeBoxx School  
-**Module:** 09-10 (MERN Stack Development)  
-**Last Updated:** March 2026
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 📖 Code Architecture Highlights
+
+### State Management (Zustand Stores)
+```
+stores/
+├── sessionStore.js  → Tracks user session and authentication state
+├── postStore.js     → Manages blog posts for display
+├── userStore.js     → Manages user list data
+└── toastStore.js    → Controls toast notifications
+```
+
+### Component Hierarchy
+```
+Layout (responsive container)
+├── Header (top nav with user menu)
+├── Sidebar (desktop nav ≥768px) OR MobileNavigation (<768px)
+├── PostModal (create new posts)
+├── Toast (notifications)
+└── Outlet (page content)
+    ├── Home, Blogs, Network, Admin pages, etc.
+    └── Post, Comments components
+```
+
+### Responsive Design Strategy
+- **Mobile-first approach** - Design for 320px, enhance upward
+- **Primary breakpoint: 768px** - iPad landscape, where nav switches from hamburger to sidebar
+- **Secondary breakpoints:** 480px (larger phones), 1024px (large desktops), 1200px (extra-large screens)
+- **Touch-friendly:** Minimum 44-48px tap targets on mobile
+- **Fluid typography** - Uses CSS `clamp()` for scalable text
 
 ---
 
-## 📚 Additional Resources
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
-- **Project Specification:** See [docs/AI_SPEC — Project Specification (Main).md](docs/AI_SPEC%20—%20Project%20Specification%20(Main).md)
-- **Feature Documentation:** Detailed documentation for each feature is available in the `docs/` folder with `🤖 AI_FEATURE_*.md` files
-- **Wireframes:** UI/UX wireframes are available in the `Wireframe assets/` folder
+## 📱 Responsive Threshold Justification
+
+CodeBloggs uses a **mobile-first responsive design** with the following key breakpoints:
+
+| Breakpoint | Width | Device | Strategy |
+|-----------|-------|--------|----------|
+| **Extra Small** | < 480px | Small phones | Single-column, full-width layout |
+| **Small** | 480px - 767px | Large phones/tablets (portrait) | 2-column grid system |
+| **Medium** | 768px+ | Tablets (landscape) & desktops | Desktop navigation & multi-column layout |
+| **Large** | 1024px+ | Small desktops | Optimized spacing & typography |
+| **Extra Large** | 1200px+ | Large desktops | Full-width multi-column layouts |
+
+### Primary Breakpoint: 768px (iPad Landscape Standard)
+
+**Why 768px?**
+- Industry standard for tablet landscape width (iPad)
+- Clear inflection point where single-column mobile layouts can expand to multi-column desktop layouts
+- Based on **MDN Web Development Best Practices** for responsive design
+
+**UX Issues Solved:**
+- **Navigation Model Switch**: Below 768px, users get a hamburger menu (fixed top bar); at 768px+, sidebar appears. This solves mobile touch usability without cluttering desktop space.
+- **Layout Adaptability**: Two-column post layouts collapse to single-column on mobile, reducing cognitive load and improving readability on small screens.
+- **Touch Targets**: Mobile layouts enforce 44-48px minimum button heights; desktop layouts optimize for mouse/trackpad precision.
+- **Content Legibility**: Typography scales using fluid sizing (`clamp()`) to remain readable across all window sizes without jarring jumps.
+- **No Horizontal Scrolling**: All content adapts to viewport width, preventing frustrating horizontal scroll on mobile devices.
+
+### Secondary Breakpoints
+
+- **480px**: Enables 2-column grid for larger phones (e.g., Network section user cards)
+- **1024px**: Optimizes spacing and multi-column layouts for larger desktops
+- **1200px**: Full-width multi-column experiences for ultra-wide screens
+
+This progressive enhancement approach ensures CodeBloggs provides an optimal experience whether accessed on a smartphone, tablet, or desktop computer.
 
 ---
 
-## 📝 Notes
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
-- The backend uses MongoDB as the primary database. Ensure you have MongoDB running locally or have a MongoDB Atlas connection string ready.
-- Sessions are automatically expired after 24 hours using MongoDB TTL (Time-To-Live) indexes.
-- Passwords are securely hashed using bcrypt before being stored in the database.
-- The application uses HTTP-only cookies for session management to enhance security.
+## 🔬 Reactive vs. Responsive
+
+A Reactive Website is a site designed to be dynamic relying on user input and user interactivity. It contains elements that interact with the user such as a chat application or social media feed that updates instantly. This reactive design creates a fluid and seamless flow of information, enhancing user engagement and providing an enjoyable user experience.
+
+A Responsive Website is designed for adaptability based on device. Responsive web design provides an optimal viewing and interaction experience across a wide range of devices. The responsive layout dynamically resizes and rearranges content to ensure a clear and usable experience.
+
+This is the most common approach to modern web design and is the standard for building mobile-friendly websites.
 
 ---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 🗄️ SQL and Relational Basics
+
+### What is SQL?
+
+SQL (Structured Query Language) is a standardized programming language used to manage and interact with relational databases. It allows developers to create, read, update, and delete (CRUD) data from databases in a structured and efficient way. SQL is used to define the database schema (tables, columns, constraints), manipulate data (INSERT, UPDATE, DELETE), and retrieve data (SELECT) using complex queries.
+
+**Note:** While CodeBloggs uses **MongoDB** (a NoSQL document database), understanding SQL and relational concepts is essential for web development, as many applications still rely on traditional relational databases like MySQL, PostgreSQL, and SQLite.
+
+---
+
+### Main Differences: SQLite vs MySQL
+
+While both SQLite and MySQL are popular SQL-based databases, they have key differences:
+
+| Feature | SQLite | MySQL |
+|---------|--------|-------|
+| **Architecture** | Lightweight, file-based, embedded | Server-based, requires separate server |
+| **Use Case** | Small applications, mobile apps, single-user | Enterprise applications, multi-user systems |
+| **Scalability** | Limited (local/small datasets) | Highly scalable (handles large datasets) |
+| **Concurrent Users** | Limited concurrent access | Supports thousands of concurrent users |
+| **Setup** | No installation required | Requires server setup and configuration |
+| **Performance** | Fast for small datasets | Optimized for large-scale operations |
+| **Security** | Basic file-level security | Advanced user authentication & permissions |
+| **Cost** | Free & open-source | Free & open-source (MariaDB alternative) |
+
+**Example:** A mobile app might use SQLite for local data storage, while a web application like CodeBloggs uses MongoDB or MySQL for server-side data management.
+
+---
+
+### Primary Keys and Foreign Keys
+
+#### Primary Key (🔑)
+A **Primary Key** is a unique identifier for each record (row) in a table. It ensures that every row can be uniquely identified and prevents duplicate entries.
+
+**Characteristics:**
+- Must contain unique values
+- Cannot be NULL (must always have a value)
+- Only ONE primary key per table
+- Speeds up data retrieval and sorting
+
+**Example:**
+```sql
+CREATE TABLE users (
+  user_id INT PRIMARY KEY,
+  first_name VARCHAR(100),
+  email VARCHAR(100) UNIQUE
+);
+```
+
+#### Foreign Key (🔗)
+A **Foreign Key** is a column (or set of columns) that creates a relationship between two tables. It references the Primary Key of another table, maintaining data integrity and establishing relationships.
+
+**Characteristics:**
+- References a Primary Key in another table
+- Enforces referential integrity (prevents orphaned records)
+- Can have multiple Foreign Keys in one table
+- Enables table joins and complex queries
+
+**Example:**
+```sql
+CREATE TABLE posts (
+  post_id INT PRIMARY KEY,
+  user_id INT,
+  content TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+```
+
+---
+
+### Types of Database Relationships
+
+Database relationships define how tables interact with each other. There are three main types:
+
+#### 1️⃣ **One-to-One (1:1) Relationship** 🔗
+
+A record in Table A is related to **exactly one** record in Table B, and vice versa.
+
+**Example: User ↔ UserProfile**
+```sql
+-- Users Table
+CREATE TABLE users (
+  user_id INT PRIMARY KEY,
+  email VARCHAR(100) UNIQUE
+);
+
+-- User Profiles Table (each user has exactly ONE profile)
+CREATE TABLE user_profiles (
+  profile_id INT PRIMARY KEY,
+  user_id INT UNIQUE,
+  bio TEXT,
+  avatar_url VARCHAR(255),
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+```
+
+**Real-world scenario:** Only one bio and avatar per user account.
+
+---
+
+#### 1️⃣➡️📚 **One-to-Many (1:N) Relationship**
+
+A record in Table A can be related to **multiple** records in Table B, but each record in Table B is related to **only one** record in Table A.
+
+**Example: User ➡️ Posts**
+```sql
+-- Users Table
+CREATE TABLE users (
+  user_id INT PRIMARY KEY,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100)
+);
+
+-- Posts Table (one user can create MANY posts)
+CREATE TABLE posts (
+  post_id INT PRIMARY KEY,
+  user_id INT,
+  content TEXT,
+  timestamp DATETIME,
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+```
+
+**Real-world scenario:** One user can write many blog posts, but each post belongs to only one author. This is the most common relationship type in CodeBloggs.
+
+---
+
+#### 🌐 **Many-to-Many (M:N) Relationship**
+
+Records in Table A can be related to **multiple** records in Table B, and vice versa. This requires a **junction table** (also called a bridge or join table).
+
+**Example: Users ↔ Tags** (e.g., users can like multiple posts, posts can be liked by many users)
+```sql
+-- Users Table
+CREATE TABLE users (
+  user_id INT PRIMARY KEY,
+  first_name VARCHAR(100)
+);
+
+-- Posts Table
+CREATE TABLE posts (
+  post_id INT PRIMARY KEY,
+  content TEXT
+);
+
+-- Junction Table: likes (tracks which users like which posts—MANY-to-MANY)
+CREATE TABLE likes (
+  like_id INT PRIMARY KEY,
+  user_id INT,
+  post_id INT,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (post_id) REFERENCES posts(post_id),
+  UNIQUE (user_id, post_id) -- Prevents duplicate likes
+);
+```
+
+**Real-world scenario:** One user likes many posts; one post is liked by many users. The `likes` junction table tracks this relationship.
+
+---
+
+### Relationship Summary for CodeBloggs
+
+| Relationship | Tables | Example |
+|-------------|--------|---------|
+| **One-to-One** 🔗 | User ↔ UserProfile | Each user has one profile |
+| **One-to-Many** 1️⃣➡️📚 | User → Posts | One user writes many posts |
+| **One-to-Many** 1️⃣➡️📚 | Post → Comments | One post has many comments |
+| **Many-to-Many** 🌐 | Users ↔ Followers | Users can follow many users; users can be followed by many |
+| **Many-to-Many** 🌐 | Users ↔ Posts (Likes) | Users like many posts; posts are liked by many users |
+
+---
+
+### CodeBloggs Database Model (MongoDB Document-Based)
+
+While CodeBloggs uses **MongoDB** (a NoSQL, document-based database) instead of traditional SQL, the conceptual relationships remain similar:
+
+- **User** has many **Posts** (One-to-Many)
+- **Post** has many **Comments** (One-to-Many)
+- **User** has many **Followers** (Many-to-Many)
+- **User** has one **Profile** (One-to-One, could be embedded in user document)
+
+MongoDB stores these relationships differently (using document embedding and references) but achieves the same logical structure.
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 📊 Database Collections (MongoDB)
+
+### Users Collection
+Stores user profile information and authentication data (first name, last name, email, password hash, occupation, location, etc.)
+
+### Posts Collection
+Stores all blog posts created by users, with timestamps, content, and references to user IDs who created them.
+
+### Comments Collection
+Stores comments on posts, with content, timestamps, and references to both post IDs and user IDs.
+
+### Sessions Collection
+Stores active user sessions with TTL (Time-To-Live) index set to 24 hours for automatic expiration and cleanup.
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
 
 ## 🔄 Development Workflow
 
@@ -479,76 +1579,113 @@ cd client
 npm run preview
 ```
 
+### Watch Mode (Continuous Development)
+```bash
+# Terminal 1: Backend with auto-reload
+cd server
+npm start
+
+# Terminal 2: Frontend with hot reload
+cd client
+npm run dev
+```
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 🐛 Troubleshooting
+
+### Common Issues & Solutions
+
+#### **Port Already in Use**
+- **Error:** `listen EADDRINUSE :::5050`
+- **Solution:** Change the `PORT` in `.env` or kill the process using that port
+  ```bash
+  # Find process using port 5050
+  lsof -i :5050
+  # Kill it
+  kill -9 <PID>
+  ```
+
+#### **MongoDB Connection Failed**
+- **Error:** `Cannot connect to MongoDB`
+- **Solutions:**
+  - Ensure MongoDB is running locally: `mongod`
+  - Or update `MONGODB_URI` to your MongoDB Atlas connection string
+  - Check that your IP is whitelisted in MongoDB Atlas
+
+#### **CORS Errors**
+- **Error:** `Access to XMLHttpRequest blocked by CORS policy`
+- **Solution:** Ensure backend is running on `http://localhost:5050` and frontend uses correct API base URL
+
+#### **Session Token Invalid/Expired**
+- **Error:** Redirected to login page unexpectedly
+- **Solution:** Session expired after 24 hours - simply log in again
+
+#### **Responsive Layout Not Switching at 768px**
+- **Check:** Browser window is resized properly or DevTools device toggle is working
+- **Clear:** Browser cache (may have cached CSS)
+- **Update:** Check that `Layout.jsx` event listener is properly detecting window resize
+
+#### **Posts Not Loading**
+- **Check:** Backend server is running on `http://localhost:5050`
+- **Check:** MongoDB has data in `posts` collection
+- **Check:** API response format includes `status: "ok"`
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 🎨 Color Palette
+
+The application uses the following color scheme:
+
+| Color | Hex Code | Name |
+|-------|----------|------|
+| Primary | `#403E6B` | Delft Blue |
+| Light | `#D3D1EE` | Lavender (web) |
+| Secondary | `#8D88EA` | Tropical Indigo |
+| Accent | `#B1ADFF` | Periwinkle |
+| Dark | `#5F5E6B` | Dim Gray |
+| Alternative | `#6E6AB8` | Slate Blue |
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 📚 Additional Resources
+
+- **Authentication Guide:** Comprehensive guide on authentication flow, token management, and protected routes - See [docs/AUTHENTICATION_GUIDE.md](docs/AUTHENTICATION_GUIDE.md)
+- **API Documentation:** Complete API endpoints with request/response examples - See [docs/WIREFRAME_ANALYSIS.md](docs/WIREFRAME_ANALYSIS.md)
+- **Session Token Validation:** Detailed session and token validation flow - See [docs/SESSION_TOKEN_VALIDATION.md](docs/SESSION_TOKEN_VALIDATION.md)
+- **Responsive Design:** Mobile-first design approach and breakpoints - See [docs/RESPONSIVE_DESIGN.md](docs/RESPONSIVE_DESIGN.md)
+- **Project Specification:** See [docs/AI_SPEC — Project Specification (Main).md](docs/AI_SPEC%20—%20Project%20Specification%20(Main).md)
+- **Feature Documentation:** Detailed documentation for each feature is available in the `docs/` folder with `🤖 AI_FEATURE_*.md` files
+- **Wireframes:** UI/UX wireframes are available in the `Wireframe assets/` folder
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 👤 Author
+**Creator:** Charles Winfield
+**Project:** CodeBloggs  
+**Organization:** CodeBoxx School  
+**Module:** 09-10 (MERN Stack Development)  
+**Last Updated:** March 2026
+
+---
+
+**[↑ Back to Table of Contents](#-table-of-contents)**
+
+## 📝 Notes
+
+- The backend uses MongoDB as the primary database. Ensure you have MongoDB running locally or have a MongoDB Atlas connection string ready.
+- Sessions are automatically expired after 24 hours using MongoDB TTL (Time-To-Live) indexes.
+- Passwords are securely hashed using bcrypt before being stored in the database.
+- The application uses HTTP-only cookies for session management to enhance security.
+
 ---
 
 For more information, refer to the feature documentation in the `docs/` folder or contact the project administrator.
-
-```
-
-```
----
-
-## CodeBlogg - Post Modal
-
-#### What, if any DATA is required from the backend to render the wireframe?
-
-#### What, if any, ACTIONS is this wireframe responsible for?
-
-```
-
-```
----
-
-## Main - User View
-
-#### What, if any DATA is required from the backend to render the wireframe?
-
-#### What, if any, ACTIONS is this wireframe responsible for?
-
-```
-
-```
----
-
-## Main - Bloggs View
-
-#### What, if any DATA is required from the backend to render the wireframe?
-
-#### What, if any, ACTIONS is this wireframe responsible for?
-
-```
-
-```
----
-
-## Main - Network View
-
-#### What, if any DATA is required from the backend to render the wireframe?
-
-#### What, if any, ACTIONS is this wireframe responsible for?
-
-```
-
-```
----
-
-## Main Admin view
-
-#### What, if any DATA is required from the backend to render the wireframe?
-
-#### What, if any, ACTIONS is this wireframe responsible for?
-
-```
-
-```
----
-## CodeBlogg - Admin view
-
-#### What, if any DATA is required from the backend to render the wireframe?
-
-#### What, if any, ACTIONS is this wireframe responsible for?
-
-```
-
-```
----

@@ -47,6 +47,10 @@ const UserUpdate = () => {
 
   // Fetch user details
   useEffect(() => {
+    // Clear password fields immediately when component mounts or ID changes
+    setPassword("");
+    setPasswordConfirm("");
+    
     const fetchUser = async () => {
       setLoading(true);
       setError(null);
@@ -61,6 +65,9 @@ const UserUpdate = () => {
 
         const result = await response.json();
         const userData = result.data || result;
+        
+        // Explicitly remove password if it somehow made it into the response
+        delete userData.password;
 
         setUser(userData);
         setFirstName(userData.first_name || "");
@@ -69,11 +76,22 @@ const UserUpdate = () => {
         setOccupation(userData.occupation || "");
         setLocation(userData.location || "");
         setAuthLevel(userData.auth_level || "basic");
+        // Ensure password fields are always empty - users must enter new password explicitly
+        setPassword("");
+        setPasswordConfirm("");
 
-        // Format date for input (YYYY-MM-DD) - using "birthday" field from schema
-        if (userData.birthday) {
-          const date = new Date(userData.birthday);
-          const formatted = date.toISOString().split("T")[0];
+        // Format date for input (YYYY-MM-DD) - check both "birthday" and "birthdate" fields
+        const dateValue = userData.birthday || userData.birthdate;
+        if (dateValue) {
+          let formatted;
+          if (typeof dateValue === 'string' && dateValue.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            // Already in YYYY-MM-DD format
+            formatted = dateValue;
+          } else {
+            // Parse as Date and format
+            const date = new Date(dateValue);
+            formatted = date.toISOString().split("T")[0];
+          }
           setBirthdate(formatted);
         }
       } catch (err) {
@@ -122,7 +140,7 @@ const UserUpdate = () => {
       email,
       occupation,
       location,
-      birthday: birthdate ? new Date(birthdate).toISOString() : undefined,
+      birthdate: birthdate || undefined,  // Send as YYYY-MM-DD string to match database field
       auth_level: authLevel,
     };
 
@@ -494,6 +512,7 @@ const UserUpdate = () => {
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Leave blank to keep current password"
@@ -546,6 +565,7 @@ const UserUpdate = () => {
                 id="passwordConfirm"
                 name="passwordConfirm"
                 type={showPasswordConfirm ? "text" : "password"}
+                autoComplete="new-password"
                 value={passwordConfirm}
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 placeholder="Repeat your new password"

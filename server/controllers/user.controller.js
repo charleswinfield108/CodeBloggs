@@ -155,7 +155,7 @@ const userGetById = async (req, res) => {
         const QUERY = { _id: new ObjectId(userId) };
         const PROJECTION = { password: 0 }; // Exclude the password field
 
-        const RESULT = await DB.collection("users").findOne(QUERY, PROJECTION);
+        const RESULT = await DB.collection("users").findOne(QUERY, { projection: PROJECTION });
 
         if (!RESULT) {
             return res.status(404).json({ error: "User not found" });
